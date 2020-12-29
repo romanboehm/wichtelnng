@@ -1,0 +1,17 @@
+Hey [( ${event.host.name} )],
+
+We sent out the following invitations for '[( ${event.title} )]':
+[# th:if="${not #lists.isEmpty(successfulResults)}"]
+[# th:each="result : ${successfulResults}"]
+- [( ${result.name} )], [( ${result.email} )]
+[/]
+[/]
+[# th:if="${not #lists.isEmpty(failedResults)}"]
+The following participants could not be reached:
+[# th:each="result : ${failedResults}"]
+- [( ${result.name} )], [( ${result.email} )]
+[/]
+[/]
+Please be aware that we cannot guarantee the correctness of the email addresses you entered themselves. So some of the emails might still have bounced.
+
+This mail was generated using https://wichteln.rmnbhm.com
