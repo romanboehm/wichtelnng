@@ -32,7 +32,7 @@ services:
       SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-      LOGGING_LEVEL_COM_RMNBHM_WICHTELN: DEBUG
+      LOGGING_LEVEL_COM_ROMANBOEHM_WICHTELNNG: DEBUG
     depends_on:
       - wichtelnng-mailserver
       - wichtelnng-db
