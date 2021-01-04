@@ -29,10 +29,9 @@ services:
       SPRING_MAIL_PASSWORD: test_password
       SPRING_MAIL_PROTOCOL: smtp
       SPRING_DATASOURCE_URL: jdbc:postgresql://wichtelnng-db:5432/wichteln
-      SPRING_DATASOURCE_DRIVERCLASSNAME: org.postgresql.Driver
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       LOGGING_LEVEL_COM_ROMANBOEHM_WICHTELNNG: DEBUG
     depends_on:
-      - wichtelnng-mailserver
       - wichtelnng-db
+      - wichtelnng-mailserver
