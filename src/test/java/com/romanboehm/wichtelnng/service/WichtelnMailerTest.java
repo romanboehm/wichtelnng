@@ -9,9 +9,11 @@ import com.romanboehm.wichtelnng.model.Event;
 import com.romanboehm.wichtelnng.model.Participant;
 import com.romanboehm.wichtelnng.model.ParticipantsMatch;
 import com.romanboehm.wichtelnng.model.SendResult;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,10 +22,6 @@ import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 
 @SpringBootTest
 public class WichtelnMailerTest {
@@ -62,24 +60,32 @@ public class WichtelnMailerTest {
         // One of three emails for participants fails.
         Mockito
                 .doThrow(new MailSendException("error"))
-                .when(occasionallyFailingSender).send(argThat(TestUtils.isSentTo(angusYoung.getEmail())));
+                .when(occasionallyFailingSender).send(ArgumentMatchers.argThat(
+                        TestUtils.isSentTo(angusYoung.getEmail()))
+        );
         Mockito
                 .doCallRealMethod()
-                .when(occasionallyFailingSender).send(argThat(TestUtils.isSentTo(malcolmYoung.getEmail())));
+                .when(occasionallyFailingSender).send(ArgumentMatchers.argThat(
+                        TestUtils.isSentTo(malcolmYoung.getEmail()))
+        );
         Mockito
                 .doCallRealMethod()
-                .when(occasionallyFailingSender).send(argThat(TestUtils.isSentTo(philRudd.getEmail())));
+                .when(occasionallyFailingSender).send(ArgumentMatchers.argThat(
+                        TestUtils.isSentTo(philRudd.getEmail()))
+        );
 
         // Email to host is sent successfully
         Mockito
                 .doCallRealMethod()
-                .when(occasionallyFailingSender).send(argThat(TestUtils.isSentTo(event.getHost().getEmail())));
+                .when(occasionallyFailingSender).send(ArgumentMatchers.argThat(
+                        TestUtils.isSentTo(event.getHost().getEmail()))
+        );
 
         wichtelnMailer.send(event, List.of(angusGiftsToMalcolm, malcolmGiftsToPhil, philGiftsToAngus));
 
         ArgumentCaptor<List<SendResult>> capturedSendResults = ArgumentCaptor.forClass(List.class);
-        Mockito.verify(hostMailer).send(any(), capturedSendResults.capture());
-        assertThat(capturedSendResults.getValue())
+        Mockito.verify(hostMailer).send(ArgumentMatchers.any(), capturedSendResults.capture());
+        Assertions.assertThat(capturedSendResults.getValue())
                 .usingFieldByFieldElementComparator()
                 .containsExactlyInAnyOrder(
                         SendResult.failure("Angus Young", "angusyoung@acdc.net"),

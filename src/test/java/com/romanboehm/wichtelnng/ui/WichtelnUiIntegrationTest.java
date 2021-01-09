@@ -1,6 +1,7 @@
 package com.romanboehm.wichtelnng.ui;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,8 +22,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Testcontainers
 @ExtendWith(ScreenshotOnFailureExtension.class)
@@ -76,44 +75,44 @@ public class WichtelnUiIntegrationTest {
     @Test
     public void shouldDisplayEventCreationForm() {
         WebElement eventCreationForm = supply(FORM_ID);
-        assertThat(eventCreationForm).isNotNull();
+        Assertions.assertThat(eventCreationForm).isNotNull();
         WebElement title = supply(TITLE_ID);
-        assertThat(title).isNotNull();
+        Assertions.assertThat(title).isNotNull();
         WebElement description = supply(DESCRIPTION_ID);
-        assertThat(description).isNotNull();
+        Assertions.assertThat(description).isNotNull();
         WebElement monetaryAmountNumber = supply(MONETARYAMOUNT_NUMBER_ID);
-        assertThat(monetaryAmountNumber).isNotNull();
+        Assertions.assertThat(monetaryAmountNumber).isNotNull();
         WebElement monetaryAmountCurrency = supply(MONETARYAMOUNT_CURRENCY_ID);
-        assertThat(monetaryAmountCurrency).isNotNull();
+        Assertions.assertThat(monetaryAmountCurrency).isNotNull();
         WebElement localDateTime = supply(LOCALDATE_ID);
-        assertThat(localDateTime).isNotNull();
+        Assertions.assertThat(localDateTime).isNotNull();
         WebElement place = supply(PLACE_ID);
-        assertThat(place).isNotNull();
+        Assertions.assertThat(place).isNotNull();
         WebElement hostName = supply(HOST_NAME_ID);
-        assertThat(hostName).isNotNull();
+        Assertions.assertThat(hostName).isNotNull();
         WebElement hostEmail = supply(HOST_EMAIL_ID);
-        assertThat(hostEmail).isNotNull();
+        Assertions.assertThat(hostEmail).isNotNull();
     }
 
     @Test
     public void shouldDisplaySubmitAndResetButtons() {
         WebElement submitButton = supply(PREVIEW_BUTTON_ID);
-        assertThat(submitButton.getText()).isEqualTo("Preview...");
+        Assertions.assertThat(submitButton.getText()).isEqualTo("Preview...");
         WebElement resetButton = supply(RESET_BUTTON_ID);
-        assertThat(resetButton.getText()).isEqualTo("Reset");
+        Assertions.assertThat(resetButton.getText()).isEqualTo("Reset");
     }
 
     @Test
     public void shouldAddAndRemoveParticipants() {
         WebElement participantsTable = supply(PARTICIPANTS_TABLE_ID);
-        assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(3);
+        Assertions.assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(3);
 
         // Remove buttons should be hidden initially since we do _not_ have more than three participants
-        assertThat(supply("remove-participants0-button").isDisplayed()).isFalse();
-        assertThat(supply("remove-participants1-button").isDisplayed()).isFalse();
-        assertThat(supply("remove-participants2-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants0-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants1-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants2-button").isDisplayed()).isFalse();
 
-        assertThat(supply(ADD_PARTICIPANT_BUTTON_ID)).isNotNull();
+        Assertions.assertThat(supply(ADD_PARTICIPANT_BUTTON_ID)).isNotNull();
         supply(ADD_PARTICIPANT_BUTTON_ID).click();
         supply(ADD_PARTICIPANT_BUTTON_ID).click();
 
@@ -124,8 +123,8 @@ public class WichtelnUiIntegrationTest {
         fillRow(4, "Cliff Williams", "cliffwilliams@acdc.net");
 
         participantsTable = supply(PARTICIPANTS_TABLE_ID);
-        assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(5);
-        assertThat(tableData()).containsExactly(
+        Assertions.assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(5);
+        Assertions.assertThat(tableData()).containsExactly(
                 List.of("Angus Young", "angusyoung@acdc.net"),
                 List.of("Malcolm Young", "malcolmyoung@acdc.net"),
                 List.of("Phil Rudd", "philrudd@acdc.net"),
@@ -134,9 +133,9 @@ public class WichtelnUiIntegrationTest {
         );
 
         // Remove buttons should now be displayed since we have more than three participants
-        assertThat(supply("remove-participants0-button").isDisplayed()).isTrue();
-        assertThat(supply("remove-participants1-button").isDisplayed()).isTrue();
-        assertThat(supply("remove-participants2-button").isDisplayed()).isTrue();
+        Assertions.assertThat(supply("remove-participants0-button").isDisplayed()).isTrue();
+        Assertions.assertThat(supply("remove-participants1-button").isDisplayed()).isTrue();
+        Assertions.assertThat(supply("remove-participants2-button").isDisplayed()).isTrue();
 
         // Button id suffix (i.e. index) get recalculated after every removal, so in order to remove participants with
         // actual indices 1 and 2, we need to click removeParticipantButton1 twice
@@ -144,17 +143,17 @@ public class WichtelnUiIntegrationTest {
         supply("remove-participants1-button").click();
 
         participantsTable = supply(PARTICIPANTS_TABLE_ID);
-        assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(3);
-        assertThat(tableData()).containsExactly(
+        Assertions.assertThat(participantsTable.findElements(By.cssSelector("tbody tr"))).hasSize(3);
+        Assertions.assertThat(tableData()).containsExactly(
                 List.of("Angus Young", "angusyoung@acdc.net"),
                 List.of("Bon Scott", "bonscott@acdc.net"),
                 List.of("Cliff Williams", "cliffwilliams@acdc.net")
         );
 
         // Remove buttons should be hidden again
-        assertThat(supply("remove-participants0-button").isDisplayed()).isFalse();
-        assertThat(supply("remove-participants1-button").isDisplayed()).isFalse();
-        assertThat(supply("remove-participants2-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants0-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants1-button").isDisplayed()).isFalse();
+        Assertions.assertThat(supply("remove-participants2-button").isDisplayed()).isFalse();
     }
 
     @Test
@@ -189,26 +188,26 @@ public class WichtelnUiIntegrationTest {
         previewButton.click();
 
         WebElement titleError = supply(TITLE_ERROR_ID);
-        assertThat(titleError.isDisplayed()).isTrue();
+        Assertions.assertThat(titleError.isDisplayed()).isTrue();
         WebElement descriptionError = supply(DESCRIPTION_ERROR_ID);
-        assertThat(descriptionError.isDisplayed()).isTrue();
+        Assertions.assertThat(descriptionError.isDisplayed()).isTrue();
         WebElement monetaryAmountNumberError = supply(MONETARYAMOUNT_NUMBER_ERROR_ID);
-        assertThat(monetaryAmountNumberError.isDisplayed()).isTrue();
+        Assertions.assertThat(monetaryAmountNumberError.isDisplayed()).isTrue();
         WebElement localDateError = supply(LOCALDATE_ERROR_ID);
-        assertThat(localDateError.isDisplayed()).isTrue();
+        Assertions.assertThat(localDateError.isDisplayed()).isTrue();
         WebElement localTimeError = supply(LOCALTIME_ERROR_ID);
-        assertThat(localTimeError.isDisplayed()).isTrue();
+        Assertions.assertThat(localTimeError.isDisplayed()).isTrue();
         WebElement placeError = supply(PLACE_ERROR_ID);
-        assertThat(placeError.isDisplayed()).isTrue();
+        Assertions.assertThat(placeError.isDisplayed()).isTrue();
         WebElement hostNameError = supply(HOST_NAME_ERROR_ID);
-        assertThat(hostNameError.isDisplayed()).isTrue();
+        Assertions.assertThat(hostNameError.isDisplayed()).isTrue();
         WebElement hostEmailError = supply(HOST_EMAIL_ERROR_ID);
-        assertThat(hostEmailError.isDisplayed()).isTrue();
+        Assertions.assertThat(hostEmailError.isDisplayed()).isTrue();
 
         WebElement angusFirstNameError = supply("participants0-name-error");
-        assertThat(angusFirstNameError.isDisplayed()).isTrue();
+        Assertions.assertThat(angusFirstNameError.isDisplayed()).isTrue();
         WebElement malcolmLastNameError = supply("participants2-name-error");
-        assertThat(malcolmLastNameError.isDisplayed()).isTrue();
+        Assertions.assertThat(malcolmLastNameError.isDisplayed()).isTrue();
     }
 
     private void fillRow(int rowIndex, String name, String email) {

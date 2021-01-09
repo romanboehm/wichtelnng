@@ -3,11 +3,10 @@ package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.model.Participant;
 import com.romanboehm.wichtelnng.model.ParticipantsMatch;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParticipantsMatcherTest {
 
@@ -25,8 +24,9 @@ public class ParticipantsMatcherTest {
                 List.of(angusYoung, malcolmYoung, philRudd)
         );
 
-        assertThat(participantsMatches).allSatisfy(match ->
-                assertThat(match.getDonor().getParticipant()).isNotEqualTo(match.getRecipient().getParticipant())
+        Assertions.assertThat(participantsMatches).allSatisfy(match ->
+                Assertions.assertThat(match.getDonor().getParticipant())
+                        .isNotEqualTo(match.getRecipient().getParticipant())
         );
     }
 }

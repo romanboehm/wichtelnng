@@ -29,13 +29,12 @@ public class AsyncParticipantsMailer {
         List<CompletableFuture<SendResult>> sendResults = new ArrayList<>();
         for (ParticipantsMatch match : matches) {
             MimeMessage matchMessage = matchMailCreator.createMatchMessage(event, match);
-            LOGGER.debug("Created mail for {} matching {}", event, match);
             CompletableFuture<SendResult> sendMatch = mailSender.send(matchMessage).handle(
                     (__, throwable) -> {
                         String name = match.getDonor().getName();
                         String email = match.getDonor().getEmail();
-                        // N.B.: This does not mean the mail has bounced.
-                        // This is a case we could only check by retrieving a bounce notification.
+                        // N.B.: This does not mean the mail has bounced, which is a case we could only check by retrieving
+                        // a bounce notification.
                         if (throwable != null) {
                             LOGGER.error(
                                     "Encountered exception while trying to send mail to {}", match.getDonor(), throwable

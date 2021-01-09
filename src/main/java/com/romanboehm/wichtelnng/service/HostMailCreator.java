@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.service;
 
-import com.romanboehm.wichtelnng.config.MailConfig;
 import com.romanboehm.wichtelnng.exception.WichtelnMailCreationException;
 import com.romanboehm.wichtelnng.model.Event;
 import com.romanboehm.wichtelnng.model.SendResult;
@@ -39,7 +38,7 @@ public class HostMailCreator {
             message.setSubject(String.format(
                     "The invitations for your Wichteln event '%s' have been sent", event.getTitle()
             ));
-            message.setFrom(MailConfig.FROM_ADDRESS);
+            message.setFrom("wichteln@romanboehm.com");
             message.setTo(event.getHost().getEmail());
 
             Context ctx = new Context();

@@ -25,18 +25,12 @@ public class AsyncHostMailer {
 
     public CompletableFuture<SendResult> send(Event event, List<SendResult> sendResults) {
         MimeMessage hostMessage = hostMailCreator.createHostMessage(event, sendResults);
-        LOGGER.debug(
-                "Created mail for {} informing {} about {}",
-                event,
-                event.getHost(),
-                sendResults.stream().map(SendResult::toString).collect(Collectors.joining(", "))
-        );
         return mailSender.send(hostMessage).handle(
                 (__, throwable) -> {
                     String name = event.getHost().getName();
                     String email = event.getHost().getEmail();
-                    // N.B.: This does not mean the mail has bounced.
-                    // This is a case we could only check by retrieving a bounce notification.
+                    // N.B.: This does not mean the mail has bounced, which is a case we could only check by retrieving
+                    // a bounce notification.
                     if (throwable != null) {
                         LOGGER.error(
                                 "Encountered exception while trying to send mail to {}", event.getHost(), throwable

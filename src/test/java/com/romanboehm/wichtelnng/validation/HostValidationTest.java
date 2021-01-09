@@ -2,10 +2,9 @@ package com.romanboehm.wichtelnng.validation;
 
 import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.Host;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class HostValidationTest extends BaseValidationTest {
 
@@ -13,7 +12,7 @@ public class HostValidationTest extends BaseValidationTest {
     public void shouldAcceptValidHost() {
         Host host = TestData.host();
 
-        assertThat(getValidator().validate(host)).isEmpty();
+        Assertions.assertThat(getValidator().validate(host)).isEmpty();
     }
 
     @Nested
@@ -23,7 +22,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setName(host.getName().repeat(20));
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -31,7 +30,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setName("");
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -39,7 +38,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setName(" ");
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -47,7 +46,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setName(null);
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
     }
 
@@ -58,7 +57,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setEmail("not an email address");
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -66,7 +65,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setEmail("");
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -74,7 +73,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setEmail(" ");
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
 
         @Test
@@ -82,7 +81,7 @@ public class HostValidationTest extends BaseValidationTest {
             Host host = TestData.host();
             host.setEmail(null);
 
-            assertThat(getValidator().validate(host)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(host)).isNotEmpty();
         }
     }
 

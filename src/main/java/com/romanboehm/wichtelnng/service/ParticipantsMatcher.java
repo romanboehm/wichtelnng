@@ -2,6 +2,8 @@ package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.model.Participant;
 import com.romanboehm.wichtelnng.model.ParticipantsMatch;
+import com.romanboehm.wichtelnng.model.ParticipantsMatch.Donor;
+import com.romanboehm.wichtelnng.model.ParticipantsMatch.Recipient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,8 +30,8 @@ public class ParticipantsMatcher {
         return IntStream.range(0, participants.size())
                 .mapToObj(i -> {
                     ParticipantsMatch participantsMatch = new ParticipantsMatch(
-                            new ParticipantsMatch.Donor(participants.get(i)),
-                            new ParticipantsMatch.Recipient(copy.get(i))
+                            new Donor(participants.get(i)),
+                            new Recipient(copy.get(i))
                     );
                     LOGGER.debug("Created match {}", participantsMatch);
                     return participantsMatch;

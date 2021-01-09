@@ -2,10 +2,9 @@ package com.romanboehm.wichtelnng.validation;
 
 import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.Participant;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ParticipantValidationTest extends BaseValidationTest {
 
@@ -13,7 +12,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
     public void shouldAcceptValidParticipant() {
         Participant participant = TestData.participant();
 
-        assertThat(getValidator().validate(participant)).isEmpty();
+        Assertions.assertThat(getValidator().validate(participant)).isEmpty();
     }
 
     @Nested
@@ -24,7 +23,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setName(participant.getName().repeat(20));
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -32,7 +31,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setName("");
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -40,7 +39,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setName(" ");
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -48,7 +47,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setName(null);
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
     }
 
@@ -59,7 +58,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setEmail("not an email address");
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -67,7 +66,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setEmail("");
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -75,7 +74,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setEmail(" ");
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
 
         @Test
@@ -83,7 +82,7 @@ public class ParticipantValidationTest extends BaseValidationTest {
             Participant participant = TestData.participant();
             participant.setEmail(null);
 
-            assertThat(getValidator().validate(participant)).isNotEmpty();
+            Assertions.assertThat(getValidator().validate(participant)).isNotEmpty();
         }
     }
 
