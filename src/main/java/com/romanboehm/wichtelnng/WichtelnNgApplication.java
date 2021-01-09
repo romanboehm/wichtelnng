@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WichtelnApplication {
+public class WichtelnNgApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WichtelnApplication.class, args);
+		SpringApplication.run(WichtelnNgApplication.class, args);
 	}
 
 }

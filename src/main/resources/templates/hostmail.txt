@@ -7,11 +7,11 @@ We sent out the following invitations for '[( ${event.title} )]':
 [/]
 [/]
 [# th:if="${not #lists.isEmpty(failedResults)}"]
-The following participants could not be reached:
+Mails to the following participants could not be sent:
 [# th:each="result : ${failedResults}"]
 - [( ${result.name} )], [( ${result.email} )]
 [/]
 [/]
-Please be aware that we cannot guarantee the correctness of the email addresses you entered themselves. So some of the emails might still have bounced.
+Please be aware that mails could still bounce and therefore participants not be reached.
 
-This mail was generated using https://wichteln.rmnbhm.com
+This mail was generated using https://wichtelnng.romanboehm.com
