@@ -32,8 +32,8 @@ public class WichtelnController {
         return new ModelAndView("wichteln", Map.of("event", Event.withMinimalDefaults()), HttpStatus.OK);
     }
 
-    @PostMapping("/preview")
-    public ModelAndView previewEvent(@ModelAttribute @Valid Event event, BindingResult bindingResult) {
+    @PostMapping("/save")
+    public ModelAndView saveEvent(@ModelAttribute @Valid Event event, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             LOGGER.debug(
                     "Failed to create {} because {}",
@@ -44,17 +44,9 @@ public class WichtelnController {
             );
             return new ModelAndView("wichteln", HttpStatus.BAD_REQUEST);
         }
-        LOGGER.info("Previewed {}", event);
-        return new ModelAndView("wichteln", Map.of("preview", true), HttpStatus.OK);
-    }
-
-    @PostMapping("/save")
-    public ModelAndView submitEvent(@ModelAttribute @Valid Event event, BindingResult bindingResult) {
-        if (!bindingResult.hasErrors()) {
-            wichtelnService.save(event);
-            LOGGER.info("Saved {}", event);
-        }
-        return new ModelAndView("redirect:/wichteln");
+        wichtelnService.save(event);
+        LOGGER.info("Saved {}", event);
+        return new ModelAndView("wichteln", Map.of("submitted", true), HttpStatus.OK);
     }
 
     @PostMapping("/add")

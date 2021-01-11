@@ -12,12 +12,12 @@
           th:object="${event}"
           method="post">
         <!-- Show in "form" mode only -->
-        <div th:hidden="${preview}?: 'false'">
+        <div th:hidden="${submitted}?: 'false'">
             <button type="submit"
-                    id="preview-button"
+                    id="submit-button"
                     class="btn btn-primary my-3 mr-3"
-                    th:formaction="@{/wichteln/preview}">
-                Preview...
+                    th:formaction="@{/wichteln/save}">
+                Submit
             </button>
             <button type="reset"
                     id="reset-button"
@@ -26,24 +26,14 @@
             </button>
             <div th:replace="fragments/form :: event-creation-form-inputs"></div>
         </div>
-        <!-- Render in preview mode only -->
-        <div th:if="${preview}">
+        <!-- Render in "submitted" mode only -->
+        <div th:if="${submitted}">
             <button type="button"
-                    id="back-button"
+                    id="new-event-button"
                     class="btn btn-secondary my-3 mr-3"
-                    onclick="history.back()">
-                Back
+                    th:formaction="@{/wichteln}">
+                New Event
             </button>
-            <button type="submit"
-                    id="submit-button"
-                    class="btn btn-primary my-3"
-                    th:formaction="@{/wichteln/save}">
-                Submit
-            </button>
-            <p>This is what your email will look like:</p>
-            <blockquote style="background: #eee;border-radius: 5px; padding: 15px;">
-                    <div th:replace="fragments/matchmail :: match-mail(donor='Angus Young', recipient='Phil Rudd', event=${event})"></div>
-            </blockquote>
         </div>
     </form>
 </div> <!-- /container -->

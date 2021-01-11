@@ -1,11 +1,5 @@
 version: '3'
 services:
-  wichtelnng-mailserver:
-    container_name: wichtelnng-mailserver
-    image: greenmail/standalone:1.6.0
-    ports:
-      - "3025:3025"
-      - "3143:3143"
   wichtelnng-db:
     container_name: wichtelnng-db
     image: postgres:latest
@@ -23,15 +17,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_MAIL_HOST: wichteln-mailserver
-      SPRING_MAIL_PORT: 3025
-      SPRING_MAIL_USERNAME: testuser
-      SPRING_MAIL_PASSWORD: test_password
-      SPRING_MAIL_PROTOCOL: smtp
       SPRING_DATASOURCE_URL: jdbc:postgresql://wichtelnng-db:5432/wichtelnng
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       LOGGING_LEVEL_COM_ROMANBOEHM_WICHTELNNG: DEBUG
     depends_on:
       - wichtelnng-db
-      - wichtelnng-mailserver
