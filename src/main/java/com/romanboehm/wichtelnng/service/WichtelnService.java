@@ -16,7 +16,6 @@ public class WichtelnService {
     }
 
     public void save(Event event) {
-        /* List<ParticipantsMatch> matches = matcher.match(event.getParticipants());
-        wichtelnMailer.send(event, matches); */
+        // TODO: Implement
     }
 }

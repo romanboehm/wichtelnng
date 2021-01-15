@@ -18,10 +18,6 @@ public class Event {
 
     public static Event withMinimalDefaults() {
         Event event = new Event();
-        // at least three participants needed
-        event.addParticipant(new Participant());
-        event.addParticipant(new Participant());
-        event.addParticipant(new Participant());
         MonetaryAmount monetaryAmount = new MonetaryAmount();
         monetaryAmount.setCurrency(Monetary.getCurrency("EUR")); // set default currency
         event.setMonetaryAmount(monetaryAmount);
@@ -61,7 +57,6 @@ public class Event {
     private Host host;
 
     @NotNull
-    @Size(min = 3, max = 100)
     private List<@Valid Participant> participants;
 
     public Event() {

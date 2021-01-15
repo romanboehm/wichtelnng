@@ -143,69 +143,6 @@
             </div>
         </div>
     </fieldset>
-    <fieldset>
-        <legend>Who?</legend>
-        <table id="participants-table" class="table table-borderless table-sm">
-            <thead class="thead-light">
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th th:hidden="${#lists.size(event.participants)} lt 4"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="participant, itemStat : *{participants}">
-                <td>
-                    <input th:field="*{participants[__${itemStat.index}__].name}"
-                           th:class="'form-control ' + ${#fields.hasErrors('*{participants[__${itemStat.index}__].name}') ? 'is-invalid' : ''}"
-                           type="text"
-                           th:placeholder="'Young No. ' +  ${itemStat.index + 1}"
-                           required/>
-                    <div th:id="participants__${itemStat.index}__-name-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('*{participants[__${itemStat.index}__].name}')}">
-                        Must be between 1 and 100 characters long.
-                    </div>
-                </td>
-                <td>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">@</span>
-                        </div>
-                        <input th:field="*{participants[__${itemStat.index}__].email}"
-                               th:class="'form-control ' + ${#fields.hasErrors('*{participants[__${itemStat.index}__].email}') ? 'is-invalid' : ''}"
-                               type="email"
-                               th:placeholder="'young' +  ${itemStat.index + 1} + '@acdc.net'"
-                               required/>
-                        <div th:id="participants__${itemStat.index}__-email-error"
-                             class="invalid-feedback"
-                             th:if="${#fields.hasErrors('*{participants[__${itemStat.index}__].email}')}">
-                            Must be a valid email address.
-                        </div>
-                    </div>
-                </td>
-                <td style="text-align: center; vertical-align: middle;"
-                    th:hidden="${#lists.size(event.participants)} lt 4">
-                    <button formnovalidate
-                            th:id="remove-participants__${itemStat.index}__-button"
-                            class="btn btn-danger btn-sm rounded-0"
-                            type="submit"
-                            title="Delete"
-                            th:formaction="@{/wichteln/remove/{participantIndex}(participantIndex=${itemStat.index})}">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <button formnovalidate
-                id="add-participant-button"
-                class="btn btn-secondary mb-3"
-                type="submit"
-                th:formaction="@{/wichteln/add}">
-            Add participant
-        </button>
-    </fieldset>
 </div>
 </body>
 </html>

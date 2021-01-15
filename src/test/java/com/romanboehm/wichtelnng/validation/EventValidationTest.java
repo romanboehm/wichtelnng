@@ -107,36 +107,6 @@ public class EventValidationTest extends BaseValidationTest {
         }
 
         @Test
-        public void shouldFailEventWithLessThanThreeParticipants() {
-            Event event = TestData.event().asObject();
-            List<Participant> oneParticipantTooFew = IntStream.rangeClosed(1, 2)
-                    .mapToObj(value -> {
-                        Participant participant = new Participant();
-                        participant.setName("Name" + value);
-                        participant.setEmail("Email@" + value);
-                        return participant;
-                    }).collect(Collectors.toList());
-            event.setParticipants(oneParticipantTooFew);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithMoreThanOneHundredParticipants() {
-            Event event = TestData.event().asObject();
-            List<Participant> oneParticipantTooMany = IntStream.rangeClosed(1, 101)
-                    .mapToObj(value -> {
-                        Participant participant = new Participant();
-                        participant.setName("Name" + value);
-                        participant.setEmail("Email@" + value);
-                        return participant;
-                    }).collect(Collectors.toList());
-            event.setParticipants(oneParticipantTooMany);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
         public void shouldFailEventWithInvalidParticipant() {
             Event event = TestData.event().asObject();
             Participant participant = new Participant();
@@ -144,7 +114,6 @@ public class EventValidationTest extends BaseValidationTest {
             participant.setEmail(null);
             List<Participant> participants = new ArrayList<>();
             participants.add(participant);
-            participants.addAll(event.getParticipants().subList(1, event.getParticipants().size() - 1));
             event.setParticipants(participants);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();

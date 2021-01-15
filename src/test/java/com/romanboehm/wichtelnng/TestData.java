@@ -27,16 +27,6 @@ public class TestData {
         acdcSanta.setLocalTime(LocalTime.of(6, 6));
         acdcSanta.setPlace("Sydney Harbor");
         acdcSanta.setHost(host());
-        Participant angusYoung = new Participant();
-        angusYoung.setName("Angus Young");
-        angusYoung.setEmail("angusyoung@acdc.net");
-        Participant malcolmYoung = new Participant();
-        malcolmYoung.setName("Malcolm Young");
-        malcolmYoung.setEmail("malcolmyoung@acdc.net");
-        Participant philRudd = new Participant();
-        philRudd.setName("Phil Rudd");
-        philRudd.setEmail("philrudd@acdc.net");
-        acdcSanta.setParticipants(List.of(angusYoung, malcolmYoung, philRudd));
         return new EventTypeStage(acdcSanta);
     }
 
@@ -88,12 +78,6 @@ public class TestData {
             map.add("place", event.getPlace());
             map.add("host.name", event.getHost().getName());
             map.add("host.email", event.getHost().getEmail());
-            map.add("participants[0].name", event.getParticipants().get(0).getName());
-            map.add("participants[0].email", event.getParticipants().get(0).getEmail());
-            map.add("participants[1].name", event.getParticipants().get(1).getName());
-            map.add("participants[1].email", event.getParticipants().get(1).getEmail());
-            map.add("participants[2].name", event.getParticipants().get(2).getName());
-            map.add("participants[2].email", event.getParticipants().get(2).getEmail());
             return map;
         }
     }

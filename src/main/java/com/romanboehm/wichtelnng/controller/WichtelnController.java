@@ -48,22 +48,4 @@ public class WichtelnController {
         LOGGER.info("Saved {}", event);
         return new ModelAndView("wichteln", Map.of("submitted", true), HttpStatus.OK);
     }
-
-    @PostMapping("/add")
-    public ModelAndView addParticipant(@ModelAttribute Event event) {
-        event.addParticipant(new Participant());
-        LOGGER.debug("Added participant to {}", event);
-        return new ModelAndView("wichteln", HttpStatus.OK);
-    }
-
-    @PostMapping("/remove/{index}")
-    public ModelAndView removeParticipant(
-            @PathVariable(name = "index") Integer participantIndex,
-            @ModelAttribute Event event
-    ) {
-        event.removeParticipantNumber(participantIndex);
-        LOGGER.debug("Removed participant {} from {}", participantIndex, event);
-
-        return new ModelAndView("wichteln", HttpStatus.OK);
-    }
 }
