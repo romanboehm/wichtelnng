@@ -31,7 +31,7 @@ public class WichtelnNgTestApplication {
          return Map.of(
                "spring.datasource.url", postgres.getJdbcUrl(),
                "spring.datasource.username", postgres.getUsername(),
-               "spring.datasource.password",postgres.getPassword()
+               "spring.datasource.password", postgres.getPassword()
          );
         }
 
