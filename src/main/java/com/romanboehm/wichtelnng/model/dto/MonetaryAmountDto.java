@@ -1,11 +1,11 @@
-package com.romanboehm.wichtelnng.model;
+package com.romanboehm.wichtelnng.model.dto;
 
 import javax.money.CurrencyUnit;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class MonetaryAmount {
+public class MonetaryAmountDto {
 
     @NotNull
     @Min(0)
@@ -14,7 +14,7 @@ public class MonetaryAmount {
     @NotNull
     private CurrencyUnit currency;
 
-    public MonetaryAmount() {
+    public MonetaryAmountDto() {
     }
 
     public BigDecimal getNumber() {

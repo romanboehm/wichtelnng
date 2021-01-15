@@ -1,7 +1,6 @@
 package com.romanboehm.wichtelnng.controller;
 
-import com.romanboehm.wichtelnng.model.Event;
-import com.romanboehm.wichtelnng.model.Participant;
+import com.romanboehm.wichtelnng.model.dto.EventDto;
 import com.romanboehm.wichtelnng.service.WichtelnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -29,11 +31,11 @@ public class WichtelnController {
 
     @GetMapping
     public ModelAndView getEvent() {
-        return new ModelAndView("wichteln", Map.of("event", Event.withMinimalDefaults()), HttpStatus.OK);
+        return new ModelAndView("wichteln", Map.of("event", EventDto.withMinimalDefaults()), HttpStatus.OK);
     }
 
     @PostMapping("/save")
-    public ModelAndView saveEvent(@ModelAttribute @Valid Event event, BindingResult bindingResult) {
+    public ModelAndView saveEvent(@ModelAttribute @Valid EventDto event, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             LOGGER.debug(
                     "Failed to create {} because {}",

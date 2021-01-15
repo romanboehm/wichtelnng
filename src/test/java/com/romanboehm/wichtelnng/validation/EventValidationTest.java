@@ -1,10 +1,10 @@
 package com.romanboehm.wichtelnng.validation;
 
 import com.romanboehm.wichtelnng.TestData;
-import com.romanboehm.wichtelnng.model.Event;
-import com.romanboehm.wichtelnng.model.Host;
-import com.romanboehm.wichtelnng.model.MonetaryAmount;
-import com.romanboehm.wichtelnng.model.Participant;
+import com.romanboehm.wichtelnng.model.dto.EventDto;
+import com.romanboehm.wichtelnng.model.dto.HostDto;
+import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
+import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,14 +14,12 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class EventValidationTest extends BaseValidationTest {
 
     @Test
     public void shouldAcceptValidEvent() {
-        Event event = TestData.event().asObject();
+        EventDto event = TestData.event().asDto();
 
         Assertions.assertThat(getValidator().validate(event)).isEmpty();
     }
@@ -31,7 +29,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithTooLongPlace() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setPlace(event.getPlace().repeat(100));
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -39,7 +37,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullPlace() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setPlace(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -47,7 +45,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithEmptyPlace() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setPlace("");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -55,7 +53,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithWhitespacePlace() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setPlace(" ");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -67,8 +65,8 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithInvalidMonetaryAmount() {
-            Event event = TestData.event().asObject();
-            MonetaryAmount monetaryAmount = new MonetaryAmount();
+            EventDto event = TestData.event().asDto();
+            MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
             event.setMonetaryAmount(monetaryAmount);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -76,7 +74,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullMonetaryAmount() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setMonetaryAmount(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -84,7 +82,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullHost() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setHost(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -92,15 +90,15 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithInvalidHost() {
-            Event event = TestData.event().asObject();
-            event.setHost(new Host());
+            EventDto event = TestData.event().asDto();
+            event.setHost(new HostDto());
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullParticipants() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setParticipants(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -108,11 +106,11 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithInvalidParticipant() {
-            Event event = TestData.event().asObject();
-            Participant participant = new Participant();
+            EventDto event = TestData.event().asDto();
+            ParticipantDto participant = new ParticipantDto();
             participant.setName(null);
             participant.setEmail(null);
-            List<Participant> participants = new ArrayList<>();
+            List<ParticipantDto> participants = new ArrayList<>();
             participants.add(participant);
             event.setParticipants(participants);
 
@@ -126,7 +124,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithTooLongTitle() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setTitle(event.getTitle().repeat(100));
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -134,7 +132,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullTitle() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setTitle(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -142,7 +140,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithEmptyTitle() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setTitle("");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -150,7 +148,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithWhitespaceTitle() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setTitle(" ");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -162,7 +160,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithTooLongDescription() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setDescription(event.getDescription().repeat(1000));
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -170,7 +168,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullDescription() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setDescription(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -178,7 +176,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithEmptyDescription() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setDescription("");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -186,7 +184,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithWhitespaceDescription() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setDescription(" ");
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -199,7 +197,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithPastLocalDateTime() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             LocalDate today = LocalDate.now();
             event.setLocalDate(today);
             LocalTime pastTime = LocalTime.now().minus(1, ChronoUnit.HOURS);
@@ -210,7 +208,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullLocalDate() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setLocalDate(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
@@ -218,7 +216,7 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithNullLocalTime() {
-            Event event = TestData.event().asObject();
+            EventDto event = TestData.event().asDto();
             event.setLocalTime(null);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();

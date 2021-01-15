@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.model;
+package com.romanboehm.wichtelnng.model.dto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,13 +33,13 @@ public class ParticipantsMatch {
 
 
     public static class Recipient {
-        private final Participant participant;
+        private final ParticipantDto participant;
 
-        public Recipient(Participant participant) {
+        public Recipient(ParticipantDto participant) {
             this.participant = participant;
         }
 
-        public Participant getParticipant() {
+        public ParticipantDto getParticipant() {
             return this.participant;
         }
 
@@ -54,13 +54,13 @@ public class ParticipantsMatch {
     }
 
     public static class Donor {
-        private final Participant participant;
+        private final ParticipantDto participant;
 
-        public Donor(Participant participant) {
+        public Donor(ParticipantDto participant) {
             this.participant = participant;
         }
 
-        public Participant getParticipant() {
+        public ParticipantDto getParticipant() {
             return this.participant;
         }
 

@@ -1,8 +1,8 @@
 package com.romanboehm.wichtelnng.service;
 
 
-import com.romanboehm.wichtelnng.model.Participant;
-import com.romanboehm.wichtelnng.model.ParticipantsMatch;
+import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
+import com.romanboehm.wichtelnng.model.dto.ParticipantsMatch;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -13,11 +13,11 @@ public class ParticipantsMatcherTest {
     @Test
     public void shouldShuffle() {
         ParticipantsMatcher participantsMatcher = new ParticipantsMatcher();
-        Participant angusYoung = new Participant();
+        ParticipantDto angusYoung = new ParticipantDto();
         angusYoung.setName("Angus Young");
-        Participant malcolmYoung = new Participant();
+        ParticipantDto malcolmYoung = new ParticipantDto();
         malcolmYoung.setName("Malcolm Young");
-        Participant philRudd = new Participant();
+        ParticipantDto philRudd = new ParticipantDto();
         philRudd.setName("Phil Rudd");
 
         List<ParticipantsMatch> participantsMatches = participantsMatcher.match(

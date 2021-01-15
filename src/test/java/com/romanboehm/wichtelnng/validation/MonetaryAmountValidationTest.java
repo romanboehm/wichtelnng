@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.validation;
 
 import com.romanboehm.wichtelnng.TestData;
-import com.romanboehm.wichtelnng.model.MonetaryAmount;
+import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,7 +14,7 @@ public class MonetaryAmountValidationTest extends BaseValidationTest {
     public class MonetaryAmountNumber {
         @Test
         public void shouldFailMonetaryAmountWithNegativeNumber() {
-            MonetaryAmount monetaryAmount = TestData.monetaryAmount();
+            MonetaryAmountDto monetaryAmount = TestData.monetaryAmount();
             monetaryAmount.setNumber(BigDecimal.valueOf(-1));
 
             Assertions.assertThat(getValidator().validate(monetaryAmount)).isNotEmpty();
@@ -22,7 +22,7 @@ public class MonetaryAmountValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailMonetaryAmountWithNullNumber() {
-            MonetaryAmount monetaryAmount = TestData.monetaryAmount();
+            MonetaryAmountDto monetaryAmount = TestData.monetaryAmount();
             monetaryAmount.setNumber(null);
 
             Assertions.assertThat(getValidator().validate(monetaryAmount)).isNotEmpty();
@@ -33,7 +33,7 @@ public class MonetaryAmountValidationTest extends BaseValidationTest {
     public class MonetaryAmountCurrency {
         @Test
         public void shouldFailMonetaryAmountWithNullCurrency() {
-            MonetaryAmount monetaryAmount = TestData.monetaryAmount();
+            MonetaryAmountDto monetaryAmount = TestData.monetaryAmount();
             monetaryAmount.setCurrency(null);
 
             Assertions.assertThat(getValidator().validate(monetaryAmount)).isNotEmpty();

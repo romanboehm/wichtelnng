@@ -1,10 +1,10 @@
-package com.romanboehm.wichtelnng.model;
+package com.romanboehm.wichtelnng.model.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-public class Host {
+public class ParticipantDto {
 
     @NotBlank
     @Size(max = 100)
@@ -14,7 +14,7 @@ public class Host {
     @Email
     private String email;
 
-    public Host() {
+    public ParticipantDto() {
     }
 
     public String getName() {
@@ -33,7 +33,8 @@ public class Host {
         this.email = email;
     }
 
+
     public String toString() {
-        return String.format("Event.Host(name=%s, email=%s)", this.getName(), this.getEmail());
+        return String.format("Participant(name=%s, email=%s)", this.getName(), this.getEmail());
     }
 }

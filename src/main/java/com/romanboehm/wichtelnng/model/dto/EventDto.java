@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.model;
+package com.romanboehm.wichtelnng.model.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,11 +14,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Event {
+public class EventDto {
 
-    public static Event withMinimalDefaults() {
-        Event event = new Event();
-        MonetaryAmount monetaryAmount = new MonetaryAmount();
+    public static EventDto withMinimalDefaults() {
+        EventDto event = new EventDto();
+        MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
         monetaryAmount.setCurrency(Monetary.getCurrency("EUR")); // set default currency
         event.setMonetaryAmount(monetaryAmount);
         return event;
@@ -34,7 +34,7 @@ public class Event {
 
     @NotNull
     @Valid
-    private MonetaryAmount monetaryAmount;
+    private MonetaryAmountDto monetaryAmount;
 
     // Keep date and time apart since we replaced `input[@type='datetime-local']` with two separate `inputs` for reasons
     // of browser compatibility and ease of use.
@@ -54,20 +54,20 @@ public class Event {
 
     @NotNull
     @Valid
-    private Host host;
+    private HostDto host;
 
     @NotNull
-    private List<@Valid Participant> participants;
+    private List<@Valid ParticipantDto> participants;
 
-    public Event() {
+    public EventDto() {
         participants = new ArrayList<>();
     }
 
-    public void addParticipant(Participant participant) {
+    public void addParticipant(ParticipantDto participant) {
         participants.add(participant);
     }
 
-    private void removeParticipant(Participant participant) {
+    private void removeParticipant(ParticipantDto participant) {
         participants.remove(participant);
     }
 
@@ -91,11 +91,11 @@ public class Event {
         this.description = description;
     }
 
-    public MonetaryAmount getMonetaryAmount() {
+    public MonetaryAmountDto getMonetaryAmount() {
         return monetaryAmount;
     }
 
-    public void setMonetaryAmount(MonetaryAmount monetaryAmount) {
+    public void setMonetaryAmount(MonetaryAmountDto monetaryAmount) {
         this.monetaryAmount = monetaryAmount;
     }
 
@@ -123,19 +123,19 @@ public class Event {
         this.place = place;
     }
 
-    public Host getHost() {
+    public HostDto getHost() {
         return host;
     }
 
-    public void setHost(Host host) {
+    public void setHost(HostDto host) {
         this.host = host;
     }
 
-    public List<Participant> getParticipants() {
+    public List<ParticipantDto> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<Participant> participants) {
+    public void setParticipants(List<ParticipantDto> participants) {
         this.participants = participants;
     }
 

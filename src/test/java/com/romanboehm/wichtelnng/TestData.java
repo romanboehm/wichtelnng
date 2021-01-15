@@ -1,9 +1,11 @@
 package com.romanboehm.wichtelnng;
 
-import com.romanboehm.wichtelnng.model.Event;
-import com.romanboehm.wichtelnng.model.Host;
-import com.romanboehm.wichtelnng.model.MonetaryAmount;
-import com.romanboehm.wichtelnng.model.Participant;
+import com.romanboehm.wichtelnng.model.dto.EventDto;
+import com.romanboehm.wichtelnng.model.dto.HostDto;
+import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
+import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
+import com.romanboehm.wichtelnng.model.entity.Event;
+import com.romanboehm.wichtelnng.model.util.EventBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -19,7 +21,7 @@ import java.util.function.Consumer;
 public class TestData {
 
     public static EventTypeStage event() {
-        Event acdcSanta = new Event();
+        EventDto acdcSanta = new EventDto();
         acdcSanta.setTitle("AC/DC Secret Santa");
         acdcSanta.setDescription("There's gonna be some santa'ing");
         acdcSanta.setMonetaryAmount(monetaryAmount());
@@ -30,39 +32,39 @@ public class TestData {
         return new EventTypeStage(acdcSanta);
     }
 
-    public static Host host() {
-        Host georgeYoung = new Host();
+    public static HostDto host() {
+        HostDto georgeYoung = new HostDto();
         georgeYoung.setName("George Young");
         georgeYoung.setEmail("georgeyoung@acdc.net");
         return georgeYoung;
     }
 
-    public static MonetaryAmount monetaryAmount() {
-        MonetaryAmount monetaryAmount = new MonetaryAmount();
+    public static MonetaryAmountDto monetaryAmount() {
+        MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
         monetaryAmount.setCurrency(Monetary.getCurrency("AUD"));
         monetaryAmount.setNumber(BigDecimal.valueOf(78.50));
         return monetaryAmount;
     }
 
-    public static Participant participant() {
-        Participant angusYoung = new Participant();
+    public static ParticipantDto participant() {
+        ParticipantDto angusYoung = new ParticipantDto();
         angusYoung.setName("Angus Young");
         angusYoung.setEmail("angusyoung@acdc.net");
         return angusYoung;
     }
 
     public static class EventTypeStage {
-        private final Event event;
+        private final EventDto event;
 
-        public EventTypeStage(Event event) {
+        public EventTypeStage(EventDto event) {
             this.event = event;
         }
 
-        public Event asObject() {
+        public EventDto asDto() {
             return event;
         }
 
-        public EventTypeStage modifying(Consumer<Event> eventModifier) {
+        public EventTypeStage modifying(Consumer<EventDto> eventModifier) {
             eventModifier.accept(this.event);
             return this;
         }
@@ -79,6 +81,10 @@ public class TestData {
             map.add("host.name", event.getHost().getName());
             map.add("host.email", event.getHost().getEmail());
             return map;
+        }
+
+        public Event asEntity() {
+            return EventBuilder.from(event);
         }
     }
 }
