@@ -8,11 +8,12 @@
 
 <div class="container-sm">
     <form id="event-creation-form"
-          class="form-horizontal"
+          class="form-horizontal my-3"
           th:object="${event}"
           method="post">
         <!-- Show in "form" mode only -->
         <div th:hidden="${submitted}?: 'false'">
+            <div th:replace="fragments/form :: event-creation-form-inputs"></div>
             <button type="submit"
                     id="submit-button"
                     class="btn btn-primary my-3 mr-3"
@@ -24,7 +25,6 @@
                     class="btn btn-danger my-3">
                 Reset
             </button>
-            <div th:replace="fragments/form :: event-creation-form-inputs"></div>
         </div>
         <!-- Render in "submitted" mode only -->
         <div th:if="${submitted}">
