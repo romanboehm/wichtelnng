@@ -40,7 +40,7 @@ public class WichtelnIntegrationTest {
         )
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.stringContainsInOrder(
-                        "Provide this link to everyone you wish to participate in your Wichteln event <span>\"AC/DC Secret Santa\"</span>",
+                        "Provide this link to everyone you wish to participate in your Wichteln event:",
                         "https://wichtelnng.romanboehm.com/wichteln/" + id
                 )));
     }

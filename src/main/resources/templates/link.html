@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"/>
+
+<body>
+<div th:replace="fragments/header :: header"/>
+<div style="background:transparent !important" class="jumbotron bg-light">
+    <div class="container-lg">
+        <h1 class="display-4">Ready to Wichtel!</h1>
+        <p class="lead">Provide this link to everyone you wish to participate in your Wichteln event</p>
+        <hr class="my-4">
+        <div class="alert alert-primary" role="alert">
+            <a class="alert-link" role="alert" th:href="${link}" th:text="${link}"></a>
+        </div>
+        <a class="btn btn-primary btn-lg my-3" th:href="@{/wichteln}" role="button">New event</a>
+    </div>
+</div>
+</body>
+</html>

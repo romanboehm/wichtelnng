@@ -11,30 +11,156 @@
           class="form-horizontal my-3"
           th:object="${event}"
           method="post">
-        <!-- Show in "form" mode only -->
-        <div th:hidden="${submitted}?: 'false'">
-            <div th:replace="fragments/form :: event-creation-form-inputs"></div>
-            <button type="submit"
-                    id="submit-button"
-                    class="btn btn-primary my-3 mr-3"
-                    th:formaction="@{/wichteln/save}">
-                Submit
-            </button>
-            <button type="reset"
-                    id="reset-button"
-                    class="btn btn-danger my-3">
-                Reset
-            </button>
-        </div>
-        <!-- Render in "submitted" mode only -->
-        <div th:if="${submitted}">
-            <button type="button"
-                    id="new-event-button"
-                    class="btn btn-secondary my-3 mr-3"
-                    th:formaction="@{/wichteln}">
-                New Event
-            </button>
-        </div>
+        <fieldset>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="title">What's the occasion?</label>
+                    <input th:field="*{title}" id="title"
+                           th:class="'form-control ' + ${#fields.hasErrors('title') ? 'is-invalid' : ''}"
+                           type="text"
+                           placeholder="AC/DC Secret Santa"
+                           required/>
+                    <div id="title-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('title')}">
+                        Must be between 1 and 100 characters long.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="description">What do participants need to know?</label>
+                    <textarea th:field="*{description}"
+                              id="description"
+                              th:class="'form-control ' + ${#fields.hasErrors('description') ? 'is-invalid' : ''}"
+                              placeholder="There's gonna be some santa'ing!"
+                              required>
+                                </textarea>
+                    <div id="description-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('description')}">
+                        Must be between 1 and 1000 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="monetary-amount-number">How much to spend on a gift?</label>
+                    <input th:field="*{monetaryAmount.number}"
+                           id="monetary-amount-number"
+                           th:class="'form-control ' + ${#fields.hasErrors('monetaryAmount.number') ? 'is-invalid' : ''}"
+                           type="number"
+                           step="0.01"
+                           placeholder="78"
+                           required/>
+                    <div id="monetary-amount-number-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('monetaryAmount.number')}">
+                        Must be greater than or equal to 0.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="title">In what currency?</label>
+                    <select id="monetary-amount-currency"
+                            class="form-control"
+                            th:field="*{monetaryAmount.currency}">
+                        <option th:each="currency : ${T(javax.money.Monetary).getCurrencies()}"
+                                th:value="${currency}"
+                                th:text="${currency}"
+                                th:selected="*{monetaryAmount.currency}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="local-date">On what day?</label>
+                    <input th:field="*{{localDate}}"
+                           id="local-date"
+                           th:class="'form-control ' + ${#fields.hasErrors('localDateTime') ? 'is-invalid' : ''}"
+                           type="date"
+                           required/>
+                    <div id="local-date-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('localDateTime')}">
+                        Must take place in the future.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="local-time">At what hour?</label>
+                    <input th:field="*{{localTime}}"
+                           id="local-time"
+                           th:class="'form-control ' + ${#fields.hasErrors('localDateTime') ? 'is-invalid' : ''}"
+                           type="time"
+                           required/>
+                    <div id="local-time-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('localDateTime')}">
+                        Must take place in the future.
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="place">Where?</label>
+                    <input th:field="*{place}"
+                           id="place"
+                           th:class="'form-control ' + ${#fields.hasErrors('place') ? 'is-invalid' : ''}"
+                           type="text"
+                           placeholder="Sydney Harbor"
+                           required/>
+                    <div id="place-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('place')}">
+                        Must be between 1 and 100 characters long.
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="host-name">Who's hosting?</label>
+                    <input th:field="*{host.name}"
+                           id="host-name"
+                           th:class="'form-control ' + ${#fields.hasErrors('host.name') ? 'is-invalid' : ''}"
+                           type="text"
+                           placeholder="George Young"
+                           required/>
+                    <div id="host-name-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('host.name')}">
+                        Must be between 1 and 100 characters long.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="place">What's their email?</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">@</span>
+                        </div>
+                        <input th:field="*{host.email}"
+                               id="host-email"
+                               th:class="'form-control ' + ${#fields.hasErrors('host.email') ? 'is-invalid' : ''}"
+                               type="text"
+                               placeholder="georgeyoung@acdc.net"
+                               required/>
+                        <div id="host-email-error"
+                             class="invalid-feedback"
+                             th:if="${#fields.hasErrors('host.email')}">
+                            Must be a valid email address.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <button type="submit"
+                id="submit-button"
+                class="btn btn-primary my-3 mr-3"
+                th:formaction="@{/wichteln/save}">
+            Submit
+        </button>
+        <button type="reset"
+                id="reset-button"
+                class="btn btn-danger my-3">
+            Reset
+        </button>
     </form>
 </div> <!-- /container -->
 </body>

@@ -19,9 +19,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Testcontainers
 @ExtendWith(ScreenshotOnFailureExtension.class)

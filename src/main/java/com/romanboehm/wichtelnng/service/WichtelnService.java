@@ -7,8 +7,7 @@ import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.URI;
 
 @Service
 public class WichtelnService {
@@ -24,13 +23,8 @@ public class WichtelnService {
     }
 
     @Transactional
-    public void save(EventDto dto) {
+    public URI save(EventDto dto) {
         Event saved = eventRepository.save(EventBuilder.from(dto));
-        try {
-            System.out.println(InetAddress.getLocalHost());
-        } catch (UnknownHostException e) {
-
-        }
-        System.out.println(InetAddress.getLoopbackAddress());
+        return linkCreator.forEvent(saved);
     }
 }
