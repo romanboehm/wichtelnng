@@ -57,11 +57,7 @@ public class EventDto {
     private HostDto host;
 
     @NotNull
-    private List<@Valid ParticipantDto> participants;
-
-    public EventDto() {
-        participants = new ArrayList<>();
-    }
+    private List<@Valid ParticipantDto> participants = new ArrayList<>();
 
     public void addParticipant(ParticipantDto participant) {
         participants.add(participant);
@@ -79,64 +75,72 @@ public class EventDto {
         return title;
     }
 
-    public void setTitle(String title) {
+    public EventDto setTitle(String title) {
         this.title = title;
+        return this;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public EventDto setDescription(String description) {
         this.description = description;
+        return this;
     }
 
     public MonetaryAmountDto getMonetaryAmount() {
         return monetaryAmount;
     }
 
-    public void setMonetaryAmount(MonetaryAmountDto monetaryAmount) {
+    public EventDto setMonetaryAmount(MonetaryAmountDto monetaryAmount) {
         this.monetaryAmount = monetaryAmount;
+        return this;
     }
 
     public LocalDate getLocalDate() {
         return localDate;
     }
 
-    public void setLocalDate(LocalDate localDate) {
+    public EventDto setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
+        return this;
     }
 
     public LocalTime getLocalTime() {
         return localTime;
     }
 
-    public void setLocalTime(LocalTime localTime) {
+    public EventDto setLocalTime(LocalTime localTime) {
         this.localTime = localTime;
+        return this;
     }
 
     public String getPlace() {
         return place;
     }
 
-    public void setPlace(String place) {
+    public EventDto setPlace(String place) {
         this.place = place;
+        return this;
     }
 
     public HostDto getHost() {
         return host;
     }
 
-    public void setHost(HostDto host) {
+    public EventDto setHost(HostDto host) {
         this.host = host;
+        return this;
     }
 
     public List<ParticipantDto> getParticipants() {
         return participants;
     }
 
-    public void setParticipants(List<ParticipantDto> participants) {
+    public EventDto setParticipants(List<ParticipantDto> participants) {
         this.participants = participants;
+        return this;
     }
 
     // Needed to delegate validation for event's "when" (its local date at its local time) to the javax validator

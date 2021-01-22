@@ -14,23 +14,22 @@ public class MonetaryAmountDto {
     @NotNull
     private CurrencyUnit currency;
 
-    public MonetaryAmountDto() {
-    }
-
     public BigDecimal getNumber() {
         return number;
     }
 
-    public void setNumber(BigDecimal number) {
+    public MonetaryAmountDto setNumber(BigDecimal number) {
         this.number = number;
+        return this;
     }
 
     public CurrencyUnit getCurrency() {
         return currency;
     }
 
-    public void setCurrency(CurrencyUnit currency) {
+    public MonetaryAmountDto setCurrency(CurrencyUnit currency) {
         this.currency = currency;
+        return this;
     }
 
     public String toString() {

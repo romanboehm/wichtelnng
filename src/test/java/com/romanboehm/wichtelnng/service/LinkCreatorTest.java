@@ -16,7 +16,7 @@ public class LinkCreatorTest {
     public void shouldCreateLink() {
         LinkCreator linkCreator = new LinkCreator("https://wichteln.com");
         UUID id = UUID.nameUUIDFromBytes("acdc-secret-santa".getBytes(StandardCharsets.UTF_8));
-        Event event = TestData.event().asEntity().setId(id);
+        Event event = TestData.event().entity().setId(id);
 
         URI actual = linkCreator.forEvent(event);
 

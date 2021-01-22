@@ -29,14 +29,14 @@ public class WichtelnIntegrationTest {
     @Test
     public void shouldDoGetFormSaveProvideLinkFlow() throws Exception {
         UUID id = UUID.nameUUIDFromBytes("acdc-secret-santa".getBytes(StandardCharsets.UTF_8));
-        Mockito.when(eventRepository.save(Mockito.any())).thenReturn(TestData.event().asEntity().setId(id));
+        Mockito.when(eventRepository.save(Mockito.any())).thenReturn(TestData.event().entity().setId(id));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/wichteln"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
         mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(TestData.event().asFormParams())
+                .params(TestData.event().formParams())
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrlTemplate(

@@ -20,36 +20,34 @@ import java.util.function.Consumer;
 public class TestData {
 
     public static EventTypeStage event() {
-        EventDto acdcSanta = new EventDto();
-        acdcSanta.setTitle("AC/DC Secret Santa");
-        acdcSanta.setDescription("There's gonna be some santa'ing");
-        acdcSanta.setMonetaryAmount(monetaryAmount());
-        acdcSanta.setLocalDate(LocalDate.of(2666, Month.JUNE, 7));
-        acdcSanta.setLocalTime(LocalTime.of(6, 6));
-        acdcSanta.setPlace("Sydney Harbor");
-        acdcSanta.setHost(host());
-        return new EventTypeStage(acdcSanta);
+        return new EventTypeStage(
+                new EventDto()
+                        .setTitle("AC/DC Secret Santa")
+                        .setDescription("There's gonna be some santa'ing")
+                        .setMonetaryAmount(monetaryAmount())
+                        .setLocalDate(LocalDate.of(2666, Month.JUNE, 7))
+                        .setLocalTime(LocalTime.of(6, 6))
+                        .setPlace("Sydney Harbor")
+                        .setHost(host())
+        );
     }
 
     public static HostDto host() {
-        HostDto georgeYoung = new HostDto();
-        georgeYoung.setName("George Young");
-        georgeYoung.setEmail("georgeyoung@acdc.net");
-        return georgeYoung;
+        return new HostDto()
+                .setName("George Young")
+                .setEmail("georgeyoung@acdc.net");
     }
 
     public static MonetaryAmountDto monetaryAmount() {
-        MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
-        monetaryAmount.setCurrency(Monetary.getCurrency("AUD"));
-        monetaryAmount.setNumber(BigDecimal.valueOf(78.50));
-        return monetaryAmount;
+        return new MonetaryAmountDto()
+                .setCurrency(Monetary.getCurrency("AUD"))
+                .setNumber(BigDecimal.valueOf(78.50));
     }
 
     public static ParticipantDto participant() {
-        ParticipantDto angusYoung = new ParticipantDto();
-        angusYoung.setName("Angus Young");
-        angusYoung.setEmail("angusyoung@acdc.net");
-        return angusYoung;
+        return new ParticipantDto()
+                .setName("Angus Young")
+                .setEmail("angusyoung@acdc.net");
     }
 
     public static class EventTypeStage {
@@ -59,16 +57,15 @@ public class TestData {
             this.event = event;
         }
 
-        public EventDto asDto() {
+        public EventDto dto() {
             return event;
         }
 
-        public EventTypeStage modifying(Consumer<EventDto> eventModifier) {
-            eventModifier.accept(this.event);
-            return this;
+        public Event entity() {
+            return EventBuilder.from(event);
         }
 
-        public MultiValueMap<String, String> asFormParams() {
+        public MultiValueMap<String, String> formParams() {
             LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
             map.add("title", event.getTitle());
             map.add("description", event.getDescription());
@@ -80,10 +77,6 @@ public class TestData {
             map.add("host.name", event.getHost().getName());
             map.add("host.email", event.getHost().getEmail());
             return map;
-        }
-
-        public Event asEntity() {
-            return EventBuilder.from(event);
         }
     }
 }

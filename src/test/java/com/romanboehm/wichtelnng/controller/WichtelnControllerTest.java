@@ -12,8 +12,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 @WebMvcTest
@@ -28,16 +30,17 @@ public class WichtelnControllerTest {
 
     @Test
     public void shouldValidate() throws Exception {
-        LocalDate invalidDate = LocalDate.now().minus(1, ChronoUnit.DAYS);
+        MultiValueMap<String, String> params = TestData.event().formParams();
+        params.set(
+                "localDate",
+                LocalDate
+                        .now().minus(1, ChronoUnit.DAYS)
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        );
 
         mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(
-                        TestData
-                                .event()
-                                .modifying(event -> event.setLocalDate(invalidDate))
-                                .asFormParams()
-                )
+                .params(params)
         )
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(

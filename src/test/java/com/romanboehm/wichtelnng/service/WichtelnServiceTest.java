@@ -24,7 +24,7 @@ public class WichtelnServiceTest {
 
     @Test
     public void shouldSave() {
-        wichtelnService.save(TestData.event().asDto());
+        wichtelnService.save(TestData.event().dto());
         Assertions.assertThat(eventRepository.findAll())
                 .hasOnlyOneElementSatisfying(event -> {
                     Assertions.assertThat(event.getId()).isNotNull();

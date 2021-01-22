@@ -14,23 +14,22 @@ public class HostDto {
     @Email
     private String email;
 
-    public HostDto() {
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public HostDto setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public HostDto setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public String toString() {
