@@ -9,22 +9,21 @@ import java.util.UUID;
 
 public class EventBuilder {
     public static Event from(EventDto dto) {
-        Event entity = new Event()
+        return new Event()
                 .setId(UUID.randomUUID())
                 .setTitle(dto.getTitle())
                 .setDescription(dto.getDescription())
                 .setLocalDateTime(dto.getLocalDateTime())
-                .setPlace(dto.getPlace());
-        entity.setHost(
-                new Host()
-                        .setName(dto.getHost().getName())
-                        .setEmail(dto.getHost().getEmail())
-        );
-        entity.setMonetaryAmount(
-                new MonetaryAmount()
-                        .setNumber(dto.getMonetaryAmount().getNumber())
-                        .setCurrency(dto.getMonetaryAmount().getCurrency().getCurrencyCode())
-        );
-        return entity;
+                .setPlace(dto.getPlace())
+                .setHost(
+                        new Host()
+                                .setName(dto.getHost().getName())
+                                .setEmail(dto.getHost().getEmail())
+                )
+                .setMonetaryAmount(
+                        new MonetaryAmount()
+                                .setNumber(dto.getMonetaryAmount().getNumber())
+                                .setCurrency(dto.getMonetaryAmount().getCurrency().getCurrencyCode())
+                );
     }
 }
