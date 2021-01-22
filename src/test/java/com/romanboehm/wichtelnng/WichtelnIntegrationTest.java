@@ -38,7 +38,10 @@ public class WichtelnIntegrationTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(TestData.event().asFormParams())
         )
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlTemplate(
+                        "/wichteln/result?link=https://wichtelnng.romanboehm.com/wichteln/{id}", id
+                ))
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.stringContainsInOrder(
                         "Provide this link to everyone you wish to participate in your Wichteln event:",
                         "https://wichtelnng.romanboehm.com/wichteln/" + id

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -36,6 +37,11 @@ public class WichtelnController {
         return new ModelAndView("wichteln", Map.of("event", EventDto.withMinimalDefaults()), HttpStatus.OK);
     }
 
+    @GetMapping("/result")
+    public ModelAndView getResult(@RequestParam("link") URI link) {
+        return new ModelAndView("result", Map.of("link", link));
+    }
+
     @PostMapping("/save")
     public ModelAndView saveEvent(
             @ModelAttribute @Valid EventDto event,
@@ -55,6 +61,6 @@ public class WichtelnController {
         URI link = wichtelnService.save(event);
         LOGGER.info("Saved {}", event);
         model.addAttribute("link", link);
-        return new ModelAndView("redirect:/link", model);
+        return new ModelAndView("redirect:/wichteln/result", model);
     }
 }
