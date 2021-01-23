@@ -34,7 +34,7 @@ public class WichtelnController {
 
     @GetMapping
     public ModelAndView getEvent() {
-        return new ModelAndView("wichteln", Map.of("event", EventDto.withMinimalDefaults()), HttpStatus.OK);
+        return new ModelAndView("wichteln", Map.of("eventDto", EventDto.withMinimalDefaults()), HttpStatus.OK);
     }
 
     @GetMapping("/result")
@@ -44,22 +44,22 @@ public class WichtelnController {
 
     @PostMapping("/save")
     public ModelAndView saveEvent(
-            @ModelAttribute @Valid EventDto event,
+            @ModelAttribute @Valid EventDto eventDto,
             BindingResult bindingResult,
             ModelMap model
     ) {
         if (bindingResult.hasErrors()) {
             LOGGER.debug(
                     "Failed to create {} because {}",
-                    event,
+                    eventDto,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(Collectors.joining(", "))
             );
             return new ModelAndView("wichteln", HttpStatus.BAD_REQUEST);
         }
-        URI link = wichtelnService.save(event);
-        LOGGER.info("Saved {}", event);
+        URI link = wichtelnService.save(eventDto);
+        LOGGER.info("Saved {}", eventDto);
         model.addAttribute("link", link);
         return new ModelAndView("redirect:/wichteln/result", model);
     }

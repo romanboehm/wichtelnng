@@ -92,7 +92,7 @@ public class WichtelnUiIntegrationTest {
     @Test
     public void shouldDisplaySubmitAndResetButtons() {
         WebElement submitButton = supply(SUBMIT_BUTTON_ID);
-        Assertions.assertThat(submitButton.getText()).isEqualTo("Preview...");
+        Assertions.assertThat(submitButton.getText()).isEqualTo("Submit");
         WebElement resetButton = supply(RESET_BUTTON_ID);
         Assertions.assertThat(resetButton.getText()).isEqualTo("Reset");
     }
