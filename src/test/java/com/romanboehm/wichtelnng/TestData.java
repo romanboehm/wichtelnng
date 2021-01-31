@@ -5,7 +5,9 @@ import com.romanboehm.wichtelnng.model.dto.HostDto;
 import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
 import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
 import com.romanboehm.wichtelnng.model.entity.Event;
+import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.model.util.EventBuilder;
+import com.romanboehm.wichtelnng.model.util.ParticipantBuilder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -15,7 +17,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.function.Consumer;
 
 public class TestData {
 
@@ -44,10 +45,35 @@ public class TestData {
                 .setNumber(BigDecimal.valueOf(78.50));
     }
 
-    public static ParticipantDto participant() {
-        return new ParticipantDto()
-                .setName("Angus Young")
-                .setEmail("angusyoung@acdc.net");
+    public static ParticipantTypeStage participant() {
+        return new ParticipantTypeStage(
+                new ParticipantDto()
+                        .setName("Angus Young")
+                        .setEmail("angusyoung@acdc.net")
+        );
+    }
+
+    public static class ParticipantTypeStage {
+        private final ParticipantDto participant;
+
+        public ParticipantTypeStage(ParticipantDto participant) {
+            this.participant = participant;
+        }
+
+        public Participant entity() {
+            return ParticipantBuilder.fromDto(participant);
+        }
+
+        public ParticipantDto dto() {
+            return participant;
+        }
+
+        public MultiValueMap<String, String> formParams() {
+            LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+            map.add("participant.name", participant.getName());
+            map.add("participant.email", participant.getEmail());
+            return map;
+        }
     }
 
     public static class EventTypeStage {
@@ -62,20 +88,20 @@ public class TestData {
         }
 
         public Event entity() {
-            return EventBuilder.from(event);
+            return EventBuilder.fromDto(event);
         }
 
         public MultiValueMap<String, String> formParams() {
             LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            map.add("title", event.getTitle());
-            map.add("description", event.getDescription());
-            map.add("monetaryAmount.number", event.getMonetaryAmount().getNumber().toString());
-            map.add("monetaryAmount.currency", event.getMonetaryAmount().getCurrency().toString());
-            map.add("localDate", event.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            map.add("localTime", event.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-            map.add("place", event.getPlace());
-            map.add("host.name", event.getHost().getName());
-            map.add("host.email", event.getHost().getEmail());
+            map.add("event.title", event.getTitle());
+            map.add("event.description", event.getDescription());
+            map.add("event.monetaryAmount.number", event.getMonetaryAmount().getNumber().toString());
+            map.add("event.monetaryAmount.currency", event.getMonetaryAmount().getCurrency().toString());
+            map.add("event.localDate", event.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+            map.add("event.localTime", event.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            map.add("event.place", event.getPlace());
+            map.add("event.host.name", event.getHost().getName());
+            map.add("event.host.email", event.getHost().getEmail());
             return map;
         }
     }

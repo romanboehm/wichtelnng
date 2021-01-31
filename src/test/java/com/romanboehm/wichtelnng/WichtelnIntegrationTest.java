@@ -10,8 +10,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.net.URI;
+import org.springframework.util.MultiValueMap;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,23 +20,38 @@ public class WichtelnIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldDoGetFormSaveProvideLinkFlow() throws Exception {
+    public void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/wichteln"))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
+        MultiValueMap<String, String> params = TestData.event().formParams();
         MvcResult saveResult = mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .params(TestData.event().formParams())
+                .params(params)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection()).andReturn();
 
-        URI link = (URI) saveResult.getModelAndView().getModelMap().get("link");
+        String eventLinkUrl = saveResult.getResponse().getHeader("Location");
+        String eventRegistrationUrl = eventLinkUrl.replace("link", "register");
 
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/wichteln/result?link=%s", link)))
+        mockMvc.perform(MockMvcRequestBuilders.get(eventLinkUrl))
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.stringContainsInOrder(
                         "Provide this link to everyone you wish to participate in your Wichteln event",
-                        link.toString()
+                        eventRegistrationUrl
                 )));
+
+        mockMvc.perform(MockMvcRequestBuilders.get(eventRegistrationUrl))
+                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+
+        String eventId = eventRegistrationUrl.split("/")[eventRegistrationUrl.split("/").length - 2];
+        params.addAll(TestData.participant().formParams());
+        params.add("event.id", eventId);
+        mockMvc.perform(MockMvcRequestBuilders.post(eventRegistrationUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(params)
+        )
+                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/wichteln"));
     }
 }

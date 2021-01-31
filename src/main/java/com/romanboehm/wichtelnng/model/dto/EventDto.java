@@ -11,8 +11,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class EventDto {
 
@@ -21,8 +20,12 @@ public class EventDto {
         MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
         monetaryAmount.setCurrency(Monetary.getCurrency("EUR")); // set default currency
         event.setMonetaryAmount(monetaryAmount);
+        event.setHost(new HostDto());
         return event;
     }
+
+    // May be `null` first
+    private UUID id;
 
     @NotBlank
     @Size(max = 100)
@@ -56,19 +59,13 @@ public class EventDto {
     @Valid
     private HostDto host;
 
-    @NotNull
-    private List<@Valid ParticipantDto> participants = new ArrayList<>();
-
-    public void addParticipant(ParticipantDto participant) {
-        participants.add(participant);
+    public UUID getId() {
+        return id;
     }
 
-    private void removeParticipant(ParticipantDto participant) {
-        participants.remove(participant);
-    }
-
-    public void removeParticipantNumber(int index) {
-        removeParticipant(participants.get(index));
+    public EventDto setId(UUID id) {
+        this.id = id;
+        return this;
     }
 
     public String getTitle() {
@@ -134,15 +131,6 @@ public class EventDto {
         return this;
     }
 
-    public List<ParticipantDto> getParticipants() {
-        return participants;
-    }
-
-    public EventDto setParticipants(List<ParticipantDto> participants) {
-        this.participants = participants;
-        return this;
-    }
-
     // Needed to delegate validation for event's "when" (its local date at its local time) to the javax validator
     // Non-nullability of the date resp. time components is validated separately through field annotations.
     @FutureOrPresent
@@ -155,15 +143,14 @@ public class EventDto {
 
     public String toString() {
         return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, place=%s, host=%s, participants=%s)",
+                "Event(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, place=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
                 this.getLocalDate(),
                 this.getLocalTime(),
                 this.getPlace(),
-                this.getHost(),
-                this.getParticipants()
+                this.getHost()
         );
     }
 

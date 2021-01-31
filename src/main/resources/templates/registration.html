@@ -7,38 +7,36 @@
 <div th:replace="fragments/header :: header"></div>
 
 <div class="container-sm">
-    <form id="event-creation-form"
+    <form id="registration-form"
           class="form-horizontal my-3"
-          th:object="${eventCreationDto}"
+          th:object="${eventRegistrationDto}"
           method="post">
+        <input th:field="*{event.id}" id="id"
+               type="text"
+               hidden
+               required
+               readonly/>
         <fieldset>
+            <legend>The Wichteln event you may register for</legend>
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="title">What's the occasion?</label>
                     <input th:field="*{event.title}" id="title"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.title') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="text"
                            placeholder="AC/DC Secret Santa"
-                           required/>
-                    <div id="title-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.title')}">
-                        Must be between 1 and 100 characters long.
-                    </div>
+                           required
+                           readonly/>
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="description">What do participants need to know?</label>
                     <textarea th:field="*{event.description}"
                               id="description"
-                              th:class="'form-control ' + ${#fields.hasErrors('event.description') ? 'is-invalid' : ''}"
+                              class="form-control"
                               placeholder="There's gonna be some santa'ing!"
-                              required>
-                                </textarea>
-                    <div id="description-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.description')}">
-                        Must be between 1 and 1000 characters long.
-                    </div>
+                              required
+                              readonly>
+                    </textarea>
                 </div>
             </div>
             <div class="form-row">
@@ -46,22 +44,19 @@
                     <label for="monetary-amount-number">How much to spend on a gift?</label>
                     <input th:field="*{event.monetaryAmount.number}"
                            id="monetary-amount-number"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.monetaryAmount.number') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="number"
                            step="0.01"
                            placeholder="78"
-                           required/>
-                    <div id="monetary-amount-number-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.monetaryAmount.number')}">
-                        Must be greater than or equal to 0.
-                    </div>
+                           required
+                           readonly/>
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="title">In what currency?</label>
                     <select id="monetary-amount-currency"
                             class="form-control"
-                            th:field="*{event.monetaryAmount.currency}">
+                            th:field="*{event.monetaryAmount.currency}"
+                            readonly>
                         <option th:each="currency : ${T(javax.money.Monetary).getCurrencies()}"
                                 th:value="${currency}"
                                 th:text="${currency}"
@@ -75,27 +70,19 @@
                     <label for="local-date">On what day?</label>
                     <input th:field="*{{event.localDate}}"
                            id="local-date"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="date"
-                           required/>
-                    <div id="local-date-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.localDateTime')}">
-                        Must take place in the future.
-                    </div>
+                           required
+                           readonly/>
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="local-time">At what hour?</label>
                     <input th:field="*{{event.localTime}}"
                            id="local-time"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="time"
-                           required/>
-                    <div id="local-time-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.localDateTime')}">
-                        Must take place in the future.
-                    </div>
+                           required
+                           readonly/>
                 </div>
             </div>
             <div class="form-row">
@@ -103,15 +90,11 @@
                     <label for="place">Where?</label>
                     <input th:field="*{event.place}"
                            id="place"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.place') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="text"
                            placeholder="Sydney Harbor"
-                           required/>
-                    <div id="place-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.place')}">
-                        Must be between 1 and 100 characters long.
-                    </div>
+                           required
+                           readonly/>
                 </div>
             </div>
             <div class="form-row">
@@ -119,15 +102,11 @@
                     <label for="host-name">Who's hosting?</label>
                     <input th:field="*{event.host.name}"
                            id="host-name"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.host.name') ? 'is-invalid' : ''}"
+                           class="form-control"
                            type="text"
                            placeholder="George Young"
-                           required/>
-                    <div id="host-name-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.host.name')}">
-                        Must be between 1 and 100 characters long.
-                    </div>
+                           required
+                           readonly/>
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="place">What's their email?</label>
@@ -137,13 +116,47 @@
                         </div>
                         <input th:field="*{event.host.email}"
                                id="host-email"
-                               th:class="'form-control ' + ${#fields.hasErrors('event.host.email') ? 'is-invalid' : ''}"
+                               class="form-control"
                                type="text"
                                placeholder="georgeyoung@acdc.net"
+                               required
+                               readonly/>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>Your data</legend>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="host-name">What's your name?</label>
+                    <input th:field="*{participant.name}"
+                           id="participant-name"
+                           th:class="'form-control ' + ${#fields.hasErrors('participant.name') ? 'is-invalid' : ''}"
+                           type="text"
+                           placeholder="Angus Young"
+                           required/>
+                    <div id="participant-name-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('participant.name')}">
+                        Must be a valid email address.
+                    </div>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="place">What's your email?</label>
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">@</span>
+                        </div>
+                        <input th:field="*{participant.email}"
+                               id="participant-email"
+                               th:class="'form-control ' + ${#fields.hasErrors('participant.email') ? 'is-invalid' : ''}"
+                               type="text"
+                               placeholder="angusyoung@acdc.net"
                                required/>
-                        <div id="host-email-error"
+                        <div id="participant-email-error"
                              class="invalid-feedback"
-                             th:if="${#fields.hasErrors('event.host.email')}">
+                             th:if="${#fields.hasErrors('participant.email')}">
                             Must be a valid email address.
                         </div>
                     </div>
@@ -151,10 +164,10 @@
             </div>
         </fieldset>
         <button type="submit"
-                id="submit-button"
+                id="register-button"
                 class="btn btn-primary my-3 mr-3"
-                th:formaction="@{/wichteln/save}">
-            Submit
+                th:formaction="@{/wichteln/{eventId}/register(eventId=*{event.id})}">
+            Register
         </button>
         <button type="reset"
                 id="reset-button"

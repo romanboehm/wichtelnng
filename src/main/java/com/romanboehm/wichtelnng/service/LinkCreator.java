@@ -1,10 +1,10 @@
 package com.romanboehm.wichtelnng.service;
 
-import com.romanboehm.wichtelnng.model.entity.Event;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.util.UUID;
 
 @Component
 public class LinkCreator {
@@ -15,7 +15,7 @@ public class LinkCreator {
         this.domain = domain;
     }
 
-    public URI forEvent(Event event) {
-        return URI.create(String.format("%s/wichteln/%s", domain, event.getId()));
+    public URI forId(UUID eventId) {
+        return URI.create(String.format("%s/wichteln/%s/register", domain, eventId));
     }
 }

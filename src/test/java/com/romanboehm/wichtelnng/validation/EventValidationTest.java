@@ -4,7 +4,6 @@ import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.dto.EventDto;
 import com.romanboehm.wichtelnng.model.dto.HostDto;
 import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
-import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventValidationTest extends BaseValidationTest {
 
@@ -92,27 +89,6 @@ public class EventValidationTest extends BaseValidationTest {
         public void shouldFailEventWithInvalidHost() {
             EventDto event = TestData.event().dto();
             event.setHost(new HostDto());
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithNullParticipants() {
-            EventDto event = TestData.event().dto();
-            event.setParticipants(null);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithInvalidParticipant() {
-            EventDto event = TestData.event().dto();
-            ParticipantDto participant = new ParticipantDto();
-            participant.setName(null);
-            participant.setEmail(null);
-            List<ParticipantDto> participants = new ArrayList<>();
-            participants.add(participant);
-            event.setParticipants(participants);
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
         }

@@ -17,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.UUID;
 
 @WebMvcTest
 @AutoConfigureMockMvc
@@ -29,10 +30,10 @@ public class WichtelnControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    public void shouldValidate() throws Exception {
+    public void shouldValidateEvent() throws Exception {
         MultiValueMap<String, String> params = TestData.event().formParams();
         params.set(
-                "localDate",
+                "event.localDate",
                 LocalDate
                         .now().minus(1, ChronoUnit.DAYS)
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -45,6 +46,22 @@ public class WichtelnControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is4xxClientError())
                 .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(
                         "Must take place in the future."
+                )));
+    }
+
+    @Test
+    public void shouldValidateParticipant() throws Exception {
+        MultiValueMap<String, String> params = TestData.participant().formParams();
+        params.set("participant.email", "notavalidemail.address");
+        params.addAll(TestData.event().formParams());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(String.format("/wichteln/%s/register", UUID.randomUUID()))
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .params(params)
+        )
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
+                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(
+                        "Must be a valid email address."
                 )));
     }
 }
