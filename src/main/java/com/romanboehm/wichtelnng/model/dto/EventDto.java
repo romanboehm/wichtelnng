@@ -2,7 +2,6 @@ package com.romanboehm.wichtelnng.model.dto;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.money.Monetary;
 import javax.validation.Valid;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
@@ -14,15 +13,6 @@ import java.time.LocalTime;
 import java.util.UUID;
 
 public class EventDto {
-
-    public static EventDto withMinimalDefaults() {
-        EventDto event = new EventDto();
-        MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
-        monetaryAmount.setCurrency(Monetary.getCurrency("EUR")); // set default currency
-        event.setMonetaryAmount(monetaryAmount);
-        event.setHost(new HostDto());
-        return event;
-    }
 
     // May be `null` first
     private UUID id;

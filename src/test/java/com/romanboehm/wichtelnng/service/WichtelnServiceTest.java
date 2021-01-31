@@ -2,7 +2,7 @@ package com.romanboehm.wichtelnng.service;
 
 
 import com.romanboehm.wichtelnng.TestData;
-import com.romanboehm.wichtelnng.model.dto.EventCreationDto;
+import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ public class WichtelnServiceTest {
 
     @Test
     public void shouldSave() {
-        wichtelnService.save(new EventCreationDto(TestData.event().dto()));
+        wichtelnService.save(new EventCreation().setEvent(TestData.event().dto()));
         Assertions.assertThat(eventRepository.findAll())
                 .hasOnlyOneElementSatisfying(event -> {
                     Assertions.assertThat(event.getId()).isNotNull();

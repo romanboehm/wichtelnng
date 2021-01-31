@@ -9,7 +9,7 @@
 <div class="container-sm">
     <form id="registration-form"
           class="form-horizontal my-3"
-          th:object="${eventRegistrationDto}"
+          th:object="${participantRegistration}"
           method="post">
         <input th:field="*{event.id}" id="id"
                type="text"

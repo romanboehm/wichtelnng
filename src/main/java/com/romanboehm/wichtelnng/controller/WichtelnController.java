@@ -1,8 +1,8 @@
 package com.romanboehm.wichtelnng.controller;
 
-import com.romanboehm.wichtelnng.model.dto.EventCreationDto;
+import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.model.dto.EventDto;
-import com.romanboehm.wichtelnng.model.dto.EventRegistrationDto;
+import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.service.WichtelnService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,28 +39,28 @@ public class WichtelnController {
     public ModelAndView getEvent() {
         return new ModelAndView(
                 "wichteln",
-                Map.of("eventCreationDto", new EventCreationDto(EventDto.withMinimalDefaults())),
+                Map.of("eventCreation", EventCreation.withMinimalDefaults()),
                 HttpStatus.OK
         );
     }
 
     @PostMapping("/save")
     public ModelAndView saveEvent(
-            @ModelAttribute @Valid EventCreationDto eventCreationDto,
+            @ModelAttribute @Valid EventCreation eventCreation,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             LOGGER.debug(
                     "Failed to create {} because {}",
-                    eventCreationDto,
+                    eventCreation,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(Collectors.joining(", "))
             );
             return new ModelAndView("wichteln", HttpStatus.BAD_REQUEST);
         }
-        UUID uuid = wichtelnService.save(eventCreationDto);
-        LOGGER.info("Saved {}", eventCreationDto);
+        UUID uuid = wichtelnService.save(eventCreation);
+        LOGGER.info("Saved {}", eventCreation);
         return new ModelAndView(String.format("redirect:/wichteln/%s/link", uuid));
     }
 
@@ -78,28 +78,28 @@ public class WichtelnController {
             return new ModelAndView("redirect:/wichteln");
         }
         EventDto eventDto = possibleEventDto.get();
-        EventRegistrationDto eventRegistrationDto = new EventRegistrationDto(eventDto);
-        return new ModelAndView("registration", Map.of("eventRegistrationDto", eventRegistrationDto), HttpStatus.OK);
+        ParticipantRegistration participantRegistration = new ParticipantRegistration(eventDto);
+        return new ModelAndView("registration", Map.of("participantRegistration", participantRegistration), HttpStatus.OK);
     }
 
     @PostMapping("/wichteln/{eventId}/register")
     public ModelAndView register(
             @PathVariable UUID eventId,
-            @ModelAttribute @Valid EventRegistrationDto eventRegistrationDto,
+            @ModelAttribute @Valid ParticipantRegistration participantRegistration,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             LOGGER.debug(
                     "Failed to create {} because {}",
-                    eventRegistrationDto,
+                    participantRegistration,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(Collectors.joining(", "))
             );
             return new ModelAndView("registration", HttpStatus.BAD_REQUEST);
         }
-        wichtelnService.register(eventId, eventRegistrationDto);
-        LOGGER.info("Registered {} for {}", eventRegistrationDto, eventId);
+        wichtelnService.register(eventId, participantRegistration);
+        LOGGER.info("Registered {} for {}", participantRegistration, eventId);
         return new ModelAndView("redirect:/wichteln");
     }
 }

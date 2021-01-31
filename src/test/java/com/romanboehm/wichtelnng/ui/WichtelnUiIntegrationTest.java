@@ -68,7 +68,7 @@ public class WichtelnUiIntegrationTest {
     }
 
     @Test
-    public void shouldDisplayEventCreationForm() {
+    public void shouldDisplayCreateEventForm() {
         WebElement eventCreationForm = supply(FORM_ID);
         Assertions.assertThat(eventCreationForm).isNotNull();
         WebElement title = supply(TITLE_ID);

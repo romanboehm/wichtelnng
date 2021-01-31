@@ -3,7 +3,7 @@ package com.romanboehm.wichtelnng.model.dto;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-public class EventRegistrationDto {
+public class ParticipantRegistration {
 
     @NotNull
     @Valid
@@ -13,7 +13,7 @@ public class EventRegistrationDto {
     @Valid
     private ParticipantDto participant;
 
-    public EventRegistrationDto(EventDto event) {
+    public ParticipantRegistration(EventDto event) {
         this.event = event;
     }
 
@@ -21,7 +21,7 @@ public class EventRegistrationDto {
         return event;
     }
 
-    public EventRegistrationDto setEvent(EventDto event) {
+    public ParticipantRegistration setEvent(EventDto event) {
         this.event = event;
         return this;
     }
@@ -30,7 +30,7 @@ public class EventRegistrationDto {
         return participant;
     }
 
-    public EventRegistrationDto setParticipant(ParticipantDto participant) {
+    public ParticipantRegistration setParticipant(ParticipantDto participant) {
         this.participant = participant;
         return this;
     }
@@ -38,7 +38,7 @@ public class EventRegistrationDto {
     @Override
     public String toString() {
         return String.format(
-                "EventRegistration(event=%s, participant=%s)",
+                "ParticipantRegistration(event=%s, participant=%s)",
                 event != null ? event : "",
                 participant != null ? participant : ""
         );

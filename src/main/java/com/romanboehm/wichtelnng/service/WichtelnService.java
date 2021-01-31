@@ -1,9 +1,9 @@
 package com.romanboehm.wichtelnng.service;
 
-import com.romanboehm.wichtelnng.model.dto.EventCreationDto;
+import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.model.dto.EventDto;
-import com.romanboehm.wichtelnng.model.dto.EventRegistrationDto;
 import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
+import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.model.util.EventBuilder;
 import com.romanboehm.wichtelnng.model.util.ParticipantBuilder;
@@ -33,7 +33,7 @@ public class WichtelnService {
     }
 
     @Transactional
-    public UUID save(EventCreationDto dto) {
+    public UUID save(EventCreation dto) {
         Event saved = eventRepository.save(EventBuilder.fromDto(dto.getEvent()));
         return saved.getId();
     }
@@ -48,13 +48,13 @@ public class WichtelnService {
     }
 
     @Transactional
-    public void register(UUID eventId, EventRegistrationDto eventRegistrationDto) {
+    public void register(UUID eventId, ParticipantRegistration participantRegistration) {
         Optional<Event> possibleEvent = eventRepository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             LOGGER.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
         }
-        ParticipantDto participantDto = eventRegistrationDto.getParticipant();
+        ParticipantDto participantDto = participantRegistration.getParticipant();
         Event event = possibleEvent.get();
         eventRepository.save(event.addParticipant(ParticipantBuilder.fromDto(participantDto)));
     }
