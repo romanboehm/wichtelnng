@@ -1,10 +1,15 @@
 package com.romanboehm.wichtelnng.model.dto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 public class EventRegistrationDto {
+
+    @NotNull
     @Valid
     private EventDto event;
+
+    @NotNull
     @Valid
     private ParticipantDto participant;
 
@@ -32,6 +37,10 @@ public class EventRegistrationDto {
 
     @Override
     public String toString() {
-        return String.format("%s with %s", event.toString(), participant.toString());
+        return String.format(
+                "EventRegistration(event=%s, participant=%s)",
+                event != null ? event : "",
+                participant != null ? participant : ""
+        );
     }
 }
