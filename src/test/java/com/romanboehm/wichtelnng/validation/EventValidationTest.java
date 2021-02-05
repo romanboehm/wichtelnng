@@ -197,6 +197,30 @@ public class EventValidationTest extends BaseValidationTest {
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
         }
+
+        @Test
+        public void shouldFailEventWithNullDeadline() {
+            EventDto event = TestData.event().dto();
+            event.setDeadline(null);
+
+            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithDeadlineSameAsLocalDate() {
+            EventDto event = TestData.event().dto();
+            event.setDeadline(event.getLocalDate());
+
+            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithDeadlineAfterLocalDate() {
+            EventDto event = TestData.event().dto();
+            event.setDeadline(event.getLocalDate().plus(1, ChronoUnit.DAYS));
+
+            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+        }
     }
 
 }

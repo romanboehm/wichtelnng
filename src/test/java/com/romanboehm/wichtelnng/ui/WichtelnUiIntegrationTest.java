@@ -40,6 +40,8 @@ public class WichtelnUiIntegrationTest {
     private final static String LOCALTIME_ERROR_ID = LOCALTIME_ID + "-error";
     private final static String PLACE_ID = "place";
     private final static String PLACE_ERROR_ID = PLACE_ID + "-error";
+    private final static String DEADLINE_ID = "deadline";
+    private final static String DEADLINE_ERROR_ID = DEADLINE_ID + "-error";
     private final static String HOST_NAME_ID = "host-name";
     private final static String HOST_NAME_ERROR_ID = HOST_NAME_ID + "-error";
     private final static String HOST_EMAIL_ID = "host-email";
@@ -83,6 +85,8 @@ public class WichtelnUiIntegrationTest {
         Assertions.assertThat(localDateTime).isNotNull();
         WebElement place = supply(PLACE_ID);
         Assertions.assertThat(place).isNotNull();
+        WebElement deadline = supply(DEADLINE_ID);
+        Assertions.assertThat(deadline).isNotNull();
         WebElement hostName = supply(HOST_NAME_ID);
         Assertions.assertThat(hostName).isNotNull();
         WebElement hostEmail = supply(HOST_EMAIL_ID);
@@ -116,6 +120,10 @@ public class WichtelnUiIntegrationTest {
         );
         WebElement place = supply(PLACE_ID);
         place.sendKeys("Sydney".repeat(20)); // too long
+        WebElement deadline = supply(DEADLINE_ID);
+        deadline.sendKeys(LocalDate.now() // same day as localDate
+                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+        );
         WebElement hostName = supply(HOST_NAME_ID);
         hostName.sendKeys("George Young".repeat(20)); // too long
         WebElement hostEmail = supply(HOST_EMAIL_ID);
@@ -136,6 +144,8 @@ public class WichtelnUiIntegrationTest {
         Assertions.assertThat(localTimeError.isDisplayed()).isTrue();
         WebElement placeError = supply(PLACE_ERROR_ID);
         Assertions.assertThat(placeError.isDisplayed()).isTrue();
+        WebElement deadlineError = supply(DEADLINE_ERROR_ID);
+        Assertions.assertThat(deadlineError.isDisplayed()).isTrue();
         WebElement hostNameError = supply(HOST_NAME_ERROR_ID);
         Assertions.assertThat(hostNameError.isDisplayed()).isTrue();
         WebElement hostEmailError = supply(HOST_EMAIL_ERROR_ID);

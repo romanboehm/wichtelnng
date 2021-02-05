@@ -96,6 +96,15 @@
                            required
                            readonly/>
                 </div>
+                <div class="form-group col-sm-6">
+                    <label for="local-date">Until what day can one register?</label>
+                    <input th:field="*{{event.deadline}}"
+                           id="deadline"
+                           class="form-control"
+                           type="date"
+                           required
+                           readonly/>
+                </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-sm-6">
@@ -109,7 +118,7 @@
                            readonly/>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="place">What's their email?</label>
+                    <label for="host-email">What's their email?</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>

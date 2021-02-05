@@ -113,6 +113,19 @@
                         Must be between 1 and 100 characters long.
                     </div>
                 </div>
+                <div class="form-group col-sm-6">
+                    <label for="local-date">Until what day can one register?</label>
+                    <input th:field="*{{event.deadline}}"
+                           id="deadline"
+                           th:class="'form-control ' + ${#fields.hasErrors('event.deadline') ? 'is-invalid' : ''}"
+                           type="date"
+                           required/>
+                    <div id="deadline-error"
+                         class="invalid-feedback"
+                         th:if="${#fields.hasErrors('event.deadline')}">
+                        Must be at least a day before the event.
+                    </div>
+                </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-sm-6">

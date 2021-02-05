@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.model.dto;
 
+import com.romanboehm.wichtelnng.validation.DeadlineOneDayBeforeLocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
@@ -12,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
+@DeadlineOneDayBeforeLocalDate
+@Valid
 public class EventDto {
 
     // May be `null` first
@@ -44,6 +47,11 @@ public class EventDto {
     @NotBlank
     @Size(max = 100)
     private String place;
+
+    @NotNull
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @FutureOrPresent
+    private LocalDate deadline;
 
     @NotNull
     @Valid
@@ -109,6 +117,15 @@ public class EventDto {
 
     public EventDto setPlace(String place) {
         this.place = place;
+        return this;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public EventDto setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
         return this;
     }
 

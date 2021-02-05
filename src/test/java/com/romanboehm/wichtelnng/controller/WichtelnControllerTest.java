@@ -23,9 +23,6 @@ import java.util.UUID;
 @AutoConfigureMockMvc
 public class WichtelnControllerTest {
 
-    @MockBean
-    private WichtelnService wichtelnService;
-
     @Autowired
     private MockMvc mockMvc;
 

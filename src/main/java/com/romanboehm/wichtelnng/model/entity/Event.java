@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,6 +40,9 @@ public class Event implements Persistable<UUID> {
 
     @Column(nullable = false, length = 100)
     private String place;
+
+    @Column(nullable = false)
+    private LocalDate deadline;
 
     @Embedded
     private Host host;
@@ -104,6 +108,15 @@ public class Event implements Persistable<UUID> {
 
     public Event setPlace(String place) {
         this.place = place;
+        return this;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public Event setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
         return this;
     }
 
