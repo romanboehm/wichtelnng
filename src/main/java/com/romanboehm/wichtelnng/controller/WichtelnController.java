@@ -79,7 +79,11 @@ public class WichtelnController {
         }
         EventDto eventDto = possibleEventDto.get();
         ParticipantRegistration participantRegistration = new ParticipantRegistration(eventDto);
-        return new ModelAndView("registration", Map.of("participantRegistration", participantRegistration), HttpStatus.OK);
+        return new ModelAndView(
+                "registration",
+                Map.of("participantRegistration", participantRegistration),
+                HttpStatus.OK
+        );
     }
 
     @PostMapping("/wichteln/{eventId}/register")
