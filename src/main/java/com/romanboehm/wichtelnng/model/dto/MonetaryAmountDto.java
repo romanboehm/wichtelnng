@@ -33,6 +33,6 @@ public class MonetaryAmountDto {
     }
 
     public String toString() {
-        return String.format("Event.MonetaryAmount(number=%s, currency=%s)", this.getNumber(), this.getCurrency());
+        return String.format("MonetaryAmountDto(number=%s, currency=%s)", this.getNumber(), this.getCurrency());
     }
 }

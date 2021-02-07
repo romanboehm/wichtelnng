@@ -30,4 +30,8 @@ public class MonetaryAmount {
         this.currency = currency;
         return this;
     }
+
+    public String toString() {
+        return String.format("Event.MonetaryAmount(number=%s, currency=%s)", this.getNumber(), this.getCurrency());
+    }
 }

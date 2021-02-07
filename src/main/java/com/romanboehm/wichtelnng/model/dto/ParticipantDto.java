@@ -33,6 +33,6 @@ public class ParticipantDto {
     }
 
     public String toString() {
-        return String.format("Participant(name=%s, email=%s)", this.getName(), this.getEmail());
+        return String.format("ParticipantDto(name=%s, email=%s)", this.getName(), this.getEmail());
     }
 }

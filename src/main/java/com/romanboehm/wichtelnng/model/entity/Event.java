@@ -174,4 +174,17 @@ public class Event implements Persistable<UUID> {
     public boolean isNew() {
         return id == null;
     }
+
+    public String toString() {
+        return String.format(
+                "Event(title=%s, description=%s, monetaryAmount=%s, localDateTime=%s, place=%s, deadline=%s host=%s)",
+                this.getTitle(),
+                this.getDescription(),
+                this.getMonetaryAmount(),
+                this.getLocalDateTime(),
+                this.getPlace(),
+                this.getDeadline(),
+                this.getHost()
+        );
+    }
 }

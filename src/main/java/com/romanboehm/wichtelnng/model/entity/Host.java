@@ -29,4 +29,8 @@ public class Host {
         this.email = email;
         return this;
     }
+
+    public String toString() {
+        return String.format("Host(name=%s, email=%s)", this.getName(), this.getEmail());
+    }
 }

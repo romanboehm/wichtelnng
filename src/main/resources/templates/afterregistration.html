@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"></div>
+
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<div style="background:transparent !important" class="jumbotron bg-light">
+    <div class="container-lg">
+        <h1 class="display-4">Congratulations!</h1>
+        <p class="lead">You've registered to wichtel.</p>
+        <hr class="my-4">
+        <p>You'll shortly receive a mail detailing your registration and what'll happen next.</p>
+        <p>If not, try going back or just click on your registration link again.</p>
+        <a id="back-button" class="btn btn-primary btn-lg" onclick="history.back()" role="button">Back</a>
+    </div>
+</div>
+</body>
+</html>

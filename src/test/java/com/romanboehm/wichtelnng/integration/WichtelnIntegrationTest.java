@@ -1,24 +1,27 @@
-package com.romanboehm.wichtelnng;
+package com.romanboehm.wichtelnng.integration;
 
+import com.icegreen.greenmail.configuration.GreenMailConfiguration;
+import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.util.ServerSetupTest;
+import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.service.WichtelnService;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.MultiValueMap;
 
+import javax.mail.Address;
 import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -26,6 +29,10 @@ import java.util.concurrent.atomic.AtomicReference;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WichtelnIntegrationTest {
+
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP_IMAP)
+            .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
 
     @Autowired
     private MockMvc mockMvc;
@@ -82,6 +89,12 @@ public class WichtelnIntegrationTest {
                 .params(params)
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/wichteln"));
+                .andExpect(MockMvcResultMatchers.redirectedUrl("/wichteln/afterregistration"));
+
+        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        Assertions.assertThat(greenMail.getReceivedMessages())
+                .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
+                .extracting(Address::toString)
+                .containsExactly("angusyoung@acdc.net");
     }
 }

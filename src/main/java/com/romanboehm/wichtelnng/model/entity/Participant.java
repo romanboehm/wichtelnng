@@ -86,4 +86,8 @@ public class Participant {
     public int hashCode() {
         return Objects.hash(name, email);
     }
+
+    public String toString() {
+        return String.format("Participant(name=%s, email=%s)", this.getName(), this.getEmail());
+    }
 }

@@ -1,0 +1,13 @@
+Hey [( ${donor} )],
+
+You registered to wichtel at '[( ${event.title} )]' (https://wichtelnng.romanboehm.com/about)!
+We matched the event's participants and you're therefore now asked to give a gift to [( ${recipient} )]. The gift's monetary value should not exceed [( ${T(org.javamoney.moneta.Money).of(event.monetaryAmount.number, event.monetaryAmount.currency)} )].
+The event will take place at [( ${event.place} )] on [( ${#temporals.format(event.localDateTime.toLocalDate(), 'yyyy-MM-dd')} )] at [( ${#temporals.format(event.localDateTime.toLocalTime(), 'HH:mm')} )] local time.
+
+Here's what the event's host says about it:
+
+"[( ${event.description} )]"
+
+If you have any questions, contact the event's host [( ${event.host.name} )] at [( ${event.host.email} )].
+
+This mail was generated using https://wichteln.romanboehm.com

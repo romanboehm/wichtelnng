@@ -22,12 +22,16 @@ public class WichtelnService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(WichtelnService.class);
 
-    private final ParticipantsMatcher matcher;
+    private final RegistrationMailSender registrationMailSender;
     private final EventRepository eventRepository;
     private final LinkCreator linkCreator;
 
-    public WichtelnService(ParticipantsMatcher matcher, EventRepository eventRepository, LinkCreator linkCreator) {
-        this.matcher = matcher;
+    public WichtelnService(
+            RegistrationMailSender registrationMailSender,
+            EventRepository eventRepository,
+            LinkCreator linkCreator
+    ) {
+        this.registrationMailSender = registrationMailSender;
         this.eventRepository = eventRepository;
         this.linkCreator = linkCreator;
     }
@@ -57,5 +61,6 @@ public class WichtelnService {
         ParticipantDto participantDto = participantRegistration.getParticipant();
         Event event = possibleEvent.get();
         eventRepository.save(event.addParticipant(ParticipantBuilder.fromDto(participantDto)));
+        registrationMailSender.send(participantRegistration);
     }
 }

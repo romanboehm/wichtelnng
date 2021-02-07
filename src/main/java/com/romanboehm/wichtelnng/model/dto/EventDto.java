@@ -150,13 +150,14 @@ public class EventDto {
 
     public String toString() {
         return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, place=%s, host=%s)",
+                "EventDto(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, place=%s, deadline=%s host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
                 this.getLocalDate(),
                 this.getLocalTime(),
                 this.getPlace(),
+                this.getDeadline(),
                 this.getHost()
         );
     }

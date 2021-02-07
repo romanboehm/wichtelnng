@@ -104,6 +104,11 @@ public class WichtelnController {
         }
         wichtelnService.register(eventId, participantRegistration);
         LOGGER.info("Registered {} for {}", participantRegistration, eventId);
-        return new ModelAndView("redirect:/wichteln");
+        return new ModelAndView("redirect:/wichteln/afterregistration");
+    }
+
+    @GetMapping("wichteln/afterregistration")
+    public ModelAndView afterRegistration() {
+        return new ModelAndView("afterregistration");
     }
 }

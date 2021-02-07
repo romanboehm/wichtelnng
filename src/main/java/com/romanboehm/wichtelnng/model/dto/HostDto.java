@@ -33,6 +33,6 @@ public class HostDto {
     }
 
     public String toString() {
-        return String.format("Event.Host(name=%s, email=%s)", this.getName(), this.getEmail());
+        return String.format("HostDto(name=%s, email=%s)", this.getName(), this.getEmail());
     }
 }
