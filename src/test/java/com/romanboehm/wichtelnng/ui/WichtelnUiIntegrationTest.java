@@ -38,10 +38,6 @@ public class WichtelnUiIntegrationTest {
     private final static String LOCALTIME_ID = "local-time";
     private final static String LOCALDATE_ERROR_ID = LOCALDATE_ID + "-error";
     private final static String LOCALTIME_ERROR_ID = LOCALTIME_ID + "-error";
-    private final static String PLACE_ID = "place";
-    private final static String PLACE_ERROR_ID = PLACE_ID + "-error";
-    private final static String DEADLINE_ID = "deadline";
-    private final static String DEADLINE_ERROR_ID = DEADLINE_ID + "-error";
     private final static String HOST_NAME_ID = "host-name";
     private final static String HOST_NAME_ERROR_ID = HOST_NAME_ID + "-error";
     private final static String HOST_EMAIL_ID = "host-email";
@@ -81,12 +77,10 @@ public class WichtelnUiIntegrationTest {
         Assertions.assertThat(monetaryAmountNumber).isNotNull();
         WebElement monetaryAmountCurrency = supply(MONETARYAMOUNT_CURRENCY_ID);
         Assertions.assertThat(monetaryAmountCurrency).isNotNull();
-        WebElement localDateTime = supply(LOCALDATE_ID);
-        Assertions.assertThat(localDateTime).isNotNull();
-        WebElement place = supply(PLACE_ID);
-        Assertions.assertThat(place).isNotNull();
-        WebElement deadline = supply(DEADLINE_ID);
-        Assertions.assertThat(deadline).isNotNull();
+        WebElement localDate = supply(LOCALDATE_ID);
+        Assertions.assertThat(localDate).isNotNull();
+        WebElement localTime = supply(LOCALTIME_ID);
+        Assertions.assertThat(localTime).isNotNull();
         WebElement hostName = supply(HOST_NAME_ID);
         Assertions.assertThat(hostName).isNotNull();
         WebElement hostEmail = supply(HOST_EMAIL_ID);
@@ -118,12 +112,6 @@ public class WichtelnUiIntegrationTest {
         localTime.sendKeys(LocalTime.now().minus(1, ChronoUnit.HOURS) // before present
                 .format(DateTimeFormatter.ofPattern("HH:mm"))
         );
-        WebElement place = supply(PLACE_ID);
-        place.sendKeys("Sydney".repeat(20)); // too long
-        WebElement deadline = supply(DEADLINE_ID);
-        deadline.sendKeys(LocalDate.now() // same day as localDate
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        );
         WebElement hostName = supply(HOST_NAME_ID);
         hostName.sendKeys("George Young".repeat(20)); // too long
         WebElement hostEmail = supply(HOST_EMAIL_ID);
@@ -142,10 +130,6 @@ public class WichtelnUiIntegrationTest {
         Assertions.assertThat(localDateError.isDisplayed()).isTrue();
         WebElement localTimeError = supply(LOCALTIME_ERROR_ID);
         Assertions.assertThat(localTimeError.isDisplayed()).isTrue();
-        WebElement placeError = supply(PLACE_ERROR_ID);
-        Assertions.assertThat(placeError.isDisplayed()).isTrue();
-        WebElement deadlineError = supply(DEADLINE_ERROR_ID);
-        Assertions.assertThat(deadlineError.isDisplayed()).isTrue();
         WebElement hostNameError = supply(HOST_NAME_ERROR_ID);
         Assertions.assertThat(hostNameError.isDisplayed()).isTrue();
         WebElement hostEmailError = supply(HOST_EMAIL_ERROR_ID);

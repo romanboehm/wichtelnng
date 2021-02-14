@@ -18,8 +18,6 @@ public class EventBuilder {
                 .setTitle(dto.getTitle())
                 .setDescription(dto.getDescription())
                 .setLocalDateTime(dto.getLocalDateTime())
-                .setPlace(dto.getPlace())
-                .setDeadline(dto.getDeadline())
                 .setHost(
                         new Host()
                                 .setName(dto.getHost().getName())
@@ -44,8 +42,6 @@ public class EventBuilder {
                 )
                 .setLocalDate(entity.getLocalDateTime().toLocalDate())
                 .setLocalTime(entity.getLocalDateTime().toLocalTime())
-                .setPlace(entity.getPlace())
-                .setDeadline(entity.getDeadline())
                 .setHost(
                         new HostDto()
                                 .setName(entity.getHost().getName())

@@ -73,7 +73,6 @@ public class MatchMailCreatorTest {
                 "Hey Angus Young,",
                 "You registered to wichtel at 'AC/DC Secret Santa' (https://wichtelnng.romanboehm.com/about)!",
                 "We matched the event's participants and you're therefore now asked to give a gift to Malcolm Young. The gift's monetary value should not exceed AUD 78.50.",
-                "The event will take place at Sydney Harbor on 2666-06-07 at 06:06 local time.",
                 "Here's what the event's host says about it:",
                 "\"There's gonna be some santa'ing\"",
                 "If you have any questions, contact the event's host George Young at georgeyoung@acdc.net.",

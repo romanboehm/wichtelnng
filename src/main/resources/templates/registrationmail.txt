@@ -1,9 +1,8 @@
 Hey [( ${participant.name} )],
 
 You have successfully registered to wichtel at '[( ${event.title} )]' (https://wichtelnng.romanboehm.com/about)!
-You'll be provided with the name of your gift's recipient through an email to [( ${participant.email} )] on [( ${#temporals.format(event.deadline, 'yyyy-MM-dd')} )].
+You'll be provided with the name of your gift's recipient through an email to [( ${participant.email} )] on [( ${#temporals.format(event.localDate, 'yyyy-MM-dd')} )] at [( ${#temporals.format(event.localTime, 'HH:mm')} )] local time.
 The gift's monetary value should not exceed [( ${T(org.javamoney.moneta.Money).of(event.monetaryAmount.number, event.monetaryAmount.currency)} )].
-The event itself will take place at [( ${event.place} )] on [( ${#temporals.format(event.localDate, 'yyyy-MM-dd')} )] at [( ${#temporals.format(event.localTime, 'HH:mm')} )] local time.
 
 Here's what the event's host says about it:
 

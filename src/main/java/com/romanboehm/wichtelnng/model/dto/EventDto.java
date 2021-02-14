@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.model.dto;
 
-import com.romanboehm.wichtelnng.validation.DeadlineOneDayBeforeLocalDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.UUID;
 
-@DeadlineOneDayBeforeLocalDate
 @Valid
 public class EventDto {
 
@@ -43,15 +41,6 @@ public class EventDto {
     @NotNull
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime localTime;
-
-    @NotBlank
-    @Size(max = 100)
-    private String place;
-
-    @NotNull
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @FutureOrPresent
-    private LocalDate deadline;
 
     @NotNull
     @Valid
@@ -111,24 +100,6 @@ public class EventDto {
         return this;
     }
 
-    public String getPlace() {
-        return place;
-    }
-
-    public EventDto setPlace(String place) {
-        this.place = place;
-        return this;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public EventDto setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-        return this;
-    }
-
     public HostDto getHost() {
         return host;
     }
@@ -150,14 +121,12 @@ public class EventDto {
 
     public String toString() {
         return String.format(
-                "EventDto(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, place=%s, deadline=%s host=%s)",
+                "EventDto(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
                 this.getLocalDate(),
                 this.getLocalTime(),
-                this.getPlace(),
-                this.getDeadline(),
                 this.getHost()
         );
     }

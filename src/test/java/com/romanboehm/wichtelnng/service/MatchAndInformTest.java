@@ -33,7 +33,7 @@ public class MatchAndInformTest {
 
     @Test
     public void shouldMatchAndInform() {
-        Mockito.when(eventRepository.findAllByDeadline(ArgumentMatchers.any())).thenReturn(List.of(
+        Mockito.when(eventRepository.findAllByLocalDateTimeBefore(ArgumentMatchers.any())).thenReturn(List.of(
                 TestData.event().entity()
                         .addParticipant(
                                 new Participant()

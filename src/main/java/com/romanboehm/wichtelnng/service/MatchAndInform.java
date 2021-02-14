@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +34,8 @@ public class MatchAndInform {
     @Scheduled(cron = "@midnight")
     @Transactional(readOnly = true)
     public void matchAndInform() {
-        List<Event> yesterdaysEvents = eventRepository.findAllByDeadline(
-                LocalDate.now().minus(1, ChronoUnit.DAYS)
-        );
-        yesterdaysEvents.forEach(event -> {
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByLocalDateTimeBefore(LocalDateTime.now());
+        eventsWhereDeadlineHasPassed.forEach(event -> {
             List<Match> matches = matcher.match(new ArrayList<>(event.getParticipants()));
             matchMailSender.send(event, matches);
         });

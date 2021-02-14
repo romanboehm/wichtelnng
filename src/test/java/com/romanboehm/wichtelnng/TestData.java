@@ -28,8 +28,6 @@ public class TestData {
                         .setMonetaryAmount(monetaryAmount())
                         .setLocalDate(LocalDate.of(2666, Month.JUNE, 7))
                         .setLocalTime(LocalTime.of(6, 6))
-                        .setPlace("Sydney Harbor")
-                        .setDeadline(LocalDate.of(2666, Month.JUNE, 6))
                         .setHost(host())
         );
     }
@@ -100,8 +98,6 @@ public class TestData {
             map.add("event.monetaryAmount.currency", event.getMonetaryAmount().getCurrency().toString());
             map.add("event.localDate", event.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.add("event.localTime", event.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-            map.add("event.place", event.getPlace());
-            map.add("event.deadline", event.getDeadline().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.add("event.host.name", event.getHost().getName());
             map.add("event.host.email", event.getHost().getEmail());
             return map;

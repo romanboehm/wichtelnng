@@ -22,42 +22,6 @@ public class EventValidationTest extends BaseValidationTest {
     }
 
     @Nested
-    public class EventPlace {
-
-        @Test
-        public void shouldFailEventWithTooLongPlace() {
-            EventDto event = TestData.event().dto();
-            event.setPlace(event.getPlace().repeat(100));
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithNullPlace() {
-            EventDto event = TestData.event().dto();
-            event.setPlace(null);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithEmptyPlace() {
-            EventDto event = TestData.event().dto();
-            event.setPlace("");
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithWhitespacePlace() {
-            EventDto event = TestData.event().dto();
-            event.setPlace(" ");
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-    }
-
-    @Nested
     public class EventDependencies {
 
         @Test
@@ -194,30 +158,6 @@ public class EventValidationTest extends BaseValidationTest {
         public void shouldFailEventWithNullLocalTime() {
             EventDto event = TestData.event().dto();
             event.setLocalTime(null);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithNullDeadline() {
-            EventDto event = TestData.event().dto();
-            event.setDeadline(null);
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithDeadlineSameAsLocalDate() {
-            EventDto event = TestData.event().dto();
-            event.setDeadline(event.getLocalDate());
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithDeadlineAfterLocalDate() {
-            EventDto event = TestData.event().dto();
-            event.setDeadline(event.getLocalDate().plus(1, ChronoUnit.DAYS));
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
         }

@@ -51,9 +51,8 @@ public class RegistrationMailCreatorTest {
         MatcherAssert.assertThat(mail.getContent().toString(), Matchers.stringContainsInOrder(
                 "Hey Angus Young,",
                 "You have successfully registered to wichtel at 'AC/DC Secret Santa' (https://wichtelnng.romanboehm.com/about)!",
-                "You'll be provided with the name of your gift's recipient through an email to angusyoung@acdc.net on 2666-06-06.",
+                "You'll be provided with the name of your gift's recipient through an email to angusyoung@acdc.net on 2666-06-07 at 06:06 local time.",
                 "The gift's monetary value should not exceed AUD 78.50.",
-                "The event itself will take place at Sydney Harbor on 2666-06-07 at 06:06 local time.",
                 "Here's what the event's host says about it:",
                 "\"There's gonna be some santa'ing\"",
                 "If you have any questions, contact the event's host George Young at georgeyoung@acdc.net.",

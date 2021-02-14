@@ -38,12 +38,6 @@ public class Event implements Persistable<UUID> {
     @Column(nullable = false)
     private LocalDateTime localDateTime;
 
-    @Column(nullable = false, length = 100)
-    private String place;
-
-    @Column(nullable = false)
-    private LocalDate deadline;
-
     @Embedded
     private Host host;
 
@@ -99,24 +93,6 @@ public class Event implements Persistable<UUID> {
 
     public Event setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
-        return this;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public Event setPlace(String place) {
-        this.place = place;
-        return this;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public Event setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
         return this;
     }
 
@@ -177,13 +153,11 @@ public class Event implements Persistable<UUID> {
 
     public String toString() {
         return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, localDateTime=%s, place=%s, deadline=%s host=%s)",
+                "Event(title=%s, description=%s, monetaryAmount=%s, localDateTime=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
                 this.getLocalDateTime(),
-                this.getPlace(),
-                this.getDeadline(),
                 this.getHost()
         );
     }

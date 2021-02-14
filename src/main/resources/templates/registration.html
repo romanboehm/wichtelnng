@@ -87,27 +87,6 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-sm-6">
-                    <label for="place">Where?</label>
-                    <input th:field="*{event.place}"
-                           id="place"
-                           class="form-control"
-                           type="text"
-                           placeholder="Sydney Harbor"
-                           required
-                           readonly/>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="local-date">Until what day can one register?</label>
-                    <input th:field="*{{event.deadline}}"
-                           id="deadline"
-                           class="form-control"
-                           type="date"
-                           required
-                           readonly/>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
                     <label for="host-name">Who's hosting?</label>
                     <input th:field="*{event.host.name}"
                            id="host-name"
@@ -152,7 +131,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="place">What's your email?</label>
+                    <label for="participant-email">What's your email?</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>

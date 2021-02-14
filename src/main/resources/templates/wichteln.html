@@ -70,9 +70,10 @@
                     </select>
                 </div>
             </div>
+            <p style="display:inline-block;margin-bottom:.5rem">What's the registration deadline?</p>
             <div class="form-row">
                 <div class="form-group col-sm-6">
-                    <label for="local-date">On what day?</label>
+                    <label for="local-date">Day</label>
                     <input th:field="*{{event.localDate}}"
                            id="local-date"
                            th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
@@ -85,7 +86,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="local-time">At what hour?</label>
+                    <label for="local-time">Hour</label>
                     <input th:field="*{{event.localTime}}"
                            id="local-time"
                            th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
@@ -95,35 +96,6 @@
                          class="invalid-feedback"
                          th:if="${#fields.hasErrors('event.localDateTime')}">
                         Must take place in the future.
-                    </div>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="place">Where?</label>
-                    <input th:field="*{event.place}"
-                           id="place"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.place') ? 'is-invalid' : ''}"
-                           type="text"
-                           placeholder="Sydney Harbor"
-                           required/>
-                    <div id="place-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.place')}">
-                        Must be between 1 and 100 characters long.
-                    </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="local-date">Until what day can one register?</label>
-                    <input th:field="*{{event.deadline}}"
-                           id="deadline"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.deadline') ? 'is-invalid' : ''}"
-                           type="date"
-                           required/>
-                    <div id="deadline-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.deadline')}">
-                        Must be at least a day before the event.
                     </div>
                 </div>
             </div>
@@ -143,7 +115,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="place">What's their email?</label>
+                    <label for="host-email">What's their email?</label>
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>

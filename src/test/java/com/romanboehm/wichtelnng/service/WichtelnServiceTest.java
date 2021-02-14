@@ -37,11 +37,9 @@ public class WichtelnServiceTest {
                     Assertions.assertThat(event.getHost().getName()).isEqualTo("George Young");
                     Assertions.assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
                     Assertions.assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
-                    Assertions.assertThat(event.getPlace()).isEqualTo("Sydney Harbor");
                     Assertions.assertThat(event.getLocalDateTime()).isEqualTo(
                             LocalDateTime.of(LocalDate.of(2666, Month.JUNE, 7), LocalTime.of(6, 6))
                     );
-                    Assertions.assertThat(event.getDeadline()).isEqualTo(LocalDate.of(2666, Month.JUNE, 6));
                 });
     }
 
