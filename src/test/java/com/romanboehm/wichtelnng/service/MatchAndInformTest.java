@@ -7,18 +7,20 @@ import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.assertj.core.api.Assertions;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import javax.mail.Address;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-@SpringBootTest
+@SpringBootTest(properties = "com.romanboehm.wichtlenng.rate=1000")
 public class MatchAndInformTest {
 
     @RegisterExtension
@@ -28,7 +30,7 @@ public class MatchAndInformTest {
     @MockBean
     private EventRepository eventRepository;
 
-    @Autowired
+    @SpyBean
     private MatchAndInform matchAndInform;
 
     @Test
@@ -47,7 +49,8 @@ public class MatchAndInformTest {
                         )
         ));
 
-        matchAndInform.matchAndInform();
+        Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS);
+        Mockito.verify(matchAndInform).matchAndInform();
 
         Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 2)).isTrue();
         Assertions.assertThat(greenMail.getReceivedMessages())

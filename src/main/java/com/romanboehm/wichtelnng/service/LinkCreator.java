@@ -11,7 +11,7 @@ public class LinkCreator {
 
     private final String domain;
 
-    public LinkCreator(@Value("${domain}") String domain) {
+    public LinkCreator(@Value("${com.romanboehm.wichtlenng.domain}") String domain) {
         this.domain = domain;
     }
 

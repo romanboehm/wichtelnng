@@ -29,7 +29,7 @@ public class MatchMailSender {
             MimeMessage message = matchMailCreator.createMessage(event, match);
             try {
                 asyncJavaMailSender.send(message).get(30, TimeUnit.SECONDS);
-                LOGGER.info("Send mail for {}", match);
+                LOGGER.info("Sent mail for {}", match);
             } catch (InterruptedException | ExecutionException | TimeoutException | RuntimeException e) {
                 LOGGER.error("Failed to send mail for {}", match, e);
             }

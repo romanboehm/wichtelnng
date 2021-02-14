@@ -29,7 +29,7 @@ public class RegistrationMailSender {
         MimeMessage message = registrationMailCreator.createMessage(participantRegistration);
         try {
             asyncJavaMailSender.send(message).get(30, TimeUnit.SECONDS);
-            LOGGER.info("Send mail for {}", participantRegistration);
+            LOGGER.info("Sent mail for {}", participantRegistration);
         } catch (InterruptedException | ExecutionException | TimeoutException | RuntimeException e) {
             LOGGER.error("Failed to send mail for {}", participantRegistration, e);
         }
