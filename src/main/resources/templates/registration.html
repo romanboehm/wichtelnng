@@ -87,6 +87,21 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-sm-6">
+                    <label for="timezone">Timezone</label>
+                    <select id="timezone"
+                            class="form-control"
+                            th:field="*{event.timezone}"
+                            readonly>
+                        <option th:each="timezone : ${T(java.time.ZoneId).getAvailableZoneIds()}"
+                                th:value="${T(java.time.ZoneId).of(timezone)}"
+                                th:text="${timezone}"
+                                th:selected="*{event.timezone}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
                     <label for="host-name">Who's hosting?</label>
                     <input th:field="*{event.host.name}"
                            id="host-name"

@@ -15,7 +15,8 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="title">What's the occasion?</label>
-                    <input th:field="*{event.title}" id="title"
+                    <input th:field="*{event.title}"
+                           id="title"
                            th:class="'form-control ' + ${#fields.hasErrors('event.title') ? 'is-invalid' : ''}"
                            type="text"
                            placeholder="AC/DC Secret Santa"
@@ -58,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-group col-sm-6">
-                    <label for="title">In what currency?</label>
+                    <label for="monetary-amount-currency">In what currency?</label>
                     <select id="monetary-amount-currency"
                             class="form-control"
                             th:field="*{event.monetaryAmount.currency}">
@@ -76,12 +77,12 @@
                     <label for="local-date">Day</label>
                     <input th:field="*{{event.localDate}}"
                            id="local-date"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
+                           th:class="'form-control ' + ${#fields.hasErrors('event.zonedDateTime') ? 'is-invalid' : ''}"
                            type="date"
                            required/>
                     <div id="local-date-error"
                          class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.localDateTime')}">
+                         th:if="${#fields.hasErrors('event.zonedDateTime')}">
                         Must take place in the future.
                     </div>
                 </div>
@@ -89,14 +90,28 @@
                     <label for="local-time">Hour</label>
                     <input th:field="*{{event.localTime}}"
                            id="local-time"
-                           th:class="'form-control ' + ${#fields.hasErrors('event.localDateTime') ? 'is-invalid' : ''}"
+                           th:class="'form-control ' + ${#fields.hasErrors('event.zonedDateTime') ? 'is-invalid' : ''}"
                            type="time"
                            required/>
                     <div id="local-time-error"
                          class="invalid-feedback"
-                         th:if="${#fields.hasErrors('event.localDateTime')}">
+                         th:if="${#fields.hasErrors('event.zonedDateTime')}">
                         Must take place in the future.
                     </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-sm-6">
+                    <label for="timezone">Timezone</label>
+                    <select id="timezone"
+                            class="form-control"
+                            th:field="*{event.timezone}">
+                        <option th:each="timezone : ${T(java.time.ZoneId).getAvailableZoneIds()}"
+                                th:value="${T(java.time.ZoneId).of(timezone)}"
+                                th:text="${timezone}"
+                                th:selected="*{event.timezone}">
+                        </option>
+                    </select>
                 </div>
             </div>
             <div class="form-row">

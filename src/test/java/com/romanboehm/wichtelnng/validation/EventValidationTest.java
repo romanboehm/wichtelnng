@@ -161,6 +161,14 @@ public class EventValidationTest extends BaseValidationTest {
 
             Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
         }
+
+        @Test
+        public void shouldFailEventWithNullTimezone() {
+            EventDto event = TestData.event().dto();
+            event.setTimezone(null);
+
+            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+        }
     }
 
 }

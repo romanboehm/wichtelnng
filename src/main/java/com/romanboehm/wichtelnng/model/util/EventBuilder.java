@@ -17,7 +17,7 @@ public class EventBuilder {
                 .setId(UUID.randomUUID())
                 .setTitle(dto.getTitle())
                 .setDescription(dto.getDescription())
-                .setLocalDateTime(dto.getLocalDateTime())
+                .setZonedDateTime(dto.getZonedDateTime())
                 .setHost(
                         new Host()
                                 .setName(dto.getHost().getName())
@@ -40,8 +40,9 @@ public class EventBuilder {
                                 .setCurrency(Monetary.getCurrency(entity.getMonetaryAmount().getCurrency()))
                                 .setNumber(entity.getMonetaryAmount().getNumber())
                 )
-                .setLocalDate(entity.getLocalDateTime().toLocalDate())
-                .setLocalTime(entity.getLocalDateTime().toLocalTime())
+                .setLocalDate(entity.getZonedDateTime().toLocalDate())
+                .setLocalTime(entity.getZonedDateTime().toLocalTime())
+                .setTimezone(entity.getZonedDateTime().getZone())
                 .setHost(
                         new HostDto()
                                 .setName(entity.getHost().getName())

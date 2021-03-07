@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class TestData {
@@ -28,6 +29,7 @@ public class TestData {
                         .setMonetaryAmount(monetaryAmount())
                         .setLocalDate(LocalDate.of(2666, Month.JUNE, 7))
                         .setLocalTime(LocalTime.of(6, 6))
+                        .setTimezone(ZoneId.of("Australia/Sydney"))
                         .setHost(host())
         );
     }
@@ -98,6 +100,7 @@ public class TestData {
             map.add("event.monetaryAmount.currency", event.getMonetaryAmount().getCurrency().toString());
             map.add("event.localDate", event.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             map.add("event.localTime", event.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+            map.add("event.timezone", event.getTimezone().toString());
             map.add("event.host.name", event.getHost().getName());
             map.add("event.host.email", event.getHost().getEmail());
             return map;

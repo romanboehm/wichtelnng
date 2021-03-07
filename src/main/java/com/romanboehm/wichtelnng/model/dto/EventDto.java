@@ -8,8 +8,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Valid
@@ -41,6 +42,9 @@ public class EventDto {
     @NotNull
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime localTime;
+
+    @NotNull
+    private ZoneId timezone;
 
     @NotNull
     @Valid
@@ -100,6 +104,15 @@ public class EventDto {
         return this;
     }
 
+    public ZoneId getTimezone() {
+        return timezone;
+    }
+
+    public EventDto setTimezone(ZoneId timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
     public HostDto getHost() {
         return host;
     }
@@ -109,24 +122,27 @@ public class EventDto {
         return this;
     }
 
-    // Needed to delegate validation for event's "when" (its local date at its local time) to the javax validator
-    // Non-nullability of the date resp. time components is validated separately through field annotations.
+    // Needed to delegate validation for event's "when" (its local date and local time at the respective timezone) to
+    // the javax validator.
+    // Non-nullability of the date, time, and timezone components is validated separately through field annotations.
     @FutureOrPresent
-    public LocalDateTime getLocalDateTime() {
-        return LocalDateTime.of(
+    public ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.of(
                 localDate != null ? localDate : LocalDate.now(),
-                localTime != null ? localTime : LocalTime.now()
+                localTime != null ? localTime : LocalTime.now(),
+                timezone != null ? timezone : ZoneId.systemDefault()
         );
     }
 
     public String toString() {
         return String.format(
-                "EventDto(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, host=%s)",
+                "EventDto(title=%s, description=%s, monetaryAmount=%s, localDate=%s, localTime=%s, timezone=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
                 this.getLocalDate(),
                 this.getLocalTime(),
+                this.getTimezone(),
                 this.getHost()
         );
     }

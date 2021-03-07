@@ -20,7 +20,10 @@ import javax.mail.Address;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@SpringBootTest(properties = "com.romanboehm.wichtlenng.rate=1000")
+@SpringBootTest(properties = {
+        "com.romanboehm.wichtlenng.matchandinform.rate.in.ms=500",
+        "com.romanboehm.wichtlenng.matchandinform.initial.delay.in.ms=0"
+})
 public class MatchAndInformTest {
 
     @RegisterExtension
@@ -35,7 +38,7 @@ public class MatchAndInformTest {
 
     @Test
     public void shouldMatchAndInform() {
-        Mockito.when(eventRepository.findAllByLocalDateTimeBefore(ArgumentMatchers.any())).thenReturn(List.of(
+        Mockito.when(eventRepository.findAllByZonedDateTimeBefore(ArgumentMatchers.any())).thenReturn(List.of(
                 TestData.event().entity()
                         .addParticipant(
                                 new Participant()
@@ -56,7 +59,7 @@ public class MatchAndInformTest {
         Assertions.assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
-                .containsExactlyInAnyOrder(
+                .contains(
                         "angusyoung@acdc.net",
                         "malcolmyoung@acdc.net"
                 );

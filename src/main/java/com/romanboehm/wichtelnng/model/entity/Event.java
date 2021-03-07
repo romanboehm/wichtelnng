@@ -12,8 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -36,7 +35,7 @@ public class Event implements Persistable<UUID> {
     private MonetaryAmount monetaryAmount;
 
     @Column(nullable = false)
-    private LocalDateTime localDateTime;
+    private ZonedDateTime zonedDateTime;
 
     @Embedded
     private Host host;
@@ -87,12 +86,12 @@ public class Event implements Persistable<UUID> {
         return this;
     }
 
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
+    public ZonedDateTime getZonedDateTime() {
+        return zonedDateTime;
     }
 
-    public Event setLocalDateTime(LocalDateTime localDateTime) {
-        this.localDateTime = localDateTime;
+    public Event setZonedDateTime(ZonedDateTime zonedDateTime) {
+        this.zonedDateTime = zonedDateTime;
         return this;
     }
 
@@ -153,11 +152,12 @@ public class Event implements Persistable<UUID> {
 
     public String toString() {
         return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, localDateTime=%s, host=%s)",
+                "Event(title=%s, description=%s, monetaryAmount=%s, zonedDateTime=%s, timezone=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
-                this.getLocalDateTime(),
+                this.getZonedDateTime(),
+                this.getZonedDateTime(),
                 this.getHost()
         );
     }

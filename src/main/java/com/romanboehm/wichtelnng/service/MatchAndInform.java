@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,10 +34,10 @@ public class MatchAndInform {
     }
 
 
-    @Scheduled(fixedRateString = "${com.romanboehm.wichtlenng.rate}")
+    @Scheduled(initialDelayString = "${com.romanboehm.wichtlenng.matchandinform.initial.delay.in.ms}", fixedRateString = "${com.romanboehm.wichtlenng.matchandinform.rate.in.ms}")
     @Transactional(readOnly = true)
     public void matchAndInform() {
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByLocalDateTimeBefore(LocalDateTime.now());
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByZonedDateTimeBefore(ZonedDateTime.now());
         LOGGER.debug(
                 "Found the following events whose participants are ready to be matched and informed: {}",
                 eventsWhereDeadlineHasPassed.stream()

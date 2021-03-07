@@ -36,6 +36,7 @@ public class WichtelnUiIntegrationTest {
     private final static String MONETARYAMOUNT_CURRENCY_ID = "monetary-amount-currency";
     private final static String LOCALDATE_ID = "local-date";
     private final static String LOCALTIME_ID = "local-time";
+    private final static String TIMEZONE_ID = "timezone";
     private final static String LOCALDATE_ERROR_ID = LOCALDATE_ID + "-error";
     private final static String LOCALTIME_ERROR_ID = LOCALTIME_ID + "-error";
     private final static String HOST_NAME_ID = "host-name";
@@ -81,6 +82,8 @@ public class WichtelnUiIntegrationTest {
         Assertions.assertThat(localDate).isNotNull();
         WebElement localTime = supply(LOCALTIME_ID);
         Assertions.assertThat(localTime).isNotNull();
+        WebElement timezone = supply(TIMEZONE_ID);
+        Assertions.assertThat(timezone).isNotNull();
         WebElement hostName = supply(HOST_NAME_ID);
         Assertions.assertThat(hostName).isNotNull();
         WebElement hostEmail = supply(HOST_EMAIL_ID);
@@ -104,8 +107,6 @@ public class WichtelnUiIntegrationTest {
         description.sendKeys("There's gonna be some santa'ing".repeat(100));
         WebElement monetaryAmountNumber = supply(MONETARYAMOUNT_NUMBER_ID);
         monetaryAmountNumber.sendKeys("-1"); // negative
-        WebElement monetaryAmountCurrency = supply(MONETARYAMOUNT_CURRENCY_ID);
-        monetaryAmountCurrency.sendKeys("XXXX"); // not a valid currency
         WebElement localDate = supply(LOCALDATE_ID);
         localDate.sendKeys(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         WebElement localTime = supply(LOCALTIME_ID);
