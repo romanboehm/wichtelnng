@@ -3,6 +3,8 @@ package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
+import com.romanboehm.wichtelnng.model.dto.EventDto;
+import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 @SpringBootTest
 public class WichtelnServiceTest {
@@ -41,6 +46,16 @@ public class WichtelnServiceTest {
                             LocalDateTime.of(LocalDate.of(2666, Month.JUNE, 7), LocalTime.of(6, 6))
                     );
                 });
+    }
+
+    @Test
+    public void shouldNoticeWhenEventPastDeadline() {
+        Event pastDeadline = eventRepository.save(
+                TestData.event().entity().setZonedDateTime(ZonedDateTime.now().minus(1, ChronoUnit.MINUTES))
+        );
+
+        Optional<EventDto> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());
+        Assertions.assertThat(possibleEvent).isEmpty();
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -48,7 +49,11 @@ public class WichtelnService {
 
     @Transactional(readOnly = true)
     public Optional<EventDto> getEvent(UUID eventId) {
-        return eventRepository.findById(eventId).map(EventBuilder::fromEntity);
+        return eventRepository.findById(eventId)
+                // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
+                // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
+                .filter(event -> event.getZonedDateTime().isAfter(ZonedDateTime.now()))
+                .map(EventBuilder::fromEntity);
     }
 
     @Transactional
