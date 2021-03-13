@@ -152,11 +152,10 @@ public class Event implements Persistable<UUID> {
 
     public String toString() {
         return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, zonedDateTime=%s, timezone=%s, host=%s)",
+                "Event(title=%s, description=%s, monetaryAmount=%s, zonedDateTime=%s, host=%s)",
                 this.getTitle(),
                 this.getDescription(),
                 this.getMonetaryAmount(),
-                this.getZonedDateTime(),
                 this.getZonedDateTime(),
                 this.getHost()
         );

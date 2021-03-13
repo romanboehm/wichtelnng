@@ -12,6 +12,6 @@ import java.util.UUID;
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
-    @EntityGraph(attributePaths = "participants")
+    @EntityGraph(attributePaths = "participants", type = EntityGraph.EntityGraphType.FETCH)
     List<Event> findAllByZonedDateTimeBefore(ZonedDateTime zonedDateTime);
 }

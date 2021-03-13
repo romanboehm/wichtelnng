@@ -37,6 +37,8 @@ public class MatchAndInform {
     @Scheduled(initialDelayString = "${com.romanboehm.wichtlenng.matchandinform.initial.delay.in.ms}", fixedRateString = "${com.romanboehm.wichtlenng.matchandinform.rate.in.ms}")
     @Transactional(readOnly = true)
     public void matchAndInform() {
+        // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
+        // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
         List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByZonedDateTimeBefore(ZonedDateTime.now());
         LOGGER.debug(
                 "Found the following events whose participants are ready to be matched and informed: {}",
