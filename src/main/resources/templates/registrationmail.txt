@@ -1,6 +1,6 @@
 Hey [( ${registration.participantName} )],
 
-You have successfully registered to wichtel at '[( ${registration.title} )]' (https://wichtelnng.romanboehm.com/about)!
+You have successfully registered to wichtel at '[( ${registration.title} )]' ([( ${domain} )]/about)!
 You'll be provided with the name of your gift's recipient through an email to [( ${registration.participantEmail} )] after [( ${#temporals.format(registration.zonedDateTime, T(java.util.Locale).US)} )].
 The gift's monetary value should not exceed [( ${T(org.javamoney.moneta.Money).of(registration.number, registration.currency)} )].
 
@@ -10,4 +10,4 @@ Here's what the event's host says about it:
 
 If you have any questions, contact the event's host [( ${registration.hostName} )] at [( ${registration.hostEmail} )].
 
-This mail was generated using https://wichtelnng.romanboehm.com
+This mail was generated using [( ${domain} )]

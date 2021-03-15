@@ -2,8 +2,8 @@ package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.exception.WichtelnMailCreationException;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -15,24 +15,38 @@ import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
-@RequiredArgsConstructor
 @Component
 public class RegistrationMailCreator {
 
+    private final String domain;
+    private final String from;
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
-    
+
+    public RegistrationMailCreator(
+            @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+            @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+            TemplateEngine templateEngine,
+            JavaMailSender mailSender
+    ) {
+        this.domain = domain;
+        this.from = from;
+        this.templateEngine = templateEngine;
+        this.mailSender = mailSender;
+    }
+
 
     public MimeMessage createMessage(ParticipantRegistration registration) throws WichtelnMailCreationException {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
             message.setSubject(String.format("You have registered to wichtel at '%s'", registration.getTitle()));
-            message.setFrom("wichteln@romanboehm.com");
+            message.setFrom(from);
             message.setTo(registration.getParticipantEmail());
 
             Context ctx = new Context();
             ctx.setVariable("registration", registration);
+            ctx.setVariable("domain", domain);
             String textContent = templateEngine.process("registrationmail.txt", ctx);
             message.setText(textContent);
 
