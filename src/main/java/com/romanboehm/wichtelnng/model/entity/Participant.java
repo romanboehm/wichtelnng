@@ -11,7 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
@@ -20,7 +21,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = "events")
+@ToString(exclude = "event")
 @Entity(name = "Participant")
 @Table(name = "participant")
 public class Participant {
@@ -37,8 +38,9 @@ public class Participant {
     @Column(nullable = false, length = 255)
     private String email;
 
-    @ManyToMany(mappedBy = "participants")
-    private Set<Event> events = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     public static Participant from(ParticipantRegistration participantRegistration) {
         return new Participant()

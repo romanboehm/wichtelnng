@@ -11,11 +11,13 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
@@ -49,11 +51,7 @@ public class Event implements Persistable<UUID> {
     @Embedded
     private Host host;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "event_participant",
-            joinColumns = @JoinColumn(name = "event_id"),
-            inverseJoinColumns = @JoinColumn(name = "participant_id")
-    )
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Participant> participants = new HashSet<>();
 
     public static Event from(EventCreation eventCreation) {
@@ -76,13 +74,13 @@ public class Event implements Persistable<UUID> {
 
     public Event addParticipant(Participant participant) {
         participants.add(participant);
-        participant.getEvents().add(this);
+        participant.setEvent(this);
         return this;
     }
 
     public Event removePartipant(Participant participant) {
         participants.remove(participant);
-        participant.getEvents().remove(this);
+        participant.setEvent(null);
         return this;
     }
 
