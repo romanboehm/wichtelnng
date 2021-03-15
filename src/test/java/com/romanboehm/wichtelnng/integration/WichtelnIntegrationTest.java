@@ -2,7 +2,9 @@ package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
+import com.romanboehm.wichtelnng.repository.EventRepository;
 import com.romanboehm.wichtelnng.service.WichtelnService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,14 @@ public class WichtelnIntegrationTest {
 
     @SpyBean
     private WichtelnService wichtelnService;
+
+    @Autowired
+    private EventRepository eventRepository;
+
+    @AfterEach
+    public void cleanup() {
+        eventRepository.deleteAll();
+    }
 
     @Test
     public void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {

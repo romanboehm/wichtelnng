@@ -30,6 +30,11 @@ public class WichtelnServiceTest {
     @Autowired
     private WichtelnService wichtelnService;
 
+    @AfterEach
+    public void cleanup() {
+        eventRepository.deleteAll();
+    }
+
     @Test
     public void shouldSave() {
         wichtelnService.save(eventCreation());
