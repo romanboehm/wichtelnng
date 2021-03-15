@@ -6,7 +6,7 @@ import com.romanboehm.wichtelnng.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+@Service
 public class MatchAndInform {
 
     private final EventRepository eventRepository;
@@ -27,7 +27,7 @@ public class MatchAndInform {
             initialDelayString = "${com.romanboehm.wichtelnng.matchandinform.initial.delay.in.ms}",
             fixedRateString = "${com.romanboehm.wichtelnng.matchandinform.rate.in.ms}"
     )
-    @Transactional(readOnly = true)
+    @Transactional
     public void matchAndInform() {
         // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
         // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
@@ -38,9 +38,20 @@ public class MatchAndInform {
                         .map(e -> e.getId().toString())
                         .collect(Collectors.joining(", "))
         );
-        eventsWhereDeadlineHasPassed.forEach(event -> {
-            List<Match> matches = matcher.match(new ArrayList<>(event.getParticipants()));
-            matchMailSender.send(event, matches);
-        });
+        for (Event event : eventsWhereDeadlineHasPassed) {
+            try {
+                List<Match> matches = matcher.match(new ArrayList<>(event.getParticipants()));
+                matchMailSender.send(event, matches);
+                log.info(
+                        "Matched {} and informed about {}",
+                        matches.stream().map(Match::toString).collect(Collectors.joining(", ")),
+                        event
+                );
+                eventRepository.delete(event);
+                log.debug("Deleted {} because participants have been matched", event);
+            } catch (Exception e) {
+                log.error("Failed to match and inform {}: ", event, e);
+            }
+        }
     }
 }
