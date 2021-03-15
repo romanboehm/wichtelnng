@@ -13,12 +13,12 @@ public class MatcherTest {
     @Test
     public void shouldShuffle() {
         Matcher matcher = new Matcher();
-        Participant angusYoung = new Participant();
-        angusYoung.setName("Angus Young");
-        Participant malcolmYoung = new Participant();
-        malcolmYoung.setName("Malcolm Young");
-        Participant philRudd = new Participant();
-        philRudd.setName("Phil Rudd");
+        Participant angusYoung = new Participant()
+                .setName("Angus Young");
+        Participant malcolmYoung = new Participant()
+                .setName("Malcolm Young");
+        Participant philRudd = new Participant()
+                .setName("Phil Rudd");
 
         List<Match> matches = matcher.match(
                 List.of(angusYoung, malcolmYoung, philRudd)

@@ -1,5 +1,10 @@
 package com.romanboehm.wichtelnng.model.entity;
 
+import com.romanboehm.wichtelnng.model.dto.EventCreation;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.CascadeType;
@@ -17,6 +22,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = "participants")
 @Entity(name = "Event")
 @Table(name = "event")
 public class Event implements Persistable<UUID> {
@@ -47,70 +56,22 @@ public class Event implements Persistable<UUID> {
     )
     private Set<Participant> participants = new HashSet<>();
 
-    public Event() {
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Event setId(UUID id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Event setTitle(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public Event setDescription(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public MonetaryAmount getMonetaryAmount() {
-        return monetaryAmount;
-    }
-
-    public Event setMonetaryAmount(MonetaryAmount monetaryAmount) {
-        this.monetaryAmount = monetaryAmount;
-        return this;
-    }
-
-    public ZonedDateTime getZonedDateTime() {
-        return zonedDateTime;
-    }
-
-    public Event setZonedDateTime(ZonedDateTime zonedDateTime) {
-        this.zonedDateTime = zonedDateTime;
-        return this;
-    }
-
-    public Host getHost() {
-        return host;
-    }
-
-    public Event setHost(Host host) {
-        this.host = host;
-        return this;
-    }
-
-    public Set<Participant> getParticipants() {
-        return participants;
-    }
-
-    public Event setParticipants(Set<Participant> participants) {
-        this.participants = participants;
-        return this;
+    public static Event from(EventCreation eventCreation) {
+        return new Event()
+                .setId(UUID.randomUUID())
+                .setTitle(eventCreation.getTitle())
+                .setDescription(eventCreation.getDescription())
+                .setZonedDateTime(eventCreation.getZonedDateTime())
+                .setHost(
+                        new Host()
+                                .setName(eventCreation.getHostName())
+                                .setEmail(eventCreation.getHostEmail())
+                )
+                .setMonetaryAmount(
+                        new MonetaryAmount()
+                                .setNumber(eventCreation.getNumber())
+                                .setCurrency(eventCreation.getCurrency().getCurrencyCode())
+                );
     }
 
     public Event addParticipant(Participant participant) {
@@ -148,16 +109,5 @@ public class Event implements Persistable<UUID> {
     @Override
     public boolean isNew() {
         return id == null;
-    }
-
-    public String toString() {
-        return String.format(
-                "Event(title=%s, description=%s, monetaryAmount=%s, zonedDateTime=%s, host=%s)",
-                this.getTitle(),
-                this.getDescription(),
-                this.getMonetaryAmount(),
-                this.getZonedDateTime(),
-                this.getHost()
-        );
     }
 }

@@ -29,9 +29,9 @@ public class WichtelnControllerTest {
 
     @Test
     public void shouldValidateEvent() throws Exception {
-        MultiValueMap<String, String> params = TestData.event().formParams();
+        MultiValueMap<String, String> params = TestData.eventFormParams();
         params.set(
-                "event.localDate",
+                "localDate",
                 LocalDate
                         .now().minus(1, ChronoUnit.DAYS)
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -49,9 +49,9 @@ public class WichtelnControllerTest {
 
     @Test
     public void shouldValidateParticipant() throws Exception {
-        MultiValueMap<String, String> params = TestData.participant().formParams();
-        params.set("participant.email", "notavalidemail.address");
-        params.addAll(TestData.event().formParams());
+        MultiValueMap<String, String> params = TestData.eventFormParams();
+        params.addAll(TestData.participantFormParams());
+        params.set("participantEmail", "notavalidemail.address");
 
         mockMvc.perform(MockMvcRequestBuilders.post(String.format("/wichteln/%s/register", UUID.randomUUID()))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)

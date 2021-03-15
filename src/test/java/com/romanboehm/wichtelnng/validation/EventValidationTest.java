@@ -1,60 +1,70 @@
 package com.romanboehm.wichtelnng.validation;
 
 import com.romanboehm.wichtelnng.TestData;
-import com.romanboehm.wichtelnng.model.dto.EventDto;
-import com.romanboehm.wichtelnng.model.dto.HostDto;
-import com.romanboehm.wichtelnng.model.dto.MonetaryAmountDto;
+import com.romanboehm.wichtelnng.model.dto.EventCreation;
+import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
-public class EventValidationTest extends BaseValidationTest {
+public class EventValidationTest {
+
+    private Validator validator;
+    private ValidatorFactory validatorFactory;
+
+    @BeforeEach
+    public void createValidator() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
+
+    @AfterEach
+    public void close() {
+        validatorFactory.close();
+    }
 
     @Test
     public void shouldAcceptValidEvent() {
-        EventDto event = TestData.event().dto();
+        EventCreation event = TestData.eventCreation();
 
-        Assertions.assertThat(getValidator().validate(event)).isEmpty();
+        Assertions.assertThat(validator.validate(event)).isEmpty();
     }
 
     @Nested
-    public class EventDependencies {
+    public class EventMonetaryAmount {
 
         @Test
-        public void shouldFailEventWithInvalidMonetaryAmount() {
-            EventDto event = TestData.event().dto();
-            MonetaryAmountDto monetaryAmount = new MonetaryAmountDto();
-            event.setMonetaryAmount(monetaryAmount);
+        public void shouldFailEventWithInvalidNumber() {
+            EventCreation event = TestData.eventCreation()
+                    .setNumber(BigDecimal.valueOf(-1));
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullMonetaryAmount() {
-            EventDto event = TestData.event().dto();
-            event.setMonetaryAmount(null);
+            EventCreation event = TestData.eventCreation()
+                    .setNumber(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
-        public void shouldFailEventWithNullHost() {
-            EventDto event = TestData.event().dto();
-            event.setHost(null);
+        public void shouldFailEventWithNullCurrency() {
+            EventCreation event = TestData.eventCreation()
+                    .setCurrency(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
-        }
-
-        @Test
-        public void shouldFailEventWithInvalidHost() {
-            EventDto event = TestData.event().dto();
-            event.setHost(new HostDto());
-
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
     }
@@ -64,34 +74,34 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithTooLongTitle() {
-            EventDto event = TestData.event().dto();
-            event.setTitle(event.getTitle().repeat(100));
+            EventCreation event = TestData.eventCreation()
+                    .setTitle("foo".repeat(100));
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullTitle() {
-            EventDto event = TestData.event().dto();
-            event.setTitle(null);
+            EventCreation event = TestData.eventCreation()
+                    .setTitle(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithEmptyTitle() {
-            EventDto event = TestData.event().dto();
-            event.setTitle("");
+            EventCreation event = TestData.eventCreation()
+                    .setTitle("");
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithWhitespaceTitle() {
-            EventDto event = TestData.event().dto();
-            event.setTitle(" ");
+            EventCreation event = TestData.eventCreation()
+                    .setTitle(" ");
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
     }
 
@@ -100,74 +110,200 @@ public class EventValidationTest extends BaseValidationTest {
 
         @Test
         public void shouldFailEventWithTooLongDescription() {
-            EventDto event = TestData.event().dto();
-            event.setDescription(event.getDescription().repeat(1000));
+            EventCreation event = TestData.eventCreation()
+                    .setDescription("foo".repeat(1000));
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullDescription() {
-            EventDto event = TestData.event().dto();
-            event.setDescription(null);
+            EventCreation event = TestData.eventCreation()
+                    .setDescription(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithEmptyDescription() {
-            EventDto event = TestData.event().dto();
-            event.setDescription("");
+            EventCreation event = TestData.eventCreation()
+                    .setDescription("");
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithWhitespaceDescription() {
-            EventDto event = TestData.event().dto();
-            event.setDescription(" ");
+            EventCreation event = TestData.eventCreation()
+                    .setDescription(" ");
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
     }
 
     @Nested
-    public class EventLocalDateTime {
+    public class EventZonedDateTime {
 
         @Test
-        public void shouldFailEventWithPastLocalDateTime() {
-            EventDto event = TestData.event().dto();
-            LocalDate today = LocalDate.now();
-            event.setLocalDate(today);
-            LocalTime pastTime = LocalTime.now().minus(1, ChronoUnit.HOURS);
-            event.setLocalTime(pastTime);
+        public void shouldFailEventWithPastZonedDateTime() {
+            EventCreation event = TestData.eventCreation()
+                    .setLocalDate(LocalDate.now())
+                    .setLocalTime(LocalTime.now().minus(1, ChronoUnit.HOURS));
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullLocalDate() {
-            EventDto event = TestData.event().dto();
-            event.setLocalDate(null);
+            EventCreation event = TestData.eventCreation()
+                    .setLocalDate(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullLocalTime() {
-            EventDto event = TestData.event().dto();
-            event.setLocalTime(null);
+            EventCreation event = TestData.eventCreation()
+                    .setLocalTime(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
         }
 
         @Test
         public void shouldFailEventWithNullTimezone() {
-            EventDto event = TestData.event().dto();
-            event.setTimezone(null);
+            EventCreation event = TestData.eventCreation()
+                    .setTimezone(null);
 
-            Assertions.assertThat(getValidator().validate(event)).isNotEmpty();
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+    }
+
+    @Nested
+    public class EventHost {
+
+        @Test
+        public void shouldFailEventWithTooLongHostName() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostName("foo".repeat(100));
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithNullHostName() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostName(null);
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithEmptyHostName() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostName("");
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithInvalidHostEmail() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostEmail("notavalid.email");
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithNullHostEmail() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostEmail(null);
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithEmptyHostEmail() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostEmail("");
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailEventWithWhitespaceHostEmail() {
+            EventCreation event = TestData.eventCreation()
+                    .setHostEmail(" ");
+
+            Assertions.assertThat(validator.validate(event)).isNotEmpty();
+        }
+    }
+
+    @Nested
+    public class EventParticipant {
+
+        @Test
+        public void shouldFailParticipantWithTooLongName() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantName("foo".repeat(100));
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithEmptyName() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantName("");
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithWhitespaceName() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantName(" ");
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithNullName() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantName(null);
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithInvalidEmail() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantEmail("notavalid.email");
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithEmptyEmail() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantEmail("");
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithWhitespaceEmail() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantEmail(" ");
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
+        }
+
+        @Test
+        public void shouldFailParticipantWithNullEmail() {
+            ParticipantRegistration registration = TestData.participantRegistration()
+                    .setParticipantEmail(null);
+
+            Assertions.assertThat(validator.validate(registration)).isNotEmpty();
         }
     }
 

@@ -61,7 +61,7 @@ public class WichtelnIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
         // Fill out and submit form for event
-        MultiValueMap<String, String> params = TestData.event().formParams();
+        MultiValueMap<String, String> params = TestData.eventFormParams();
         mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)
@@ -82,8 +82,8 @@ public class WichtelnIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
 
         // Register participant for event
-        params.addAll(TestData.participant().formParams());
-        params.add("event.id", eventId.toString());
+        params.addAll(TestData.participantFormParams());
+        params.add("id", eventId.toString());
         mockMvc.perform(MockMvcRequestBuilders.post(registrationUrl.toString())
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .params(params)

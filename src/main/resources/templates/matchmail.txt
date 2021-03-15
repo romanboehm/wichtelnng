@@ -9,4 +9,4 @@ Here's what the event's host says about it:
 
 If you have any questions, contact the event's host [( ${event.host.name} )] at [( ${event.host.email} )].
 
-This mail was generated using https://wichteln.romanboehm.com
+This mail was generated using https://wichtelnng.romanboehm.com

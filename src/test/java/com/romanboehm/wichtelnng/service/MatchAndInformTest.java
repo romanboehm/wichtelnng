@@ -7,30 +7,28 @@ import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.assertj.core.api.Assertions;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import javax.mail.Address;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 
-@SpringBootTest(properties = {
-        "com.romanboehm.wichtlenng.matchandinform.rate.in.ms=500",
-        "com.romanboehm.wichtlenng.matchandinform.initial.delay.in.ms=0"
-})
+@SpringBootTest(properties = { "com.romanboehm.wichtelnng.matchandinform.rate.in.ms=500" })
 public class MatchAndInformTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP_IMAP)
             .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
 
-    @MockBean
+    @Autowired
     private EventRepository eventRepository;
 
     @SpyBean
@@ -38,30 +36,60 @@ public class MatchAndInformTest {
 
     @Test
     public void shouldMatchAndInform() {
-        Mockito.when(eventRepository.findAllByZonedDateTimeBefore(ArgumentMatchers.any())).thenReturn(List.of(
-                TestData.event().entity()
-                        .addParticipant(
-                                new Participant()
-                                        .setName("Angus Young")
-                                        .setEmail("angusyoung@acdc.net")
+        eventRepository.save(TestData.event()
+                .setZonedDateTime(
+                        ZonedDateTime.of(
+                                LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
+                                LocalTime.now(),
+                                ZoneId.of("Australia/Sydney")
                         )
-                        .addParticipant(
-                                new Participant()
-                                        .setName("Malcolm Young")
-                                        .setEmail("malcolmyoung@acdc.net")
+                ).addParticipant(
+                        new Participant()
+                                .setName("Angus Young")
+                                .setEmail("angusyoung@acdc.net")
+                ).addParticipant(
+                        new Participant()
+                                .setName("Malcolm Young")
+                                .setEmail("malcolmyoung@acdc.net")
+                ).addParticipant(
+                        new Participant()
+                                .setName("George Young")
+                                .setEmail("georgeyoung@acdc.net")
+                )
+        );
+
+        eventRepository.save(TestData.event()
+                .setZonedDateTime(
+                        ZonedDateTime.of(
+                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be excluded
+                                LocalTime.now(),
+                                ZoneId.of("Australia/Sydney")
                         )
-        ));
+                ).addParticipant(
+                        new Participant()
+                                .setName("Phil Rudd")
+                                .setEmail("philrudd@acdc.net")
+                ).addParticipant(
+                        new Participant()
+                                .setName("Bon Scott")
+                                .setEmail("bonscott@acdc.net")
+                ).addParticipant(
+                        new Participant()
+                                .setName("Cliff Williams")
+                                .setEmail("cliffwilliams@acdc.net")
+                )
+        );
 
-        Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS);
-        Mockito.verify(matchAndInform).matchAndInform();
+        Mockito.verify(matchAndInform, Mockito.timeout(1500).atLeastOnce()).matchAndInform();
 
-        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 2)).isTrue();
+        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
         Assertions.assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
                 .contains(
                         "angusyoung@acdc.net",
-                        "malcolmyoung@acdc.net"
+                        "malcolmyoung@acdc.net",
+                        "georgeyoung@acdc.net"
                 );
 
 

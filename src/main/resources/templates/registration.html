@@ -11,7 +11,7 @@
           class="form-horizontal my-3"
           th:object="${participantRegistration}"
           method="post">
-        <input th:field="*{event.id}" id="id"
+        <input th:field="*{id}" id="id"
                type="text"
                hidden
                required
@@ -21,7 +21,7 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="title">What's the occasion?</label>
-                    <input th:field="*{event.title}" id="title"
+                    <input th:field="*{title}" id="title"
                            class="form-control"
                            type="text"
                            placeholder="AC/DC Secret Santa"
@@ -30,7 +30,7 @@
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="description">What do participants need to know?</label>
-                    <textarea th:field="*{event.description}"
+                    <textarea th:field="*{description}"
                               id="description"
                               class="form-control"
                               placeholder="There's gonna be some santa'ing!"
@@ -42,7 +42,7 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="monetary-amount-number">How much to spend on a gift?</label>
-                    <input th:field="*{event.monetaryAmount.number}"
+                    <input th:field="*{number}"
                            id="monetary-amount-number"
                            class="form-control"
                            type="number"
@@ -55,12 +55,12 @@
                     <label for="title">In what currency?</label>
                     <select id="monetary-amount-currency"
                             class="form-control"
-                            th:field="*{event.monetaryAmount.currency}"
+                            th:field="*{currency}"
                             readonly>
                         <option th:each="currency : ${T(javax.money.Monetary).getCurrencies()}"
                                 th:value="${currency}"
                                 th:text="${currency}"
-                                th:selected="*{event.monetaryAmount.currency}">
+                                th:selected="*{currency}">
                         </option>
                     </select>
                 </div>
@@ -68,7 +68,7 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="local-date">On what day?</label>
-                    <input th:field="*{{event.localDate}}"
+                    <input th:field="*{{localDate}}"
                            id="local-date"
                            class="form-control"
                            type="date"
@@ -77,7 +77,7 @@
                 </div>
                 <div class="form-group col-sm-6">
                     <label for="local-time">At what hour?</label>
-                    <input th:field="*{{event.localTime}}"
+                    <input th:field="*{{localTime}}"
                            id="local-time"
                            class="form-control"
                            type="time"
@@ -90,12 +90,12 @@
                     <label for="timezone">Timezone</label>
                     <select id="timezone"
                             class="form-control"
-                            th:field="*{event.timezone}"
+                            th:field="*{timezone}"
                             readonly>
                         <option th:each="timezone : ${T(java.time.ZoneId).getAvailableZoneIds()}"
                                 th:value="${T(java.time.ZoneId).of(timezone)}"
                                 th:text="${timezone}"
-                                th:selected="*{event.timezone}">
+                                th:selected="*{timezone}">
                         </option>
                     </select>
                 </div>
@@ -103,7 +103,7 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="host-name">Who's hosting?</label>
-                    <input th:field="*{event.host.name}"
+                    <input th:field="*{hostName}"
                            id="host-name"
                            class="form-control"
                            type="text"
@@ -117,7 +117,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
-                        <input th:field="*{event.host.email}"
+                        <input th:field="*{hostEmail}"
                                id="host-email"
                                class="form-control"
                                type="text"
@@ -133,15 +133,15 @@
             <div class="form-row">
                 <div class="form-group col-sm-6">
                     <label for="host-name">What's your name?</label>
-                    <input th:field="*{participant.name}"
+                    <input th:field="*{participantName}"
                            id="participant-name"
-                           th:class="'form-control ' + ${#fields.hasErrors('participant.name') ? 'is-invalid' : ''}"
+                           th:class="'form-control ' + ${#fields.hasErrors('participantName') ? 'is-invalid' : ''}"
                            type="text"
                            placeholder="Angus Young"
                            required/>
                     <div id="participant-name-error"
                          class="invalid-feedback"
-                         th:if="${#fields.hasErrors('participant.name')}">
+                         th:if="${#fields.hasErrors('participantName')}">
                         Must be a valid email address.
                     </div>
                 </div>
@@ -151,15 +151,15 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">@</span>
                         </div>
-                        <input th:field="*{participant.email}"
+                        <input th:field="*{participantEmail}"
                                id="participant-email"
-                               th:class="'form-control ' + ${#fields.hasErrors('participant.email') ? 'is-invalid' : ''}"
+                               th:class="'form-control ' + ${#fields.hasErrors('participantEmail') ? 'is-invalid' : ''}"
                                type="text"
                                placeholder="angusyoung@acdc.net"
                                required/>
                         <div id="participant-email-error"
                              class="invalid-feedback"
-                             th:if="${#fields.hasErrors('participant.email')}">
+                             th:if="${#fields.hasErrors('participantEmail')}">
                             Must be a valid email address.
                         </div>
                     </div>
@@ -169,7 +169,7 @@
         <button type="submit"
                 id="register-button"
                 class="btn btn-primary my-3 mr-3"
-                th:formaction="@{/wichteln/{eventId}/register(eventId=*{event.id})}">
+                th:formaction="@{/wichteln/{eventId}/register(eventId=*{id})}">
             Register
         </button>
         <button type="reset"

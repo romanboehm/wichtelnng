@@ -1,15 +1,12 @@
 package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
-import com.romanboehm.wichtelnng.model.dto.EventDto;
-import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
-import com.romanboehm.wichtelnng.model.util.EventBuilder;
-import com.romanboehm.wichtelnng.model.util.ParticipantBuilder;
+import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,28 +15,18 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
+@RequiredArgsConstructor
 @Service
 public class WichtelnService {
-
-    private final static Logger LOGGER = LoggerFactory.getLogger(WichtelnService.class);
 
     private final RegistrationMailSender registrationMailSender;
     private final EventRepository eventRepository;
     private final LinkCreator linkCreator;
 
-    public WichtelnService(
-            RegistrationMailSender registrationMailSender,
-            EventRepository eventRepository,
-            LinkCreator linkCreator
-    ) {
-        this.registrationMailSender = registrationMailSender;
-        this.eventRepository = eventRepository;
-        this.linkCreator = linkCreator;
-    }
-
     @Transactional
-    public UUID save(EventCreation dto) {
-        Event saved = eventRepository.save(EventBuilder.fromDto(dto.getEvent()));
+    public UUID save(EventCreation eventCreation) {
+        Event saved = eventRepository.save(Event.from(eventCreation));
         return saved.getId();
     }
 
@@ -48,24 +35,23 @@ public class WichtelnService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<EventDto> getEvent(UUID eventId) {
+    public Optional<EventCreation> getEvent(UUID eventId) {
         return eventRepository.findById(eventId)
                 // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
                 // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
                 .filter(event -> event.getZonedDateTime().isAfter(ZonedDateTime.now()))
-                .map(EventBuilder::fromEntity);
+                .map(EventCreation::from);
     }
 
     @Transactional
     public void register(UUID eventId, ParticipantRegistration participantRegistration) {
         Optional<Event> possibleEvent = eventRepository.findById(eventId);
         if (possibleEvent.isEmpty()) {
-            LOGGER.error("Failed to retrieve event {}", eventId);
+            log.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
         }
-        ParticipantDto participantDto = participantRegistration.getParticipant();
         Event event = possibleEvent.get();
-        eventRepository.save(event.addParticipant(ParticipantBuilder.fromDto(participantDto)));
+        eventRepository.save(event.addParticipant(Participant.from(participantRegistration)));
         registrationMailSender.send(participantRegistration);
     }
 }

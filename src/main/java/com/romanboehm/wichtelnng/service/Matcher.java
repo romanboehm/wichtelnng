@@ -4,8 +4,7 @@ import com.romanboehm.wichtelnng.model.Donor;
 import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.Recipient;
 import com.romanboehm.wichtelnng.model.entity.Participant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,10 +14,9 @@ import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+@Slf4j
 @Component
 public class Matcher {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(Matcher.class);
 
     public List<Match> match(List<Participant> participants) {
         if (participants.size() < 2) {
@@ -36,7 +34,7 @@ public class Matcher {
                             new Donor(participants.get(i)),
                             new Recipient(copy.get(i))
                     );
-                    LOGGER.debug("Created match {}", match);
+                    log.debug("Created match {}", match);
                     return match;
                         }
                 ).collect(Collectors.toList());
@@ -46,7 +44,7 @@ public class Matcher {
         boolean areNotMatchedCorrectly = IntStream.range(0, participants.size())
                 .anyMatch(i -> participants.get(i).equals(copy.get(i)));
         if (areNotMatchedCorrectly) {
-            LOGGER.debug("Failed to provide valid matches by rotating collection");
+            log.debug("Failed to provide valid matches by rotating collection");
         }
         return areNotMatchedCorrectly;
     }

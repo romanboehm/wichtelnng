@@ -1,5 +1,10 @@
 package com.romanboehm.wichtelnng.model.entity;
 
+import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.Column;
@@ -12,6 +17,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = "events")
 @Entity(name = "Participant")
 @Table(name = "participant")
 public class Participant {
@@ -31,43 +40,10 @@ public class Participant {
     @ManyToMany(mappedBy = "participants")
     private Set<Event> events = new HashSet<>();
 
-    public Participant() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Participant setId(Long id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Participant setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public Participant setEmail(String email) {
-        this.email = email;
-        return this;
-    }
-
-    public Set<Event> getEvents() {
-        return events;
-    }
-
-    public Participant setEvents(Set<Event> events) {
-        this.events = events;
-        return this;
+    public static Participant from(ParticipantRegistration participantRegistration) {
+        return new Participant()
+                .setName(participantRegistration.getParticipantName())
+                .setEmail(participantRegistration.getParticipantEmail());
     }
 
     @Override
@@ -85,9 +61,5 @@ public class Participant {
     @Override
     public int hashCode() {
         return Objects.hash(name, email);
-    }
-
-    public String toString() {
-        return String.format("Participant(name=%s, email=%s)", this.getName(), this.getEmail());
     }
 }

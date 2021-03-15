@@ -1,11 +1,9 @@
 package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.exception.WichtelnMailCreationException;
-import com.romanboehm.wichtelnng.model.dto.EventDto;
-import com.romanboehm.wichtelnng.model.dto.ParticipantDto;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -16,40 +14,32 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.nio.charset.StandardCharsets;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class RegistrationMailCreator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RegistrationMailCreator.class);
-
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
+    
 
-    public RegistrationMailCreator(TemplateEngine templateEngine, JavaMailSender mailSender) {
-        this.templateEngine = templateEngine;
-        this.mailSender = mailSender;
-    }
-
-    public MimeMessage createMessage(ParticipantRegistration participantRegistration) throws WichtelnMailCreationException {
+    public MimeMessage createMessage(ParticipantRegistration registration) throws WichtelnMailCreationException {
         try {
-            EventDto event = participantRegistration.getEvent();
-            ParticipantDto participant = participantRegistration.getParticipant();
-
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
-            message.setSubject(String.format("You have registered to wichtel at '%s'", event.getTitle()));
+            message.setSubject(String.format("You have registered to wichtel at '%s'", registration.getTitle()));
             message.setFrom("wichteln@romanboehm.com");
-            message.setTo(participant.getEmail());
+            message.setTo(registration.getParticipantEmail());
 
             Context ctx = new Context();
-            ctx.setVariable("event", event);
-            ctx.setVariable("participant", participant);
+            ctx.setVariable("registration", registration);
             String textContent = templateEngine.process("registrationmail.txt", ctx);
             message.setText(textContent);
 
-            LOGGER.debug("Created mail for {}", participantRegistration);
+            log.debug("Created mail for {}", registration);
             return mimeMessage;
         } catch (MessagingException e) {
-            LOGGER.error("Failed to create mail for {}", participantRegistration, e);
+            log.error("Failed to create mail for {}", registration, e);
             // Re-throw as custom `RuntimeException` to be handled by upstream by `ErrorController`
             throw new WichtelnMailCreationException();
         }

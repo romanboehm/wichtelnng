@@ -23,8 +23,9 @@ public class RegistrationMailCreatorTest {
 
     @Test
     public void shouldHandleToAndFromCorrectly() throws MessagingException {
-        ParticipantRegistration registration = new ParticipantRegistration(TestData.event().dto())
-                .setParticipant(TestData.participant().dto());
+        ParticipantRegistration registration = ParticipantRegistration.with(TestData.eventCreation())
+                .setParticipantName("Angus Young")
+                .setParticipantEmail("angusyoung@acdc.net");
 
         MimeMessage mail = registrationMailCreator.createMessage(registration);
 
@@ -36,8 +37,9 @@ public class RegistrationMailCreatorTest {
 
     @Test
     public void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        ParticipantRegistration registration = new ParticipantRegistration(TestData.event().dto())
-                .setParticipant(TestData.participant().dto());
+        ParticipantRegistration registration = ParticipantRegistration.with(TestData.eventCreation())
+                .setParticipantName("Angus Young")
+                .setParticipantEmail("angusyoung@acdc.net");
 
         MimeMessage mail = registrationMailCreator.createMessage(registration);
 

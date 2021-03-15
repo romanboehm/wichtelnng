@@ -22,28 +22,28 @@ public class EventRepositoryTest {
 
     @Test
     public void shouldHandleZonedDatetimeQueriesCorrectly() {
-        Event sameZoneIncluded = eventRepository.save(TestData.event().entity().setZonedDateTime(
+        Event sameZoneIncluded = eventRepository.save(TestData.event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(10, 0),
                         ZoneId.of("Europe/Berlin")
                 )
         ));
-        Event sameZoneExcluded = eventRepository.save(TestData.event().entity().setZonedDateTime(
+        Event sameZoneExcluded = eventRepository.save(TestData.event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(11, 1),
                         ZoneId.of("Europe/Berlin")
                 )
         ));
-        Event differentZoneIncluded = eventRepository.save(TestData.event().entity().setZonedDateTime(
+        Event differentZoneIncluded = eventRepository.save(TestData.event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(9, 0),
                         ZoneId.of("UTC")
                 )
         ));
-        Event differentZoneExcluded = eventRepository.save(TestData.event().entity().setZonedDateTime(
+        Event differentZoneExcluded = eventRepository.save(TestData.event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(10, 1),

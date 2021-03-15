@@ -1,11 +1,10 @@
 package com.romanboehm.wichtelnng.controller;
 
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
-import com.romanboehm.wichtelnng.model.dto.EventDto;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.service.WichtelnService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -24,22 +23,19 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping(path = {"/", "/wichteln"})
 public class WichtelnController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WichtelnController.class);
     private final WichtelnService wichtelnService;
-
-    public WichtelnController(WichtelnService wichtelnService) {
-        this.wichtelnService = wichtelnService;
-    }
 
     @GetMapping
     public ModelAndView getEvent() {
         return new ModelAndView(
                 "wichteln",
-                Map.of("eventCreation", EventCreation.withMinimalDefaults()),
+                Map.of("eventCreation", new EventCreation()),
                 HttpStatus.OK
         );
     }
@@ -50,7 +46,7 @@ public class WichtelnController {
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            LOGGER.debug(
+            log.debug(
                     "Failed to create {} because {}",
                     eventCreation,
                     bindingResult.getAllErrors().stream()
@@ -60,25 +56,25 @@ public class WichtelnController {
             return new ModelAndView("wichteln", HttpStatus.BAD_REQUEST);
         }
         UUID uuid = wichtelnService.save(eventCreation);
-        LOGGER.info("Saved {}", eventCreation);
+        log.info("Saved {}", eventCreation);
         return new ModelAndView(String.format("redirect:/wichteln/%s/link", uuid));
     }
 
     @GetMapping("/wichteln/{eventId}/link")
     public ModelAndView getLink(@PathVariable UUID eventId) {
         URI link = wichtelnService.createLink(eventId);
-        LOGGER.info("Created link {}", link);
+        log.info("Created link {}", link);
         return new ModelAndView("result", Map.of("link", link), HttpStatus.OK);
     }
 
     @GetMapping("/wichteln/{eventId}/register")
     public ModelAndView getEvent(@PathVariable UUID eventId) {
-        Optional<EventDto> possibleEventDto = wichtelnService.getEvent(eventId);
-        if (possibleEventDto.isEmpty()) {
+        Optional<EventCreation> possibleEvent = wichtelnService.getEvent(eventId);
+        if (possibleEvent.isEmpty()) {
             return new ModelAndView("redirect:/wichteln");
         }
-        EventDto eventDto = possibleEventDto.get();
-        ParticipantRegistration participantRegistration = new ParticipantRegistration(eventDto);
+        EventCreation event = possibleEvent.get();
+        ParticipantRegistration participantRegistration = ParticipantRegistration.with(event);
         return new ModelAndView(
                 "registration",
                 Map.of("participantRegistration", participantRegistration),
@@ -93,7 +89,7 @@ public class WichtelnController {
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            LOGGER.debug(
+            log.debug(
                     "Failed to create {} because {}",
                     participantRegistration,
                     bindingResult.getAllErrors().stream()
@@ -103,7 +99,7 @@ public class WichtelnController {
             return new ModelAndView("registration", HttpStatus.BAD_REQUEST);
         }
         wichtelnService.register(eventId, participantRegistration);
-        LOGGER.info("Registered {} for {}", participantRegistration, eventId);
+        log.info("Registered {} for {}", participantRegistration, eventId);
         return new ModelAndView("redirect:/wichteln/afterregistration");
     }
 

@@ -1,13 +1,13 @@
-Hey [( ${participant.name} )],
+Hey [( ${registration.participantName} )],
 
-You have successfully registered to wichtel at '[( ${event.title} )]' (https://wichtelnng.romanboehm.com/about)!
-You'll be provided with the name of your gift's recipient through an email to [( ${participant.email} )] after [( ${#temporals.format(event.zonedDateTime, T(java.util.Locale).US)} )].
-The gift's monetary value should not exceed [( ${T(org.javamoney.moneta.Money).of(event.monetaryAmount.number, event.monetaryAmount.currency)} )].
+You have successfully registered to wichtel at '[( ${registration.title} )]' (https://wichtelnng.romanboehm.com/about)!
+You'll be provided with the name of your gift's recipient through an email to [( ${registration.participantEmail} )] after [( ${#temporals.format(registration.zonedDateTime, T(java.util.Locale).US)} )].
+The gift's monetary value should not exceed [( ${T(org.javamoney.moneta.Money).of(registration.number, registration.currency)} )].
 
 Here's what the event's host says about it:
 
-"[( ${event.description} )]"
+"[( ${registration.description} )]"
 
-If you have any questions, contact the event's host [( ${event.host.name} )] at [( ${event.host.email} )].
+If you have any questions, contact the event's host [( ${registration.hostName} )] at [( ${registration.hostEmail} )].
 
 This mail was generated using https://wichtelnng.romanboehm.com

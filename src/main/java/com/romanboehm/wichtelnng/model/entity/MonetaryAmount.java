@@ -1,9 +1,12 @@
 package com.romanboehm.wichtelnng.model.entity;
 
+import lombok.Data;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
+@Data
 @Embeddable
 public class MonetaryAmount {
     
@@ -12,26 +15,4 @@ public class MonetaryAmount {
 
     @Column(nullable = false, length = 3)
     private String currency;
-
-    public BigDecimal getNumber() {
-        return number;
-    }
-
-    public MonetaryAmount setNumber(BigDecimal number) {
-        this.number = number;
-        return this;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
-    public MonetaryAmount setCurrency(String currency) {
-        this.currency = currency;
-        return this;
-    }
-
-    public String toString() {
-        return String.format("Event.MonetaryAmount(number=%s, currency=%s)", this.getNumber(), this.getCurrency());
-    }
 }
