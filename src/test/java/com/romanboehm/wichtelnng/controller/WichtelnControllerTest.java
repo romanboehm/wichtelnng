@@ -1,22 +1,26 @@
 package com.romanboehm.wichtelnng.controller;
 
-import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.service.WichtelnService;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
+
+import static com.romanboehm.wichtelnng.TestData.eventFormParams;
+import static com.romanboehm.wichtelnng.TestData.participantFormParams;
+import static java.lang.String.format;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.util.UUID.randomUUID;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = WichtelnController.class)
 public class WichtelnControllerTest {
@@ -29,37 +33,35 @@ public class WichtelnControllerTest {
 
     @Test
     public void shouldValidateEvent() throws Exception {
-        MultiValueMap<String, String> params = TestData.eventFormParams();
+        MultiValueMap<String, String> params = eventFormParams();
         params.set(
                 "localDate",
                 LocalDate
-                        .now().minus(1, ChronoUnit.DAYS)
+                        .now().minus(1, DAYS)
                         .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        mockMvc.perform(post("/wichteln/save")
+                .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params)
         )
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString(
                         "Must take place in the future."
                 )));
     }
 
     @Test
     public void shouldValidateParticipant() throws Exception {
-        MultiValueMap<String, String> params = TestData.eventFormParams();
-        params.addAll(TestData.participantFormParams());
+        MultiValueMap<String, String> params = eventFormParams();
+        params.addAll(participantFormParams());
         params.set("participantEmail", "notavalidemail.address");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(String.format("/wichteln/%s/register", UUID.randomUUID()))
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+        mockMvc.perform(post(format("/wichteln/%s/register", randomUUID()))
+                .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params)
         )
-                .andExpect(MockMvcResultMatchers.status().is4xxClientError())
-                .andExpect(MockMvcResultMatchers.content().string(Matchers.containsString(
-                        "Must be a valid email address."
-                )));
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("Must be a valid email address.")));
     }
 }

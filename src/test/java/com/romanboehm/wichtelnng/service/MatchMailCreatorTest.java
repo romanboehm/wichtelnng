@@ -1,23 +1,24 @@
 package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
-import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.Donor;
 import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.Recipient;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.model.entity.Participant;
-import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.Address;
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+
+import static com.romanboehm.wichtelnng.TestData.event;
+import static javax.mail.Message.RecipientType.TO;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 
 @CustomSpringBootTest(properties= { "com.romanboehm.wichtelnng.domain=https://wichtelnng.romanboehm.com" })
 public class MatchMailCreatorTest {
@@ -33,7 +34,7 @@ public class MatchMailCreatorTest {
         Participant malcolmYoung = new Participant()
                 .setName("Malcolm Young")
                 .setEmail("malcolmyoung@acdc.net");
-        Event event = TestData.event()
+        Event event = event()
                 .addParticipant(angusYoung)
                 .addParticipant(malcolmYoung);
         Match angusGiftsToMalcolm = new Match(
@@ -43,8 +44,8 @@ public class MatchMailCreatorTest {
 
         MimeMessage mail = matchMailCreator.createMessage(event, angusGiftsToMalcolm);
 
-        Assertions.assertThat(mail).isNotNull();
-        Assertions.assertThat(mail.getRecipients(Message.RecipientType.TO))
+        assertThat(mail).isNotNull();
+        assertThat(mail.getRecipients(TO))
                 .extracting(Address::toString)
                 .containsExactly("angusyoung@acdc.net");
     }
@@ -57,7 +58,7 @@ public class MatchMailCreatorTest {
         Participant malcolmYoung = new Participant()
                 .setName("Malcolm Young")
                 .setEmail("malcolmyoung@acdc.net");
-        Event event = TestData.event()
+        Event event = event()
                 .addParticipant(angusYoung)
                 .addParticipant(malcolmYoung);
         Match angusGiftsToMalcolm = new Match(
@@ -67,9 +68,9 @@ public class MatchMailCreatorTest {
 
         MimeMessage mail = matchMailCreator.createMessage(event, angusGiftsToMalcolm);
 
-        Assertions.assertThat(mail).isNotNull();
-        Assertions.assertThat(mail.getSubject()).isEqualTo("You have been matched to wichtel at 'AC/DC Secret Santa'");
-        MatcherAssert.assertThat(mail.getContent().toString(), Matchers.stringContainsInOrder(
+        assertThat(mail).isNotNull();
+        assertThat(mail.getSubject()).isEqualTo("You have been matched to wichtel at 'AC/DC Secret Santa'");
+        MatcherAssert.assertThat(mail.getContent().toString(), stringContainsInOrder(
                 "Hey Angus Young,",
                 "You registered to wichtel at 'AC/DC Secret Santa' (https://wichtelnng.romanboehm.com/about)!",
                 "We matched the event's participants and you're therefore now asked to give a gift to Malcolm Young. The gift's monetary value should not exceed AUD 78.50.",

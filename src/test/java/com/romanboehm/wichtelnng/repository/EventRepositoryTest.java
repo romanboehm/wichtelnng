@@ -1,8 +1,6 @@
 package com.romanboehm.wichtelnng.repository;
 
-import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.entity.Event;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -14,6 +12,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static com.romanboehm.wichtelnng.TestData.event;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @DataJpaTest
 public class EventRepositoryTest {
 
@@ -22,28 +23,28 @@ public class EventRepositoryTest {
 
     @Test
     public void shouldHandleZonedDatetimeQueriesCorrectly() {
-        Event sameZoneIncluded = eventRepository.save(TestData.event().setZonedDateTime(
+        Event sameZoneIncluded = eventRepository.save(event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(10, 0),
                         ZoneId.of("Europe/Berlin")
                 )
         ));
-        Event sameZoneExcluded = eventRepository.save(TestData.event().setZonedDateTime(
+        Event sameZoneExcluded = eventRepository.save(event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(11, 1),
                         ZoneId.of("Europe/Berlin")
                 )
         ));
-        Event differentZoneIncluded = eventRepository.save(TestData.event().setZonedDateTime(
+        Event differentZoneIncluded = eventRepository.save(event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(9, 0),
                         ZoneId.of("UTC")
                 )
         ));
-        Event differentZoneExcluded = eventRepository.save(TestData.event().setZonedDateTime(
+        Event differentZoneExcluded = eventRepository.save(event().setZonedDateTime(
                 ZonedDateTime.of(
                         LocalDate.of(2021, Month.MARCH, 13),
                         LocalTime.of(10, 1),
@@ -58,7 +59,7 @@ public class EventRepositoryTest {
         );
         List<Event> events = eventRepository.findAllByZonedDateTimeBefore(queryTime);
 
-        Assertions.assertThat(events).extracting(Event::getId)
+        assertThat(events).extracting(Event::getId)
                 .containsExactlyInAnyOrder(sameZoneIncluded.getId(), differentZoneIncluded.getId());
     }
 }

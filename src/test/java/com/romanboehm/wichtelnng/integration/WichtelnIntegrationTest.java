@@ -1,24 +1,15 @@
 package com.romanboehm.wichtelnng.integration;
 
-import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.util.ServerSetupTest;
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
-import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.service.WichtelnService;
-import org.assertj.core.api.Assertions;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.util.MultiValueMap;
 
 import javax.mail.Address;
@@ -26,13 +17,28 @@ import java.net.URI;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
+import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
+import static com.romanboehm.wichtelnng.TestData.eventFormParams;
+import static com.romanboehm.wichtelnng.TestData.participantFormParams;
+import static java.lang.String.format;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @CustomSpringBootTest
 @AutoConfigureMockMvc
 public class WichtelnIntegrationTest {
 
     @RegisterExtension
-    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP_IMAP)
-            .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
+    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
+            .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
     private MockMvc mockMvc;
@@ -43,56 +49,56 @@ public class WichtelnIntegrationTest {
     @Test
     public void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {
         AtomicReference<URI> registrationUrl = new AtomicReference<>();
-        Mockito.doAnswer(invocationOnMock -> {
+        doAnswer(invocationOnMock -> {
             URI uri = (URI) invocationOnMock.callRealMethod();
             registrationUrl.set(uri);
             return uri;
-        }).when(wichtelnService).createLink(ArgumentMatchers.any());
+        }).when(wichtelnService).createLink(any());
 
         AtomicReference<UUID> eventId = new AtomicReference<>();
-        Mockito.doAnswer(invocationOnMock -> {
+        doAnswer(invocationOnMock -> {
             UUID uuid = (UUID) invocationOnMock.callRealMethod();
             eventId.set(uuid);
             return uuid;
-        }).when(wichtelnService).save(ArgumentMatchers.any());
+        }).when(wichtelnService).save(any());
 
         // Fetch page where event can be created
-        mockMvc.perform(MockMvcRequestBuilders.get("/wichteln"))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        mockMvc.perform(get("/wichteln"))
+                .andExpect(status().is2xxSuccessful());
 
         // Fill out and submit form for event
-        MultiValueMap<String, String> params = TestData.eventFormParams();
+        MultiValueMap<String, String> params = eventFormParams();
         mockMvc.perform(MockMvcRequestBuilders.post("/wichteln/save")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params)
         )
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl(String.format("/wichteln/%s/link", eventId.toString())));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/wichteln/%s/link", eventId.toString())));
 
         // "Redirect" to page showing registration link
-        mockMvc.perform(MockMvcRequestBuilders.get(String.format("/wichteln/%s/link", eventId.toString())))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-                .andExpect(MockMvcResultMatchers.content().string(Matchers.stringContainsInOrder(
+        mockMvc.perform(get(format("/wichteln/%s/link", eventId.toString())))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(content().string(stringContainsInOrder(
                         "Provide this link to everyone you wish to participate in your Wichteln event",
                         registrationUrl.toString()
                 )));
 
         // Fetch page for participant registration
-        mockMvc.perform(MockMvcRequestBuilders.get(registrationUrl.toString()))
-                .andExpect(MockMvcResultMatchers.status().is2xxSuccessful());
+        mockMvc.perform(get(registrationUrl.toString()))
+                .andExpect(status().is2xxSuccessful());
 
         // Register participant for event
-        params.addAll(TestData.participantFormParams());
+        params.addAll(participantFormParams());
         params.add("id", eventId.toString());
         mockMvc.perform(MockMvcRequestBuilders.post(registrationUrl.toString())
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params)
         )
-                .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.redirectedUrl("/wichteln/afterregistration"));
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/wichteln/afterregistration"));
 
-        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
-        Assertions.assertThat(greenMail.getReceivedMessages())
+        assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
                 .containsExactly("angusyoung@acdc.net");

@@ -21,6 +21,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -54,7 +56,7 @@ public class Event implements Persistable<UUID> {
 
     public static Event from(EventCreation eventCreation) {
         return new Event()
-                .setId(UUID.randomUUID())
+                .setId(randomUUID())
                 .setTitle(eventCreation.getTitle())
                 .setDescription(eventCreation.getDescription())
                 .setZonedDateTime(eventCreation.getZonedDateTime())

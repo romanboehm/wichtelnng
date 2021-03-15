@@ -4,10 +4,12 @@ package com.romanboehm.wichtelnng.service;
 import com.romanboehm.wichtelnng.exception.TooFewParticipantsException;
 import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.entity.Participant;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MatcherTest {
 
@@ -22,8 +24,8 @@ public class MatcherTest {
                         .setName("Phil Rudd")
         ));
 
-        Assertions.assertThat(matches).allSatisfy(match ->
-                Assertions.assertThat(match.getDonor().getParticipant())
+        assertThat(matches).allSatisfy(match ->
+                assertThat(match.getDonor().getParticipant())
                         .isNotEqualTo(match.getRecipient().getParticipant())
         );
     }
@@ -35,7 +37,7 @@ public class MatcherTest {
                         .setName("Angus Young")
         );
 
-        Assertions.assertThatThrownBy(() -> new Matcher().match(oneTooFew))
+        assertThatThrownBy(() -> new Matcher().match(oneTooFew))
                 .isInstanceOf(TooFewParticipantsException.class);
     }
 }

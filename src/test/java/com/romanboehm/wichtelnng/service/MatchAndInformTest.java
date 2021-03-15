@@ -1,14 +1,10 @@
 package com.romanboehm.wichtelnng.service;
 
-import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.icegreen.greenmail.util.ServerSetupTest;
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
-import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -21,12 +17,17 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
+import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
+import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
+import static com.romanboehm.wichtelnng.TestData.event;
+import static org.assertj.core.api.Assertions.assertThat;
+
 @CustomSpringBootTest
 public class MatchAndInformTest {
 
     @RegisterExtension
-    static GreenMailExtension greenMail = new GreenMailExtension(ServerSetupTest.SMTP_IMAP)
-            .withConfiguration(GreenMailConfiguration.aConfig().withDisabledAuthentication());
+    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
+            .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
     private EventRepository eventRepository;
@@ -41,7 +42,7 @@ public class MatchAndInformTest {
 
     @Test
     public void shouldMatchAndInform() {
-        eventRepository.save(TestData.event()
+        eventRepository.save(event()
                 .setZonedDateTime(
                         ZonedDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
@@ -63,7 +64,7 @@ public class MatchAndInformTest {
                 )
         );
 
-        eventRepository.save(TestData.event()
+        eventRepository.save(event()
                 .setZonedDateTime(
                         ZonedDateTime.of(
                                 LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be excluded
@@ -87,8 +88,8 @@ public class MatchAndInformTest {
 
         matchAndInform.matchAndInform();
 
-        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
-        Assertions.assertThat(greenMail.getReceivedMessages())
+        assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
+        assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
                 .contains(
@@ -100,7 +101,7 @@ public class MatchAndInformTest {
 
     @Test
     public void shouldDeleteEventsWhereParticipantsHaveBeenInformed() {
-        Event deleted = eventRepository.save(TestData.event()
+        Event deleted = eventRepository.save(event()
                 .setZonedDateTime(
                         ZonedDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
@@ -122,7 +123,7 @@ public class MatchAndInformTest {
                 )
         );
 
-        Event open = eventRepository.save(TestData.event()
+        Event open = eventRepository.save(event()
                 .setZonedDateTime(
                         ZonedDateTime.of(
                                 LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be excluded
@@ -146,16 +147,16 @@ public class MatchAndInformTest {
 
         matchAndInform.matchAndInform();
 
-        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
+        assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
 
-        Assertions.assertThat(eventRepository.findAll())
+        assertThat(eventRepository.findAll())
                 .contains(open)
                 .doesNotContain(deleted);
     }
 
     @Test
     public void shouldInformHostAboutEmptyEvent() {
-        eventRepository.save(TestData.event()
+        eventRepository.save(event()
                 .setZonedDateTime(
                         ZonedDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
@@ -171,8 +172,8 @@ public class MatchAndInformTest {
 
         matchAndInform.matchAndInform();
 
-        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
-        Assertions.assertThat(greenMail.getReceivedMessages())
+        assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
                 .contains("georgeyoung@acdc.net")

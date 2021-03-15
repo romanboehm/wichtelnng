@@ -12,7 +12,8 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
@@ -39,7 +40,7 @@ public class RegistrationMailCreator {
     public MimeMessage createMessage(ParticipantRegistration registration) throws WichtelnMailCreationException {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
             message.setSubject(String.format("You have registered to wichtel at '%s'", registration.getTitle()));
             message.setFrom(from);
             message.setTo(registration.getParticipantEmail());

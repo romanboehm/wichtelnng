@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class MatchAndInform {
                 "Found the following events whose participants are ready to be matched and informed: {}",
                 eventsWhereDeadlineHasPassed.stream()
                         .map(e -> e.getId().toString())
-                        .collect(Collectors.joining(", "))
+                        .collect(joining(", "))
         );
         for (Event event : eventsWhereDeadlineHasPassed) {
             try {
@@ -46,7 +47,7 @@ public class MatchAndInform {
                 matchMailSender.send(event, matches);
                 log.info(
                         "Matched {} and informed about {}",
-                        matches.stream().map(Match::toString).collect(Collectors.joining(", ")),
+                        matches.stream().map(Match::toString).collect(joining(", ")),
                         event
                 );
                 eventRepository.delete(event);

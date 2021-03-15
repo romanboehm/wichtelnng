@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.net.URI;
 import java.util.UUID;
 
+import static java.lang.String.format;
+
 @Component
 public class LinkCreator {
 
@@ -16,6 +18,6 @@ public class LinkCreator {
     }
 
     public URI forId(UUID eventId) {
-        return URI.create(String.format("%s/wichteln/%s/register", domain, eventId));
+        return URI.create(format("%s/wichteln/%s/register", domain, eventId));
     }
 }

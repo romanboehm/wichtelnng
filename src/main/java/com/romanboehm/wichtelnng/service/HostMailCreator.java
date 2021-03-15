@@ -1,19 +1,18 @@
 package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.exception.WichtelnMailCreationException;
-import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
+
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
@@ -36,12 +35,12 @@ public class HostMailCreator {
     public MimeMessage createMessage(Event event) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
-            message.setSubject(String.format("Unfortunately, nobody has registered for '%s'", event.getTitle()));
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
+            message.setSubject(format("Unfortunately, nobody has registered for '%s'", event.getTitle()));
             message.setFrom(from);
             message.setTo(event.getHost().getEmail());
 
-            message.setText(String.format(
+            message.setText(format(
                     "Hey %s,%nUnfortunately nobody has registered to wichtel at '%s'.%nTry creating a new event: %s!%nThis mail was generated using %s",
                     event.getHost().getName(),
                     event.getTitle(),

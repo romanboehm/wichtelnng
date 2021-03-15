@@ -2,7 +2,6 @@ package com.romanboehm.wichtelnng.ui;
 
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import org.apache.commons.lang3.SystemUtils;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,7 +9,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -21,9 +19,12 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 @Testcontainers
 @ExtendWith(ScreenshotOnFailureExtension.class)
-@CustomSpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@CustomSpringBootTest(webEnvironment = RANDOM_PORT)
 public class WichtelnUiIntegrationTest {
 
     private final static String HOST_IP_ADDRESS = SystemUtils.IS_OS_LINUX ? "172.17.0.1" : "host.docker.internal";
@@ -70,33 +71,33 @@ public class WichtelnUiIntegrationTest {
     @Test
     public void shouldDisplayCreateEventForm() {
         WebElement eventCreationForm = supply(FORM_ID);
-        Assertions.assertThat(eventCreationForm).isNotNull();
+        assertThat(eventCreationForm).isNotNull();
         WebElement title = supply(TITLE_ID);
-        Assertions.assertThat(title).isNotNull();
+        assertThat(title).isNotNull();
         WebElement description = supply(DESCRIPTION_ID);
-        Assertions.assertThat(description).isNotNull();
+        assertThat(description).isNotNull();
         WebElement monetaryAmountNumber = supply(MONETARYAMOUNT_NUMBER_ID);
-        Assertions.assertThat(monetaryAmountNumber).isNotNull();
+        assertThat(monetaryAmountNumber).isNotNull();
         WebElement monetaryAmountCurrency = supply(MONETARYAMOUNT_CURRENCY_ID);
-        Assertions.assertThat(monetaryAmountCurrency).isNotNull();
+        assertThat(monetaryAmountCurrency).isNotNull();
         WebElement localDate = supply(LOCALDATE_ID);
-        Assertions.assertThat(localDate).isNotNull();
+        assertThat(localDate).isNotNull();
         WebElement localTime = supply(LOCALTIME_ID);
-        Assertions.assertThat(localTime).isNotNull();
+        assertThat(localTime).isNotNull();
         WebElement timezone = supply(TIMEZONE_ID);
-        Assertions.assertThat(timezone).isNotNull();
+        assertThat(timezone).isNotNull();
         WebElement hostName = supply(HOST_NAME_ID);
-        Assertions.assertThat(hostName).isNotNull();
+        assertThat(hostName).isNotNull();
         WebElement hostEmail = supply(HOST_EMAIL_ID);
-        Assertions.assertThat(hostEmail).isNotNull();
+        assertThat(hostEmail).isNotNull();
     }
 
     @Test
     public void shouldDisplaySubmitAndResetButtons() {
         WebElement submitButton = supply(SUBMIT_BUTTON_ID);
-        Assertions.assertThat(submitButton.getText()).isEqualTo("Submit");
+        assertThat(submitButton.getText()).isEqualTo("Submit");
         WebElement resetButton = supply(RESET_BUTTON_ID);
-        Assertions.assertThat(resetButton.getText()).isEqualTo("Reset");
+        assertThat(resetButton.getText()).isEqualTo("Reset");
     }
 
     @Test
@@ -123,18 +124,18 @@ public class WichtelnUiIntegrationTest {
         saveButton.click();
 
         WebElement titleError = supply(TITLE_ERROR_ID);
-        Assertions.assertThat(titleError.isDisplayed()).isTrue();
+        assertThat(titleError.isDisplayed()).isTrue();
         WebElement descriptionError = supply(DESCRIPTION_ERROR_ID);
-        Assertions.assertThat(descriptionError.isDisplayed()).isTrue();
+        assertThat(descriptionError.isDisplayed()).isTrue();
         WebElement monetaryAmountNumberError = supply(MONETARYAMOUNT_NUMBER_ERROR_ID);
-        Assertions.assertThat(monetaryAmountNumberError.isDisplayed()).isTrue();
+        assertThat(monetaryAmountNumberError.isDisplayed()).isTrue();
         WebElement localDateError = supply(LOCALDATE_ERROR_ID);
-        Assertions.assertThat(localDateError.isDisplayed()).isTrue();
+        assertThat(localDateError.isDisplayed()).isTrue();
         WebElement localTimeError = supply(LOCALTIME_ERROR_ID);
-        Assertions.assertThat(localTimeError.isDisplayed()).isTrue();
+        assertThat(localTimeError.isDisplayed()).isTrue();
         WebElement hostNameError = supply(HOST_NAME_ERROR_ID);
-        Assertions.assertThat(hostNameError.isDisplayed()).isTrue();
+        assertThat(hostNameError.isDisplayed()).isTrue();
         WebElement hostEmailError = supply(HOST_EMAIL_ERROR_ID);
-        Assertions.assertThat(hostEmailError.isDisplayed()).isTrue();
+        assertThat(hostEmailError.isDisplayed()).isTrue();
     }
 }

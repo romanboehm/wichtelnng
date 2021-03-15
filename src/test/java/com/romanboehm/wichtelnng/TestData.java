@@ -9,7 +9,6 @@ import com.romanboehm.wichtelnng.model.entity.Participant;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -17,6 +16,8 @@ import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static javax.money.Monetary.getCurrency;
 
 public class TestData {
 
@@ -42,7 +43,7 @@ public class TestData {
 
     public static MonetaryAmount monetaryAmount() {
         return new MonetaryAmount()
-                .setCurrency(Monetary.getCurrency("AUD").getCurrencyCode())
+                .setCurrency(getCurrency("AUD").getCurrencyCode())
                 .setNumber(BigDecimal.valueOf(78.50));
     }
 

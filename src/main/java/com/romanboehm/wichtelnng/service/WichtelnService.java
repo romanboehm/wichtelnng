@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
-import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.UUID;
+
+import static java.time.ZonedDateTime.now;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class WichtelnService {
         return eventRepository.findById(eventId)
                 // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
                 // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
-                .filter(event -> event.getZonedDateTime().isAfter(ZonedDateTime.now()))
+                .filter(event -> event.getZonedDateTime().isAfter(now()))
                 .map(EventCreation::from);
     }
 

@@ -13,7 +13,9 @@ import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.nio.charset.StandardCharsets;
+
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
@@ -39,8 +41,8 @@ public class MatchMailCreator {
     public MimeMessage createMessage(Event event, Match match) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.toString());
-            message.setSubject(String.format("You have been matched to wichtel at '%s'", event.getTitle()));
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
+            message.setSubject(format("You have been matched to wichtel at '%s'", event.getTitle()));
             message.setFrom(from);
             message.setTo(match.getDonor().getEmail());
 
