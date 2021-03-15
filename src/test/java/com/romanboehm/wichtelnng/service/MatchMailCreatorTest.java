@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.service;
 
+import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.Donor;
 import com.romanboehm.wichtelnng.model.Match;
@@ -11,7 +12,6 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.Address;
 import javax.mail.Message;
@@ -19,7 +19,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 
-@SpringBootTest
+@CustomSpringBootTest
 public class MatchMailCreatorTest {
 
     @Autowired

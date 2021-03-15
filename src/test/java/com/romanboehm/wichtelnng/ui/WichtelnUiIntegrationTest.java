@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.ui;
 
+import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import org.apache.commons.lang3.SystemUtils;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +23,7 @@ import java.time.temporal.ChronoUnit;
 
 @Testcontainers
 @ExtendWith(ScreenshotOnFailureExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@CustomSpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class WichtelnUiIntegrationTest {
 
     private final static String HOST_IP_ADDRESS = SystemUtils.IS_OS_LINUX ? "172.17.0.1" : "host.docker.internal";

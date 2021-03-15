@@ -3,6 +3,7 @@ package com.romanboehm.wichtelnng.service;
 import com.icegreen.greenmail.configuration.GreenMailConfiguration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.util.ServerSetupTest;
+import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.TestData;
 import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
@@ -21,7 +22,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
-@SpringBootTest(properties = { "com.romanboehm.wichtelnng.matchandinform.rate.in.ms=500" })
+@CustomSpringBootTest(properties = { "com.romanboehm.wichtelnng.matchandinform.rate.in.ms=500" })
 public class MatchAndInformTest {
 
     @RegisterExtension
