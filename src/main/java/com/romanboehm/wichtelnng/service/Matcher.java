@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.service;
 
+import com.romanboehm.wichtelnng.exception.TooFewParticipantsException;
 import com.romanboehm.wichtelnng.model.Donor;
 import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.Recipient;
@@ -18,9 +19,9 @@ import java.util.stream.IntStream;
 @Component
 public class Matcher {
 
-    public List<Match> match(List<Participant> participants) {
+    public List<Match> match(List<Participant> participants) throws TooFewParticipantsException {
         if (participants.size() < 2) {
-            throw new IllegalArgumentException("Matching needs at least two participants.");
+            throw new TooFewParticipantsException("Matching needs at least two participants.");
         }
         List<Participant> copy = new ArrayList<>(participants);
         Random random = new Random();

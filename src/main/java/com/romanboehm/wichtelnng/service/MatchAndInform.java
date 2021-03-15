@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.service;
 
+import com.romanboehm.wichtelnng.exception.TooFewParticipantsException;
 import com.romanboehm.wichtelnng.model.Match;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.repository.EventRepository;
@@ -22,6 +23,7 @@ public class MatchAndInform {
     private final EventRepository eventRepository;
     private final Matcher matcher;
     private final MatchMailSender matchMailSender;
+    private final HostMailSender hostMailSender;
 
     @Scheduled(
             initialDelayString = "${com.romanboehm.wichtelnng.matchandinform.initial.delay.in.ms}",
@@ -49,8 +51,8 @@ public class MatchAndInform {
                 );
                 eventRepository.delete(event);
                 log.debug("Deleted {} because participants have been matched", event);
-            } catch (Exception e) {
-                log.error("Failed to match and inform {}: ", event, e);
+            } catch (TooFewParticipantsException e) {
+                hostMailSender.send(event);
             }
         }
     }

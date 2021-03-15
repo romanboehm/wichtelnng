@@ -152,4 +152,30 @@ public class MatchAndInformTest {
                 .contains(open)
                 .doesNotContain(deleted);
     }
+
+    @Test
+    public void shouldInformHostAboutEmptyEvent() {
+        eventRepository.save(TestData.event()
+                .setZonedDateTime(
+                        ZonedDateTime.of(
+                                LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
+                                LocalTime.now(),
+                                ZoneId.of("Australia/Sydney")
+                        )
+                ).addParticipant(
+                        new Participant()
+                                .setName("Angus Young")
+                                .setEmail("angusyoung@acdc.net")
+                )
+        );
+
+        matchAndInform.matchAndInform();
+
+        Assertions.assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        Assertions.assertThat(greenMail.getReceivedMessages())
+                .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
+                .extracting(Address::toString)
+                .contains("georgeyoung@acdc.net")
+                .doesNotContain("angusyoung@acdc.net");
+    }
 }
