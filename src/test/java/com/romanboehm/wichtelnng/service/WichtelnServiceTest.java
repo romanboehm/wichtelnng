@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +20,7 @@ import java.util.Optional;
 
 import static com.romanboehm.wichtelnng.TestData.event;
 import static com.romanboehm.wichtelnng.TestData.eventCreation;
+import static java.time.Month.JUNE;
 import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,7 +54,7 @@ public class WichtelnServiceTest {
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
                     assertThat(event.getZonedDateTime()).isEqualTo(
                             ZonedDateTime.of(
-                                    LocalDate.of(2666, Month.JUNE, 7),
+                                    LocalDate.of(2666, JUNE, 7),
                                     LocalTime.of(6, 6),
                                     ZoneId.of("Australia/Sydney")
                             )

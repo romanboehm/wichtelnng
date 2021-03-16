@@ -12,11 +12,11 @@ import org.springframework.util.MultiValueMap;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static java.time.Month.JUNE;
 import static javax.money.Monetary.getCurrency;
 
 public class TestData {
@@ -28,7 +28,7 @@ public class TestData {
                 .setMonetaryAmount(monetaryAmount())
                 .setZonedDateTime(
                         ZonedDateTime.of(
-                                LocalDate.of(2666, Month.JUNE, 7),
+                                LocalDate.of(2666, JUNE, 7),
                                 LocalTime.of(6, 6),
                                 ZoneId.of("Australia/Sydney"))
                 )
