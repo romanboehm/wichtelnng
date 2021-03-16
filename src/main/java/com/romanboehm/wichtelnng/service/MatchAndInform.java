@@ -10,11 +10,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.romanboehm.wichtelnng.model.entity.Event.DEADLINE_HAS_PASSED;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,9 +33,11 @@ public class MatchAndInform {
     )
     @Transactional
     public void matchAndInform() {
-        // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
-        // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByZonedDateTimeBefore(ZonedDateTime.now());
+        // Yes, retrieving all events and filtering in the app is slower than a custom query. But the number of events
+        // is low and it's easier than writing a custom query.
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAll().stream()
+                .filter(DEADLINE_HAS_PASSED)
+                .collect(toList());
         log.debug(
                 "Found the following events whose participants are ready to be matched and informed: {}",
                 eventsWhereDeadlineHasPassed.stream()

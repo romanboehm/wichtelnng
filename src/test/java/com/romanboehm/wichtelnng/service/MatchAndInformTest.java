@@ -12,14 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.Address;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.TestData.event;
+import static java.time.ZoneId.systemDefault;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CustomSpringBootTest
@@ -43,13 +43,13 @@ public class MatchAndInformTest {
     @Test
     public void shouldMatchAndInform() {
         eventRepository.save(event()
-                .setZonedDateTime(
-                        ZonedDateTime.of(
+                .setLocalDateTime(
+                        LocalDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now(),
-                                ZoneId.of("Australia/Sydney")
+                                LocalTime.now()
                         )
-                ).addParticipant(
+                ).setZoneId(systemDefault())
+                .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
                                 .setEmail("angusyoung@acdc.net")
@@ -65,13 +65,13 @@ public class MatchAndInformTest {
         );
 
         eventRepository.save(event()
-                .setZonedDateTime(
-                        ZonedDateTime.of(
-                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be excluded
-                                LocalTime.now(),
-                                ZoneId.of("Australia/Sydney")
+                .setLocalDateTime(
+                        LocalDateTime.of(
+                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be included
+                                LocalTime.now()
                         )
-                ).addParticipant(
+                ).setZoneId(systemDefault())
+                .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
                                 .setEmail("philrudd@acdc.net")
@@ -102,13 +102,13 @@ public class MatchAndInformTest {
     @Test
     public void shouldDeleteEventsWhereParticipantsHaveBeenInformed() {
         Event deleted = eventRepository.save(event()
-                .setZonedDateTime(
-                        ZonedDateTime.of(
+                .setLocalDateTime(
+                        LocalDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now(),
-                                ZoneId.of("Australia/Sydney")
+                                LocalTime.now()
                         )
-                ).addParticipant(
+                ).setZoneId(systemDefault())
+                .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
                                 .setEmail("angusyoung@acdc.net")
@@ -124,13 +124,13 @@ public class MatchAndInformTest {
         );
 
         Event open = eventRepository.save(event()
-                .setZonedDateTime(
-                        ZonedDateTime.of(
-                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be excluded
-                                LocalTime.now(),
-                                ZoneId.of("Australia/Sydney")
+                .setLocalDateTime(
+                        LocalDateTime.of(
+                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be included
+                                LocalTime.now()
                         )
-                ).addParticipant(
+                ).setZoneId(systemDefault())
+                .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
                                 .setEmail("philrudd@acdc.net")
@@ -157,13 +157,13 @@ public class MatchAndInformTest {
     @Test
     public void shouldInformHostAboutEmptyEvent() {
         eventRepository.save(event()
-                .setZonedDateTime(
-                        ZonedDateTime.of(
+                .setLocalDateTime(
+                        LocalDateTime.of(
                                 LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now(),
-                                ZoneId.of("Australia/Sydney")
+                                LocalTime.now()
                         )
-                ).addParticipant(
+                ).setZoneId(systemDefault())
+                .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
                                 .setEmail("angusyoung@acdc.net")

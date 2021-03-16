@@ -14,7 +14,8 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.time.ZonedDateTime.now;
+import static com.romanboehm.wichtelnng.model.entity.Event.DEADLINE_HAS_PASSED;
+import static java.util.function.Predicate.not;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,9 +38,8 @@ public class WichtelnService {
 
     @Transactional(readOnly = true)
     public Optional<EventCreation> getEvent(UUID eventId) {
-        // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
-        // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
-        return eventRepository.findByIdAndZonedDateTimeAfter(eventId, now())
+        return eventRepository.findById(eventId)
+                .filter(not(DEADLINE_HAS_PASSED))
                 .map(EventCreation::from);
     }
 

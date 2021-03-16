@@ -11,9 +11,9 @@ import org.springframework.util.MultiValueMap;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static java.time.Month.JUNE;
@@ -26,12 +26,13 @@ public class TestData {
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setMonetaryAmount(monetaryAmount())
-                .setZonedDateTime(
-                        ZonedDateTime.of(
+                .setLocalDateTime(
+                        LocalDateTime.of(
                                 LocalDate.of(2666, JUNE, 7),
-                                LocalTime.of(6, 6),
-                                ZoneId.of("Australia/Sydney"))
+                                LocalTime.of(6, 6)
+                        )
                 )
+                .setZoneId(ZoneId.of("Australia/Sydney"))
                 .setHost(host());
     }
 

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -69,6 +70,14 @@ public class EventCreation {
         );
     }
 
+    // For convenience
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.of(
+                localDate != null ? localDate : LocalDate.now(),
+                localTime != null ? localTime : LocalTime.now()
+        );
+    }
+
     @NotBlank
     @Size(max = 100)
     private String hostName;
@@ -84,9 +93,9 @@ public class EventCreation {
                 .setDescription(entity.getDescription())
                 .setCurrency(Monetary.getCurrency(entity.getMonetaryAmount().getCurrency()))
                 .setNumber(entity.getMonetaryAmount().getNumber())
-                .setLocalDate(entity.getZonedDateTime().toLocalDate())
-                .setLocalTime(entity.getZonedDateTime().toLocalTime())
-                .setTimezone(entity.getZonedDateTime().getZone())
+                .setLocalDate(entity.getLocalDateTime().toLocalDate())
+                .setLocalTime(entity.getLocalDateTime().toLocalTime())
+                .setTimezone(entity.getZoneId())
                 .setHostName(entity.getHost().getName())
                 .setHostEmail(entity.getHost().getEmail());
     }

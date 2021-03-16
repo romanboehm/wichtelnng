@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static com.romanboehm.wichtelnng.TestData.event;
 import static com.romanboehm.wichtelnng.TestData.eventCreation;
+import static java.time.LocalDateTime.now;
 import static java.time.Month.JUNE;
-import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CustomSpringBootTest
@@ -52,20 +52,22 @@ public class WichtelnServiceTest {
                     assertThat(event.getHost().getName()).isEqualTo("George Young");
                     assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
-                    assertThat(event.getZonedDateTime()).isEqualTo(
-                            ZonedDateTime.of(
+                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
+                    assertThat(event.getLocalDateTime()).isEqualTo(
+                            LocalDateTime.of(
                                     LocalDate.of(2666, JUNE, 7),
-                                    LocalTime.of(6, 6),
-                                    ZoneId.of("Australia/Sydney")
+                                    LocalTime.of(6, 6)
                             )
                     );
+                    assertThat(event.getZoneId()).isEqualTo(ZoneId.of("Australia/Sydney"));
                 });
     }
 
     @Test
     public void shouldNoticeWhenEventPastDeadline() {
         Event pastDeadline = eventRepository.save(event()
-                .setZonedDateTime(now().minus(1, ChronoUnit.MINUTES))
+                .setLocalDateTime(now().minus(1, ChronoUnit.MINUTES))
+                .setZoneId(ZoneId.systemDefault())
         );
 
         Optional<EventCreation> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());

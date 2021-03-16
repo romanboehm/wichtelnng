@@ -83,6 +83,7 @@ public class ParticipantRegistration {
 
     public static ParticipantRegistration with(EventCreation eventCreation) {
         return new ParticipantRegistration()
+                .setId(eventCreation.getId())
                 .setTitle(eventCreation.getTitle())
                 .setDescription(eventCreation.getDescription())
                 .setCurrency(eventCreation.getCurrency())

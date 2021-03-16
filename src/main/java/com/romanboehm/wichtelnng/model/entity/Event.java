@@ -6,19 +6,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.ZoneIdConverter;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
+import static java.time.ZonedDateTime.now;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
@@ -29,6 +35,11 @@ import static javax.persistence.FetchType.LAZY;
 @Entity(name = "Event")
 @Table(name = "event")
 public class Event implements Persistable<UUID> {
+
+    // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
+    // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
+    public static final Predicate<Event> DEADLINE_HAS_PASSED =
+            event -> ZonedDateTime.of(event.getLocalDateTime(), event.getZoneId()).isBefore(now());
 
     @Id
     @GeneratedValue
@@ -44,7 +55,11 @@ public class Event implements Persistable<UUID> {
     private MonetaryAmount monetaryAmount;
 
     @Column(nullable = false)
-    private ZonedDateTime zonedDateTime;
+    private LocalDateTime localDateTime;
+
+    @Column(nullable = false, length = 3)
+    @Convert(converter = ZoneIdConverter.class)
+    private ZoneId zoneId;
 
     @Embedded
     private Host host;
@@ -57,7 +72,8 @@ public class Event implements Persistable<UUID> {
         return new Event()
                 .setTitle(eventCreation.getTitle())
                 .setDescription(eventCreation.getDescription())
-                .setZonedDateTime(eventCreation.getZonedDateTime())
+                .setLocalDateTime(eventCreation.getLocalDateTime())
+                .setZoneId(eventCreation.getTimezone())
                 .setHost(
                         new Host()
                                 .setName(eventCreation.getHostName())

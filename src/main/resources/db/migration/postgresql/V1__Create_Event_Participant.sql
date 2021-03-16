@@ -8,7 +8,8 @@ CREATE TABLE event (
     currency varchar(3) NOT NULL,
     number decimal(10,2) NOT NULL,
     title varchar(100) NOT NULL,
-    zoned_date_time timestamp NOT NULL,
+    local_date_time timestamp NOT NULL,
+    zone_id varchar(50) NOT NULL,
     PRIMARY KEY (id)
 );
 
