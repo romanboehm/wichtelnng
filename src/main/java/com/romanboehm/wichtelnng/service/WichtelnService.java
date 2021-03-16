@@ -37,10 +37,9 @@ public class WichtelnService {
 
     @Transactional(readOnly = true)
     public Optional<EventCreation> getEvent(UUID eventId) {
-        return eventRepository.findById(eventId)
-                // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
-                // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
-                .filter(event -> event.getZonedDateTime().isAfter(now()))
+        // Relying on `Clock::systemDefaultZone()` is fine when not running within a container.
+        // Otherwise, we need to a) mount /etc/timezone or b) pass the correct `ZoneId` here.
+        return eventRepository.findByIdAndZonedDateTimeAfter(eventId, now())
                 .map(EventCreation::from);
     }
 

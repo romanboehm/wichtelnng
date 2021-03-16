@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -14,4 +15,6 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @EntityGraph(attributePaths = "participants", type = EntityGraph.EntityGraphType.FETCH)
     List<Event> findAllByZonedDateTimeBefore(ZonedDateTime zonedDateTime);
+
+    Optional<Event> findByIdAndZonedDateTimeAfter(UUID uuid, ZonedDateTime zonedDateTime);
 }

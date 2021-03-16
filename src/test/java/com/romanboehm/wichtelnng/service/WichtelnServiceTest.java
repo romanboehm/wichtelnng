@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static com.romanboehm.wichtelnng.TestData.event;
 import static com.romanboehm.wichtelnng.TestData.eventCreation;
+import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CustomSpringBootTest
@@ -62,7 +63,7 @@ public class WichtelnServiceTest {
     @Test
     public void shouldNoticeWhenEventPastDeadline() {
         Event pastDeadline = eventRepository.save(event()
-                .setZonedDateTime(ZonedDateTime.now().minus(1, ChronoUnit.MINUTES))
+                .setZonedDateTime(now().minus(1, ChronoUnit.MINUTES))
         );
 
         Optional<EventCreation> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());
