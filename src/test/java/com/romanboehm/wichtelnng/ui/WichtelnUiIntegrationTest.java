@@ -46,7 +46,6 @@ public class WichtelnUiIntegrationTest {
     private final static String HOST_EMAIL_ID = "host-email";
     private final static String HOST_EMAIL_ERROR_ID = HOST_EMAIL_ID + "-error";
     private final static String SUBMIT_BUTTON_ID = "submit-button";
-    private final static String RESET_BUTTON_ID = "reset-button";
 
     private RemoteWebDriver webDriver;
 
@@ -93,11 +92,9 @@ public class WichtelnUiIntegrationTest {
     }
 
     @Test
-    public void shouldDisplaySubmitAndResetButtons() {
+    public void shouldDisplaySubmitButton() {
         WebElement submitButton = supply(SUBMIT_BUTTON_ID);
         assertThat(submitButton.getText()).isEqualTo("Submit");
-        WebElement resetButton = supply(RESET_BUTTON_ID);
-        assertThat(resetButton.getText()).isEqualTo("Reset");
     }
 
     @Test
