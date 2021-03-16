@@ -3,6 +3,7 @@ package com.romanboehm.wichtelnng.repository;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
@@ -14,8 +15,10 @@ import java.util.List;
 import static com.romanboehm.wichtelnng.TestData.event;
 import static java.time.Month.MARCH;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
-@DataJpaTest
+@DataJpaTest(properties = {"spring.datasource.url=jdbc:tc:postgresql:latest:///wichteln?TC_DAEMON=true"})
+@AutoConfigureTestDatabase(replace = NONE)
 public class EventRepositoryTest {
 
     @Autowired

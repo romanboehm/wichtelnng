@@ -7,11 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
@@ -21,7 +19,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static java.util.UUID.randomUUID;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
 @NoArgsConstructor
 @Getter
@@ -51,12 +50,11 @@ public class Event implements Persistable<UUID> {
     private Host host;
 
 
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "event", cascade = ALL, orphanRemoval = true, fetch = LAZY)
     private Set<Participant> participants = new HashSet<>();
 
     public static Event from(EventCreation eventCreation) {
         return new Event()
-                .setId(randomUUID())
                 .setTitle(eventCreation.getTitle())
                 .setDescription(eventCreation.getDescription())
                 .setZonedDateTime(eventCreation.getZonedDateTime())

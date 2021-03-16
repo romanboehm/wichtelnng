@@ -9,6 +9,7 @@ import com.romanboehm.wichtelnng.model.entity.Participant;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.TestPropertySource;
 
 import javax.mail.Address;
 import javax.mail.MessagingException;
@@ -20,7 +21,11 @@ import static javax.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-@CustomSpringBootTest(properties= { "com.romanboehm.wichtelnng.domain=https://wichtelnng.romanboehm.com" })
+@CustomSpringBootTest
+@TestPropertySource(properties = {
+        "com.romanboehm.wichtelnng.domain=https://wichtelnng.romanboehm.com",
+        "com.romanboehm.wichtelnng.mail.from=wichteln@romanboehm.com",
+})
 public class MatchMailCreatorTest {
 
     @Autowired
@@ -45,6 +50,9 @@ public class MatchMailCreatorTest {
         MimeMessage mail = matchMailCreator.createMessage(event, angusGiftsToMalcolm);
 
         assertThat(mail).isNotNull();
+        assertThat(mail.getFrom())
+                .extracting(Address::toString)
+                .containsExactly("wichteln@romanboehm.com");
         assertThat(mail.getRecipients(TO))
                 .extracting(Address::toString)
                 .containsExactly("angusyoung@acdc.net");

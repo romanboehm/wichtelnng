@@ -100,7 +100,6 @@ public class WichtelnServiceTest {
                 .hasOnlyOneElementSatisfying(participant -> {
                     assertThat(participant.getName()).isEqualTo("Angus Young");
                     assertThat(participant.getEmail()).isEqualTo("angusyoung@acdc.net");
-                    assertThat(participant.getId()).isEqualTo(1L);
                 });
 
     }
