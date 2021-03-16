@@ -3,9 +3,8 @@
 A demo/testbed for various technologies disguised as a Secret Santa (German: "Wichteln") web application:
 - Spring Boot
 - Spring MVC + Thymeleaf
-- jOOQ + Postgres  
+- JPA + Postgres  
 - JUnit 5 + Testcontainers
-- HTML
 
 ## How to try it out?
 ### a) Web

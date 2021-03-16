@@ -16,7 +16,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
                 "spring.mail.username=testuser",
                 "spring.mail.password=testpassword",
                 "spring.mail.protocol=smtp",
-                "spring.datasource.url=jdbc:tc:postgresql:latest:///wichteln?TC_DAEMON=true",
+                "spring.datasource.url=jdbc:tc:postgresql:latest:///postgres?TC_DAEMON=true",
                 "com.romanboehm.wichtelnng.domain=http://localhost:8080",
                 "com.romanboehm.wichtelnng.mail.from=wichteln@localhost.com"
         }

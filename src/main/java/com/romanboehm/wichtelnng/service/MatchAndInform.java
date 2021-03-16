@@ -38,12 +38,6 @@ public class MatchAndInform {
         List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAll().stream()
                 .filter(DEADLINE_HAS_PASSED)
                 .collect(toList());
-        log.debug(
-                "Found the following events whose participants are ready to be matched and informed: {}",
-                eventsWhereDeadlineHasPassed.stream()
-                        .map(e -> e.getId().toString())
-                        .collect(joining(", "))
-        );
         for (Event event : eventsWhereDeadlineHasPassed) {
             try {
                 List<Match> matches = matcher.match(new ArrayList<>(event.getParticipants()));
