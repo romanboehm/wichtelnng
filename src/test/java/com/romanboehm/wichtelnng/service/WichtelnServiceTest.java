@@ -3,7 +3,9 @@ package com.romanboehm.wichtelnng.service;
 
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
+import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
+import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -68,6 +70,39 @@ public class WichtelnServiceTest {
 
         Optional<EventCreation> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());
         assertThat(possibleEvent).isEmpty();
+    }
+
+    @Test
+    public void shouldPreventParticipantFromRegisteringMultipleTimes() {
+        Event event = eventRepository.save(event()
+                .addParticipant(
+                        new Participant()
+                                .setName("Angus Young")
+                                .setEmail("angusyoung@acdc.net")
+                )
+        );
+
+        wichtelnService.register(
+                event.getId(),
+                ParticipantRegistration.with(EventCreation.from(event))
+                        .setParticipantName("Angus Young")
+                        .setParticipantEmail("angusyoung@acdc.net")
+        );
+
+        wichtelnService.register(
+                event.getId(),
+                ParticipantRegistration.with(EventCreation.from(event))
+                        .setParticipantName("Angus Young")
+                        .setParticipantEmail("angusyoung@acdc.net")
+        );
+
+        assertThat(event.getParticipants())
+                .hasOnlyOneElementSatisfying(participant -> {
+                    assertThat(participant.getName()).isEqualTo("Angus Young");
+                    assertThat(participant.getEmail()).isEqualTo("angusyoung@acdc.net");
+                    assertThat(participant.getId()).isEqualTo(1L);
+                });
+
     }
 
 }
