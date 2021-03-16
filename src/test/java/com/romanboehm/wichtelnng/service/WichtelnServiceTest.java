@@ -5,7 +5,6 @@ import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
-import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -23,6 +22,7 @@ import static com.romanboehm.wichtelnng.TestData.eventCreation;
 import static java.time.LocalDateTime.now;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @CustomSpringBootTest
 public class WichtelnServiceTest {
@@ -75,34 +75,36 @@ public class WichtelnServiceTest {
     }
 
     @Test
-    public void shouldPreventParticipantFromRegisteringMultipleTimes() {
-        Event event = eventRepository.save(event()
-                .addParticipant(
-                        new Participant()
-                                .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                )
-        );
+    public void shouldPreventParticipantFromRegisteringMultipleTimesForSameEvent() {
+        Event eventA = eventRepository.save(event().setTitle("A"));
+        Event eventB = eventRepository.save(event().setTitle("B"));
 
         wichtelnService.register(
-                event.getId(),
-                ParticipantRegistration.with(EventCreation.from(event))
+                eventA.getId(),
+                ParticipantRegistration.with(EventCreation.from(eventA))
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
         wichtelnService.register(
-                event.getId(),
-                ParticipantRegistration.with(EventCreation.from(event))
+                eventA.getId(),
+                ParticipantRegistration.with(EventCreation.from(eventA))
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
-        assertThat(event.getParticipants())
-                .hasOnlyOneElementSatisfying(participant -> {
-                    assertThat(participant.getName()).isEqualTo("Angus Young");
-                    assertThat(participant.getEmail()).isEqualTo("angusyoung@acdc.net");
-                });
+        wichtelnService.register(
+                eventB.getId(),
+                ParticipantRegistration.with(EventCreation.from(eventB))
+                        .setParticipantName("Angus Young")
+                        .setParticipantEmail("angusyoung@acdc.net")
+        );
+
+        assertThat(eventRepository.findAll()).extracting(Event::getTitle, event -> event.getParticipants().size())
+                .containsExactlyInAnyOrder(
+                        tuple("A", 1),
+                        tuple("B", 1)
+                );
 
     }
 

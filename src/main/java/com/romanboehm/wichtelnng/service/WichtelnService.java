@@ -52,6 +52,7 @@ public class WichtelnService {
         }
         Event event = possibleEvent.get();
         eventRepository.save(event.addParticipant(Participant.from(participantRegistration)));
+        log.info("Registered {}", participantRegistration);
         registrationMailSender.send(participantRegistration);
     }
 }

@@ -20,5 +20,5 @@ CREATE TABLE participant (
     event_id uuid NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (event_id) REFERENCES event (id)  ON DELETE CASCADE ON UPDATE CASCADE,
-    UNIQUE (name, email)
+    UNIQUE (name, email, event_id)
 );
