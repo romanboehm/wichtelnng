@@ -57,7 +57,7 @@ public class Event implements Persistable<UUID> {
     @Column(nullable = false)
     private LocalDateTime localDateTime;
 
-    @Column(nullable = false, length = 3)
+    @Column(nullable = false, length = 50)
     @Convert(converter = ZoneIdConverter.class)
     private ZoneId zoneId;
 
