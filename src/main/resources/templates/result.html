@@ -12,9 +12,29 @@
         <hr class="my-4">
         <div class="alert alert-primary" role="alert">
             <a class="alert-link" role="alert" th:href="${link}" th:text="${link}"></a>
+            <button onclick="copyLink()">
+                <i class="fas fa-copy"></i>
+            </button>
         </div>
         <a class="btn btn-primary btn-lg my-3" th:href="@{/wichteln}" role="button">New event</a>
     </div>
 </div>
+
+<script th:inline="javascript">
+/*<![CDATA[*/
+    function copyLink() {
+        var link = /*[[${link}]]*/ '';
+        if (link) {
+            navigator.clipboard.writeText(link).then(function() {
+                console.log('Copied link to clipboard: ' + link);
+            }, function() {
+                console.log('Failed to copy link to clipboard');
+            });
+        }
+    }
+/*]]>*/
+
+</script>
+
 </body>
 </html>
