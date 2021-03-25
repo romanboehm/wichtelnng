@@ -9,14 +9,16 @@ import com.romanboehm.wichtelnng.model.entity.Participant;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static java.time.Month.JUNE;
+import static java.time.ZoneId.systemDefault;
 import static javax.money.Monetary.getCurrency;
 
 public class TestData {
@@ -26,13 +28,13 @@ public class TestData {
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setMonetaryAmount(monetaryAmount())
-                .setLocalDateTime(
-                        LocalDateTime.of(
+                .setDeadline(
+                        ZonedDateTime.of(
                                 LocalDate.of(2666, JUNE, 7),
-                                LocalTime.of(6, 6)
-                        )
+                                LocalTime.of(6, 6),
+                                ZoneId.of("Australia/Sydney")
+                        ).toInstant()
                 )
-                .setZoneId(ZoneId.of("Australia/Sydney"))
                 .setHost(host());
     }
 
@@ -55,7 +57,18 @@ public class TestData {
     }
 
     public static EventCreation eventCreation() {
-        return EventCreation.from(event());
+        Event entity = event();
+        return new EventCreation()
+                .setId(entity.getId())
+                .setTitle(entity.getTitle())
+                .setDescription(entity.getDescription())
+                .setCurrency(Monetary.getCurrency(entity.getMonetaryAmount().getCurrency()))
+                .setNumber(entity.getMonetaryAmount().getNumber())
+                .setLocalDate(entity.getDeadline().atZone(systemDefault()).toLocalDate())
+                .setLocalTime(entity.getDeadline().atZone(systemDefault()).toLocalTime())
+                .setTimezone(systemDefault())
+                .setHostName(entity.getHost().getName())
+                .setHostEmail(entity.getHost().getEmail());
     }
 
     public static MultiValueMap<String, String> eventFormParams() {
@@ -75,7 +88,7 @@ public class TestData {
 
     public static ParticipantRegistration participantRegistration() {
         Participant participant = participant();
-        return ParticipantRegistration.with(eventCreation())
+        return ParticipantRegistration.with(event())
                 .setParticipantName(participant.getName())
                 .setParticipantEmail(participant.getEmail());
     }

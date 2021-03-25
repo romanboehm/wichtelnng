@@ -67,40 +67,6 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-sm-6">
-                    <label for="local-date">On what day?</label>
-                    <input th:field="*{{localDate}}"
-                           id="local-date"
-                           class="form-control"
-                           type="date"
-                           required
-                           readonly/>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="local-time">At what hour?</label>
-                    <input th:field="*{{localTime}}"
-                           id="local-time"
-                           class="form-control"
-                           type="time"
-                           required
-                           readonly/>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="timezone">Timezone</label>
-                    <select id="timezone"
-                            class="form-control"
-                            th:field="*{timezone}"
-                            readonly>
-                        <option th:value="*{timezone}"
-                                th:text="*{timezone}"
-                                th:selected="*{timezone}">
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
                     <label for="host-name">Who's hosting?</label>
                     <input th:field="*{hostName}"
                            id="host-name"

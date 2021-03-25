@@ -37,10 +37,9 @@ public class WichtelnService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<EventCreation> getEvent(UUID eventId) {
+    public Optional<Event> getEvent(UUID eventId) {
         return eventRepository.findById(eventId)
-                .filter(not(DEADLINE_HAS_PASSED))
-                .map(EventCreation::from);
+                .filter(not(DEADLINE_HAS_PASSED));
     }
 
     @Transactional

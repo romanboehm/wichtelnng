@@ -2,7 +2,6 @@ package com.romanboehm.wichtelnng.service;
 
 
 import com.romanboehm.wichtelnng.CustomSpringBootTest;
-import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.repository.EventRepository;
@@ -11,16 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
 import static com.romanboehm.wichtelnng.TestData.event;
 import static com.romanboehm.wichtelnng.TestData.eventCreation;
-import static java.time.LocalDateTime.now;
+import static java.time.Instant.now;
 import static java.time.Month.JUNE;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -53,24 +52,23 @@ public class WichtelnServiceTest {
                     assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
-                    assertThat(event.getLocalDateTime()).isEqualTo(
-                            LocalDateTime.of(
+                    assertThat(event.getDeadline()).isEqualTo(
+                            ZonedDateTime.of(
                                     LocalDate.of(2666, JUNE, 7),
-                                    LocalTime.of(6, 6)
-                            )
+                                    LocalTime.of(6, 6),
+                                    ZoneId.of("Australia/Sydney")
+                            ).toInstant()
                     );
-                    assertThat(event.getZoneId()).isEqualTo(ZoneId.of("Australia/Sydney"));
                 });
     }
 
     @Test
     public void shouldNoticeWhenEventPastDeadline() {
         Event pastDeadline = eventRepository.save(event()
-                .setLocalDateTime(now().minus(1, ChronoUnit.MINUTES))
-                .setZoneId(ZoneId.systemDefault())
+                .setDeadline(now().minus(1, MINUTES))
         );
 
-        Optional<EventCreation> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());
+        Optional<Event> possibleEvent = wichtelnService.getEvent(pastDeadline.getId());
         assertThat(possibleEvent).isEmpty();
     }
 
@@ -81,21 +79,21 @@ public class WichtelnServiceTest {
 
         wichtelnService.register(
                 eventA.getId(),
-                ParticipantRegistration.with(EventCreation.from(eventA))
+                ParticipantRegistration.with(eventA)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
         wichtelnService.register(
                 eventA.getId(),
-                ParticipantRegistration.with(EventCreation.from(eventA))
+                ParticipantRegistration.with(eventA)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
         wichtelnService.register(
                 eventB.getId(),
-                ParticipantRegistration.with(EventCreation.from(eventB))
+                ParticipantRegistration.with(eventB)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );

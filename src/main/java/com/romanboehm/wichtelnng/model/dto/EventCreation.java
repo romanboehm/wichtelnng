@@ -1,11 +1,9 @@
 package com.romanboehm.wichtelnng.model.dto;
 
-import com.romanboehm.wichtelnng.model.entity.Event;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
@@ -13,8 +11,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -62,20 +60,12 @@ public class EventCreation {
     // the javax validator.
     // Non-nullability of the date, time, and timezone components is validated separately through field annotations.
     @FutureOrPresent
-    public ZonedDateTime getZonedDateTime() {
+    public Instant getInstant() {
         return ZonedDateTime.of(
                 localDate != null ? localDate : LocalDate.now(),
                 localTime != null ? localTime : LocalTime.now(),
                 timezone != null ? timezone : ZoneId.systemDefault()
-        );
-    }
-
-    // For convenience
-    public LocalDateTime getLocalDateTime() {
-        return LocalDateTime.of(
-                localDate != null ? localDate : LocalDate.now(),
-                localTime != null ? localTime : LocalTime.now()
-        );
+        ).toInstant();
     }
 
     @NotBlank
@@ -85,18 +75,4 @@ public class EventCreation {
     @NotBlank
     @Email
     private String hostEmail;
-
-    public static EventCreation from(Event entity) {
-        return new EventCreation()
-                .setId(entity.getId())
-                .setTitle(entity.getTitle())
-                .setDescription(entity.getDescription())
-                .setCurrency(Monetary.getCurrency(entity.getMonetaryAmount().getCurrency()))
-                .setNumber(entity.getMonetaryAmount().getNumber())
-                .setLocalDate(entity.getLocalDateTime().toLocalDate())
-                .setLocalTime(entity.getLocalDateTime().toLocalTime())
-                .setTimezone(entity.getZoneId())
-                .setHostName(entity.getHost().getName())
-                .setHostEmail(entity.getHost().getEmail());
-    }
 }

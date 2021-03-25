@@ -12,10 +12,10 @@ import javax.validation.ValidatorFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import static com.romanboehm.wichtelnng.TestData.eventCreation;
 import static com.romanboehm.wichtelnng.TestData.participantRegistration;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -151,7 +151,7 @@ public class EventValidationTest {
         public void shouldFailEventWithPastZonedDateTime() {
             EventCreation event = eventCreation()
                     .setLocalDate(LocalDate.now())
-                    .setLocalTime(LocalTime.now().minus(1, ChronoUnit.HOURS));
+                    .setLocalTime(LocalTime.now().minus(1, HOURS));
 
             assertThat(validator.validate(event)).isNotEmpty();
         }

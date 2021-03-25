@@ -11,15 +11,12 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.Address;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.TestData.event;
-import static java.time.ZoneId.systemDefault;
+import static java.time.Instant.now;
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @CustomSpringBootTest
@@ -43,12 +40,7 @@ public class MatchAndInformTest {
     @Test
     public void shouldMatchAndInform() {
         eventRepository.save(event()
-                .setLocalDateTime(
-                        LocalDateTime.of(
-                                LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now()
-                        )
-                ).setZoneId(systemDefault())
+                .setDeadline(now().minus(1, DAYS)) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -65,12 +57,7 @@ public class MatchAndInformTest {
         );
 
         eventRepository.save(event()
-                .setLocalDateTime(
-                        LocalDateTime.of(
-                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now()
-                        )
-                ).setZoneId(systemDefault())
+                .setDeadline(now().plus(1, DAYS)) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
@@ -102,12 +89,7 @@ public class MatchAndInformTest {
     @Test
     public void shouldDeleteEventsWhoseDeadlineHasPassed() {
         Event deleted = eventRepository.save(event()
-                .setLocalDateTime(
-                        LocalDateTime.of(
-                                LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now()
-                        )
-                ).setZoneId(systemDefault())
+                .setDeadline(now().minus(1, DAYS)) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -124,12 +106,7 @@ public class MatchAndInformTest {
         );
 
         Event open = eventRepository.save(event()
-                .setLocalDateTime(
-                        LocalDateTime.of(
-                                LocalDate.now().plus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now()
-                        )
-                ).setZoneId(systemDefault())
+                .setDeadline(now().plus(1, DAYS)) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
@@ -157,12 +134,7 @@ public class MatchAndInformTest {
     @Test
     public void shouldInformHostAboutEmptyEvent() {
         eventRepository.save(event()
-                .setLocalDateTime(
-                        LocalDateTime.of(
-                                LocalDate.now().minus(1, ChronoUnit.DAYS), // Should be included
-                                LocalTime.now()
-                        )
-                ).setZoneId(systemDefault())
+                .setDeadline(now().minus(1, DAYS)) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")

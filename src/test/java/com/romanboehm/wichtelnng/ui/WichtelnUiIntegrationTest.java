@@ -17,8 +17,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -109,7 +109,7 @@ public class WichtelnUiIntegrationTest {
         WebElement localDate = supply(LOCALDATE_ID);
         localDate.sendKeys(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         WebElement localTime = supply(LOCALTIME_ID);
-        localTime.sendKeys(LocalTime.now().minus(1, ChronoUnit.HOURS) // before present
+        localTime.sendKeys(LocalTime.now().minus(1, HOURS) // before present
                 .format(DateTimeFormatter.ofPattern("HH:mm"))
         );
         WebElement hostName = supply(HOST_NAME_ID);

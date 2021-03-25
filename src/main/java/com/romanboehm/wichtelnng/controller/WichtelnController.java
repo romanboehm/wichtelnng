@@ -2,6 +2,7 @@ package com.romanboehm.wichtelnng.controller;
 
 import com.romanboehm.wichtelnng.model.dto.EventCreation;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
+import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.service.WichtelnService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +66,11 @@ public class WichtelnController {
 
     @GetMapping("/wichteln/{eventId}/register")
     public ModelAndView getEvent(@PathVariable UUID eventId) {
-        Optional<EventCreation> possibleEvent = wichtelnService.getEvent(eventId);
+        Optional<Event> possibleEvent = wichtelnService.getEvent(eventId);
         if (possibleEvent.isEmpty()) {
             return new ModelAndView("redirect:/wichteln");
         }
-        EventCreation event = possibleEvent.get();
-        ParticipantRegistration participantRegistration = ParticipantRegistration.with(event);
+        ParticipantRegistration participantRegistration = ParticipantRegistration.with(possibleEvent.get());
         return new ModelAndView("registration", Map.of("participantRegistration", participantRegistration), OK);
     }
 
