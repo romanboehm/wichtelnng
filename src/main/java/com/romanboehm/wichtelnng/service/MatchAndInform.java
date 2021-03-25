@@ -47,11 +47,11 @@ public class MatchAndInform {
                         matches.stream().map(Match::toString).collect(joining(", ")),
                         event
                 );
-                eventRepository.delete(event);
-                log.debug("Deleted {} because participants have been matched", event);
             } catch (TooFewParticipantsException e) {
                 hostMailSender.send(event);
             }
+            eventRepository.delete(event);
+            log.debug("Deleted {}", event);
         }
     }
 }

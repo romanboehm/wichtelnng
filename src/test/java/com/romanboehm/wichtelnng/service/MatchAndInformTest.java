@@ -100,7 +100,7 @@ public class MatchAndInformTest {
     }
 
     @Test
-    public void shouldDeleteEventsWhereParticipantsHaveBeenInformed() {
+    public void shouldDeleteEventsWhoseDeadlineHasPassed() {
         Event deleted = eventRepository.save(event()
                 .setLocalDateTime(
                         LocalDateTime.of(
