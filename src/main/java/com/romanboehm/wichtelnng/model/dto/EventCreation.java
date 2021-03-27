@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Min;
@@ -16,11 +17,16 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Data
 public class EventCreation {
+
+    private static final List<CurrencyUnit> CURRENCIES = Monetary.getCurrencies().stream().sorted().collect(toList());
 
     // May be `null` first
     private UUID id;
@@ -75,4 +81,8 @@ public class EventCreation {
     @NotBlank
     @Email
     private String hostEmail;
+
+    public List<CurrencyUnit> getCurrencies() {
+        return CURRENCIES;
+    }
 }

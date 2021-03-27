@@ -63,7 +63,7 @@
                     <select id="monetary-amount-currency"
                             class="form-control"
                             th:field="*{currency}">
-                        <option th:each="currency : ${T(javax.money.Monetary).getCurrencies()}"
+                        <option th:each="currency : *{currencies}"
                                 th:value="${currency}"
                                 th:text="${currency}"
                                 th:selected="*{currency}">

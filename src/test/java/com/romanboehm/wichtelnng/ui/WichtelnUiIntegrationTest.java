@@ -17,6 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -134,5 +135,17 @@ public class WichtelnUiIntegrationTest {
         assertThat(hostNameError.isDisplayed()).isTrue();
         WebElement hostEmailError = supply(HOST_EMAIL_ERROR_ID);
         assertThat(hostEmailError.isDisplayed()).isTrue();
+    }
+
+    @Test
+    public void shouldSortCurrencies() {
+        WebElement currencies = supply(MONETARYAMOUNT_CURRENCY_ID);
+
+        currencies.click();
+
+        List<WebElement> options = currencies.findElements(By.tagName("option"));
+        assertThat(options).extracting(WebElement::getText)
+                .isNotEmpty()
+                .isSorted();
     }
 }
