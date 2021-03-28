@@ -1,6 +1,7 @@
 package com.romanboehm.wichtelnng.model.dto;
 
 import lombok.Data;
+import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.money.CurrencyUnit;
@@ -14,17 +15,53 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.String.format;
+import static java.time.ZoneId.getAvailableZoneIds;
+import static java.util.Comparator.comparing;
+import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 
 
 @Data
 public class EventCreation {
+
+    @Value
+    static class EventZoneId {
+        private static final LocalDateTime NOW = LocalDateTime.now();
+
+        private static final Comparator<EventZoneId> COMPARATOR = comparing(
+                eventZoneId -> NOW.atZone(eventZoneId.getZoneId()).getOffset(), reverseOrder()
+        );
+        private static final List<EventZoneId> ALL_ZONES = getAvailableZoneIds().stream()
+                .map(ZoneId::of)
+                .map(EventZoneId::new)
+                .sorted(COMPARATOR)
+                .collect(toList());
+
+        ZoneId zoneId;
+
+        @Override
+        public String toString() {
+            return format("%s (UTC %s)", zoneId.getId(), getOffset());
+        }
+
+        private String getOffset() {
+            return NOW
+                    .atZone(zoneId)
+                    .getOffset()
+                    .getId()
+                    .replace("Z", "+00:00");
+        }
+
+    }
 
     private static final List<CurrencyUnit> CURRENCIES = Monetary.getCurrencies().stream().sorted().collect(toList());
 
@@ -84,5 +121,9 @@ public class EventCreation {
 
     public List<CurrencyUnit> getCurrencies() {
         return CURRENCIES;
+    }
+
+    public List<EventZoneId> getTimezones() {
+        return EventZoneId.ALL_ZONES;
     }
 }

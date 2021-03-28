@@ -106,8 +106,8 @@
                     <select id="timezone"
                             class="form-control"
                             th:field="*{timezone}">
-                        <option th:each="timezone : ${T(java.time.ZoneId).getAvailableZoneIds()}"
-                                th:value="${T(java.time.ZoneId).of(timezone)}"
+                        <option th:each="timezone : *{timezones}"
+                                th:value="${timezone.zoneId}"
                                 th:text="${timezone}"
                                 th:selected="*{timezone}">
                         </option>
