@@ -1,6 +1,7 @@
 package com.romanboehm.wichtelnng.model.entity;
 
 import lombok.Data;
+import org.javamoney.moneta.Money;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -15,4 +16,9 @@ public class MonetaryAmount {
 
     @Column(nullable = false, length = 3)
     private String currency;
+
+    @Override
+    public String toString() {
+        return Money.of(number, currency).toString();
+    }
 }

@@ -1,7 +1,9 @@
 package com.romanboehm.wichtelnng.model.dto;
 
 import com.romanboehm.wichtelnng.model.entity.Event;
+import com.romanboehm.wichtelnng.model.entity.MonetaryAmount;
 import lombok.Data;
+import org.javamoney.moneta.Money;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -59,5 +61,11 @@ public class ParticipantRegistration {
                 .setNumber(event.getMonetaryAmount().getNumber())
                 .setHostName(event.getHost().getName())
                 .setHostEmail(event.getHost().getEmail());
+    }
+
+    public MonetaryAmount getMonetaryAmount() {
+        return new MonetaryAmount()
+                .setNumber(number)
+                .setCurrency(currency.getCurrencyCode());
     }
 }

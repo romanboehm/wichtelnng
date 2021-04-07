@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.javamoney.moneta.Money;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;

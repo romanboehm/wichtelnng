@@ -57,11 +57,7 @@
                             class="form-control"
                             th:field="*{currency}"
                             readonly>
-                        <option th:each="currency : ${T(javax.money.Monetary).getCurrencies()}"
-                                th:value="${currency}"
-                                th:text="${currency}"
-                                th:selected="*{currency}">
-                        </option>
+                        <option th:value="*{currency}" th:text="*{currency}"></option>
                     </select>
                 </div>
             </div>
