@@ -14,8 +14,7 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.romanboehm.wichtelnng.model.entity.Event.DEADLINE_HAS_PASSED;
-import static java.util.function.Predicate.not;
+import static java.time.Instant.now;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,8 +37,7 @@ public class WichtelnService {
 
     @Transactional(readOnly = true)
     public Optional<Event> getEvent(UUID eventId) {
-        return eventRepository.findById(eventId)
-                .filter(not(DEADLINE_HAS_PASSED));
+        return eventRepository.findByIdAndDeadlineAfter(eventId, now());
     }
 
     @Transactional

@@ -13,9 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.romanboehm.wichtelnng.model.entity.Event.DEADLINE_HAS_PASSED;
+import static java.time.Instant.now;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,9 +34,7 @@ public class MatchAndInform {
     public void matchAndInform() {
         // Yes, retrieving all events and filtering in the app is slower than a custom query. But the number of events
         // is low and it's easier than writing a custom query.
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAll().stream()
-                .filter(DEADLINE_HAS_PASSED)
-                .collect(toList());
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBefore(now());
         for (Event event : eventsWhereDeadlineHasPassed) {
             try {
                 List<Match> matches = matcher.match(new ArrayList<>(event.getParticipants()));
