@@ -16,8 +16,7 @@
 
     <properties>
         <java.version>15</java.version>
-        <testcontainers.version>1.15.2</testcontainers.version>
-        <selenium.version>3.141.59</selenium.version>
+        <testcontainers.version>1.15.3</testcontainers.version>
         <greenmail.version>1.6.1</greenmail.version>
     </properties>
 
