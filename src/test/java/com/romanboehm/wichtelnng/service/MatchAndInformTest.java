@@ -1,7 +1,6 @@
 package com.romanboehm.wichtelnng.service;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.model.entity.Participant;
 import com.romanboehm.wichtelnng.repository.EventRepository;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.Address;
 
@@ -19,7 +19,7 @@ import static java.time.Instant.now;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@CustomSpringBootTest
+@SpringBootTest
 public class MatchAndInformTest {
 
     @RegisterExtension

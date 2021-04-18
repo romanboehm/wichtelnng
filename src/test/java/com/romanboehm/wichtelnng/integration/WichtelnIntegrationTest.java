@@ -1,7 +1,6 @@
 package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import com.romanboehm.wichtelnng.service.WichtelnService;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -34,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@CustomSpringBootTest
+@SpringBootTest
 @AutoConfigureMockMvc
 public class WichtelnIntegrationTest {
 

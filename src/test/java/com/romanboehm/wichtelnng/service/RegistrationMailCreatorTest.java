@@ -1,11 +1,10 @@
 package com.romanboehm.wichtelnng.service;
 
-import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.Address;
 import javax.mail.MessagingException;
@@ -17,8 +16,7 @@ import static javax.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-@CustomSpringBootTest
-@TestPropertySource(properties = {
+@SpringBootTest(properties = {
         "com.romanboehm.wichtelnng.domain=https://wichtelnng.romanboehm.com",
         "com.romanboehm.wichtelnng.mail.from=wichteln@romanboehm.com",
 })

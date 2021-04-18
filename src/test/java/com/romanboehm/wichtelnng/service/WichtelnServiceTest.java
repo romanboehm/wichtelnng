@@ -1,13 +1,13 @@
 package com.romanboehm.wichtelnng.service;
 
 
-import com.romanboehm.wichtelnng.CustomSpringBootTest;
 import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
 import com.romanboehm.wichtelnng.model.entity.Event;
 import com.romanboehm.wichtelnng.repository.EventRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,7 +23,7 @@ import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-@CustomSpringBootTest
+@SpringBootTest
 public class WichtelnServiceTest {
 
     @Autowired
