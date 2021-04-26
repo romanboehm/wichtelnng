@@ -1,11 +1,11 @@
 package com.romanboehm.wichtelnng;
 
-import com.romanboehm.wichtelnng.model.dto.EventCreation;
-import com.romanboehm.wichtelnng.model.dto.ParticipantRegistration;
-import com.romanboehm.wichtelnng.model.entity.Event;
-import com.romanboehm.wichtelnng.model.entity.Host;
-import com.romanboehm.wichtelnng.model.entity.MonetaryAmount;
-import com.romanboehm.wichtelnng.model.entity.Participant;
+import com.romanboehm.wichtelnng.usecases.createevent.CreateEvent;
+import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.data.Host;
+import com.romanboehm.wichtelnng.data.MonetaryAmount;
+import com.romanboehm.wichtelnng.data.Participant;
+import com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipant;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -56,9 +56,9 @@ public class TestData {
                 .setEmail("angusyoung@acdc.net");
     }
 
-    public static EventCreation eventCreation() {
+    public static CreateEvent createEvent() {
         Event entity = event();
-        return new EventCreation()
+        return new CreateEvent()
                 .setId(entity.getId())
                 .setTitle(entity.getTitle())
                 .setDescription(entity.getDescription())
@@ -72,23 +72,23 @@ public class TestData {
     }
 
     public static MultiValueMap<String, String> eventFormParams() {
-        EventCreation eventCreation = eventCreation();
+        CreateEvent createEvent = createEvent();
         LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("title", eventCreation.getTitle());
-        map.add("description", eventCreation.getDescription());
-        map.add("number", eventCreation.getNumber().toString());
-        map.add("currency", eventCreation.getCurrency().toString());
-        map.add("localDate", eventCreation.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        map.add("localTime", eventCreation.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
-        map.add("timezone", eventCreation.getTimezone().toString());
-        map.add("hostName", eventCreation.getHostName());
-        map.add("hostEmail", eventCreation.getHostEmail());
+        map.add("title", createEvent.getTitle());
+        map.add("description", createEvent.getDescription());
+        map.add("number", createEvent.getNumber().toString());
+        map.add("currency", createEvent.getCurrency().toString());
+        map.add("localDate", createEvent.getLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        map.add("localTime", createEvent.getLocalTime().format(DateTimeFormatter.ofPattern("HH:mm")));
+        map.add("timezone", createEvent.getTimezone().toString());
+        map.add("hostName", createEvent.getHostName());
+        map.add("hostEmail", createEvent.getHostEmail());
         return map;
     }
 
-    public static ParticipantRegistration participantRegistration() {
+    public static RegisterParticipant participantRegistration() {
         Participant participant = participant();
-        return ParticipantRegistration.with(event())
+        return RegisterParticipant.with(event())
                 .setParticipantName(participant.getName())
                 .setParticipantEmail(participant.getEmail());
     }
