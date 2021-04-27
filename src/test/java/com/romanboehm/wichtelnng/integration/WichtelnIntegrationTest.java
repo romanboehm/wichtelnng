@@ -23,7 +23,6 @@ import static com.romanboehm.wichtelnng.TestData.participantFormParams;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,23 +54,23 @@ class WichtelnIntegrationTest {
 
     @Test
     void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {
-
         // Fetch page where event can be created
         mockMvc.perform(get("/event"))
                 .andExpect(status().is2xxSuccessful());
 
         // Fill out and submit form for event
         MultiValueMap<String, String> params = eventFormParams();
-        ResultActions createEvent = mockMvc.perform(post("/event")
+        ResultActions createEventRedirect = mockMvc.perform(post("/event")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params)
         )
                 .andExpect(status().is3xxRedirection());
 
-        // Hacky way to retrieve event's ID without mocking repo
+        // Hacky way to retrieve event's ID since we cannot spy `EventRepository`.
+        // Cf. https://github.com/spring-projects/spring-boot/issues/7033
         UUID eventId = eventRepository.findAll().get(0).getId();
 
-        createEvent
+        createEventRedirect
                 .andExpect(redirectedUrl(format("/event/%s/link", eventId)));
 
         String registrationUrl = format("%s/event/%s/registration", domain, eventId);
