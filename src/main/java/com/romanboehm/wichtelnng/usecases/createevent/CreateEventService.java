@@ -4,6 +4,7 @@ import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +19,14 @@ public class CreateEventService {
 
     @Transactional
     UUID save(CreateEvent createEvent) {
-        Event saved = eventRepository.save(Event.from(createEvent));
-        return saved.getId();
+        try {
+            Event saved = eventRepository.save(Event.from(createEvent));
+            log.debug("Saved {}", saved);
+            return saved.getId();
+        } catch (DataIntegrityViolationException e) {
+            log.debug("Failed to save {}", createEvent, e);
+            // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
+            throw new RuntimeException("Duplicate event");
+        }
     }
 }

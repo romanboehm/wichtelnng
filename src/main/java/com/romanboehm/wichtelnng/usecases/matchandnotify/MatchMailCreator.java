@@ -55,8 +55,9 @@ public class MatchMailCreator {
             log.debug("Created mail for {} matching {}", event, match);
             return mimeMessage;
         } catch (MessagingException e) {
+            log.error("Failed to create mail for {} with {}", event, match, e);
             // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to create match mail");
         }
     }
 }

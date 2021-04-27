@@ -1,0 +1,1 @@
+ALTER TABLE event ADD CONSTRAINT event_unique UNIQUE (title, description, number, currency, name, email, deadline);

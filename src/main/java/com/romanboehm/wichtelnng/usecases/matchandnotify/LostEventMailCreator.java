@@ -50,8 +50,9 @@ public class LostEventMailCreator {
             log.debug("Created mail to inform about empty event: {}", event);
             return mimeMessage;
         } catch (MessagingException e) {
+            log.error("Failed to create mail for {}", event, e);
             // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to create lost event mail");
         }
     }
 }

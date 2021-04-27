@@ -54,7 +54,7 @@ public class RegisterParticipantMailCreator {
         } catch (MessagingException e) {
             log.error("Failed to create mail for {}", registerParticipant, e);
             // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
-            throw new RuntimeException();
+            throw new RuntimeException("Failed to create registration mail");
         }
     }
 }

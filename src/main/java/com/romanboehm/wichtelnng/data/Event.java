@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.Column;
@@ -35,18 +36,23 @@ public class Event implements Persistable<UUID> {
     private UUID id;
 
     @Column(nullable = false, length = 100)
+    @NaturalId
     private String title;
 
     @Column(nullable = false, length = 1000)
+    @NaturalId
     private String description;
 
     @Embedded
+    @NaturalId
     private MonetaryAmount monetaryAmount;
 
     @Column(nullable = false)
+    @NaturalId
     private Instant deadline;
 
     @Embedded
+    @NaturalId
     private Host host;
 
     @OneToMany(mappedBy = "event", cascade = ALL, orphanRemoval = true, fetch = LAZY)

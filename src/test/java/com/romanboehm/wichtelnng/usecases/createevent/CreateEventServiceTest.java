@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 import static com.romanboehm.wichtelnng.TestData.createEvent;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class CreateEventServiceTest {
@@ -52,6 +53,13 @@ class CreateEventServiceTest {
                             ).toInstant()
                     );
                 });
+    }
+
+    @Test
+    void shouldThrowOnDuplicateEvent() {
+        service.save(createEvent());
+        assertThatThrownBy(() -> service.save(createEvent()))
+                .isInstanceOf(RuntimeException.class);
     }
 
 }
