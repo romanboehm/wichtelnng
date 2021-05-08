@@ -2,11 +2,11 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 
 import org.junit.jupiter.api.Test;
 
+import javax.money.CurrencyUnit;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CreateEventTest {
 
@@ -18,5 +18,12 @@ class CreateEventTest {
         assertThat(timezones).isSortedAccordingTo((t1, t2) ->
             t2.getZoneId().getRules().getOffset(now).compareTo(t1.getZoneId().getRules().getOffset(now))
         );
+    }
+
+    @Test
+    void shouldSortCurrenciesAlphabetically() {
+        List<CurrencyUnit> currencies = new CreateEvent().getCurrencies();
+
+        assertThat(currencies).isSorted();
     }
 }
