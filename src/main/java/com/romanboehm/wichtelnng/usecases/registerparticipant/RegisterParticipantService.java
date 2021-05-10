@@ -23,7 +23,8 @@ public class RegisterParticipantService {
 
     @Transactional(readOnly = true)
     Optional<Event> getEvent(UUID eventId) {
-        return eventRepository.findByIdAndDeadlineAfter(eventId, now());
+        return eventRepository.findById(eventId)
+                .filter(event -> event.getDeadline().asInstant().isAfter(now()));
     }
 
     @Transactional

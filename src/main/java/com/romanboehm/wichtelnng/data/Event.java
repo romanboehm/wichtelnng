@@ -8,14 +8,8 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import java.time.Instant;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -47,9 +41,9 @@ public class Event implements Persistable<UUID> {
     @NaturalId
     private MonetaryAmount monetaryAmount;
 
-    @Column(nullable = false)
+    @Embedded
     @NaturalId
-    private Instant deadline;
+    private Deadline deadline;
 
     @Embedded
     @NaturalId
@@ -62,7 +56,16 @@ public class Event implements Persistable<UUID> {
         return new Event()
                 .setTitle(createEvent.getTitle())
                 .setDescription(createEvent.getDescription())
-                .setDeadline(createEvent.getInstant())
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(
+                                        LocalDateTime.of(
+                                                createEvent.getLocalDate(),
+                                                createEvent.getLocalTime()
+                                        )
+                                )
+                                .setZoneId(createEvent.getTimezone().getId())
+                )
                 .setHost(
                         new Host()
                                 .setName(createEvent.getHostName())

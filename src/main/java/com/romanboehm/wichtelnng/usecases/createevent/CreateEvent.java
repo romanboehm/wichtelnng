@@ -6,19 +6,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -109,6 +99,18 @@ public class CreateEvent {
                 localTime != null ? localTime : LocalTime.now(),
                 timezone != null ? timezone : ZoneId.systemDefault()
         ).toInstant();
+    }
+
+    // Needed to delegate validation for event's "when" (its local date and local time at the respective timezone) to
+    // the javax validator.
+    // Non-nullability of the date, time, and timezone components is validated separately through field annotations.
+    @FutureOrPresent
+    public ZonedDateTime getZonedDateTime() {
+        return ZonedDateTime.of(
+                localDate != null ? localDate : LocalDate.now(),
+                localTime != null ? localTime : LocalTime.now(),
+                timezone != null ? timezone : ZoneId.systemDefault()
+        );
     }
 
     @NotBlank

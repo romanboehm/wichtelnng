@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.Instant.now;
 import static java.util.stream.Collectors.joining;
 
 @Slf4j
@@ -22,15 +21,15 @@ public class MatchAndNotifyService {
     private final EventRepository eventRepository;
     private final ParticipantsMatcher participantsMatcher;
     private final MatchNotifier matchNotifier;
-    private final LostEventNotifier informHost;
+    private final LostEventNotifier lostEventNotifier;
 
     @Scheduled(
             initialDelayString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.initial.delay.in.ms}",
             fixedRateString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.rate.in.ms}"
     )
     @Transactional
-    public void matchAndInform() {
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBefore(now());
+    public void matchAndNotify() {
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBeforeNow();
         for (Event event : eventsWhereDeadlineHasPassed) {
             try {
                 List<Match> matches = participantsMatcher.match(new ArrayList<>(event.getParticipants()));
@@ -41,7 +40,7 @@ public class MatchAndNotifyService {
                         event
                 );
             } catch (TooFewParticipants e) {
-                informHost.send(event);
+                lostEventNotifier.send(event);
             }
             eventRepository.delete(event);
             log.debug("Deleted {}", event);

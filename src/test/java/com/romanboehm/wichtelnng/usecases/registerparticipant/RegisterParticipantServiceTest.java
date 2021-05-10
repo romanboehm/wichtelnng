@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
+import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.EventRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -8,17 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.romanboehm.wichtelnng.TestData.event;
-import static java.time.Instant.now;
+import static com.romanboehm.wichtelnng.TestData.zoneId;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 @SpringBootTest
 class RegisterParticipantServiceTest {
-    
+
     @Autowired
     private EventRepository eventRepository;
 
@@ -36,7 +38,11 @@ class RegisterParticipantServiceTest {
     @Test
     void shouldNoticeWhenEventPastDeadline() {
         Event pastDeadline = eventRepository.save(event()
-                .setDeadline(now().minus(1, MINUTES))
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(LocalDateTime.now().minus(1, MINUTES))
+                                .setZoneId(zoneId())
+                )
         );
 
         Optional<Event> possibleEvent = service.getEvent(pastDeadline.getId());

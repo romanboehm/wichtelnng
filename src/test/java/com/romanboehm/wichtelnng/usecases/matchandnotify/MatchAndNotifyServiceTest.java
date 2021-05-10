@@ -1,9 +1,10 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Participant;
 import com.romanboehm.wichtelnng.data.EventRepository;
+import com.romanboehm.wichtelnng.data.Participant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -15,12 +16,13 @@ import javax.mail.Address;
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.TestData.event;
-import static java.time.Instant.now;
-import static java.time.temporal.ChronoUnit.DAYS;
+import static com.romanboehm.wichtelnng.TestData.zoneId;
+import static java.time.LocalDateTime.now;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class MatchAndNotifyTest {
+class MatchAndNotifyServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
@@ -38,9 +40,14 @@ class MatchAndNotifyTest {
     }
 
     @Test
-    void shouldMatchAndInform() {
+    void shouldMatchAndNotify() {
         eventRepository.save(event()
-                .setDeadline(now().minus(1, DAYS)) // Should be included
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(now().minus(1, MINUTES))
+                                .setZoneId(zoneId())
+
+                ) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -57,7 +64,12 @@ class MatchAndNotifyTest {
         );
 
         eventRepository.save(event()
-                .setDeadline(now().plus(1, DAYS)) // Should be included
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(now().plus(1, MINUTES))
+                                .setZoneId(zoneId())
+
+                ) // Should not be included
                 .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
@@ -73,13 +85,13 @@ class MatchAndNotifyTest {
                 )
         );
 
-        service.matchAndInform();
+        service.matchAndNotify();
 
         assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
         assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
-                .contains(
+                .containsExactlyInAnyOrder(
                         "angusyoung@acdc.net",
                         "malcolmyoung@acdc.net",
                         "georgeyoung@acdc.net"
@@ -89,7 +101,12 @@ class MatchAndNotifyTest {
     @Test
     void shouldDeleteEventsWhoseDeadlineHasPassed() {
         Event deleted = eventRepository.save(event()
-                .setDeadline(now().minus(1, DAYS)) // Should be included
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(now().minus(1, MINUTES))
+                                .setZoneId(zoneId())
+
+                ) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -106,7 +123,12 @@ class MatchAndNotifyTest {
         );
 
         Event open = eventRepository.save(event()
-                .setDeadline(now().plus(1, DAYS)) // Should be included
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(now().plus(2, MINUTES))
+                                .setZoneId(zoneId())
+
+                ) // Should not be included
                 .addParticipant(
                         new Participant()
                                 .setName("Phil Rudd")
@@ -122,7 +144,7 @@ class MatchAndNotifyTest {
                 )
         );
 
-        service.matchAndInform();
+        service.matchAndNotify();
 
         assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
 
@@ -134,7 +156,12 @@ class MatchAndNotifyTest {
     @Test
     void shouldInformHostAboutEmptyEvent() {
         eventRepository.save(event()
-                .setDeadline(now().minus(1, DAYS)) // Should be included
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(now().minus(1, MINUTES))
+                                .setZoneId(zoneId())
+
+                ) // Should be included
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -142,7 +169,7 @@ class MatchAndNotifyTest {
                 )
         );
 
-        service.matchAndInform();
+        service.matchAndNotify();
 
         assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
         assertThat(greenMail.getReceivedMessages())

@@ -1,10 +1,7 @@
 package com.romanboehm.wichtelnng;
 
+import com.romanboehm.wichtelnng.data.*;
 import com.romanboehm.wichtelnng.usecases.createevent.CreateEvent;
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.MonetaryAmount;
-import com.romanboehm.wichtelnng.data.Participant;
 import com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipant;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -12,9 +9,9 @@ import org.springframework.util.MultiValueMap;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static java.time.Month.JUNE;
@@ -23,19 +20,30 @@ import static javax.money.Monetary.getCurrency;
 
 public class TestData {
 
+    private static final ZoneId ZONE_ID = systemDefault();
+
     public static Event event() {
         return new Event()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setMonetaryAmount(monetaryAmount())
-                .setDeadline(
-                        ZonedDateTime.of(
-                                LocalDate.of(2666, JUNE, 7),
-                                LocalTime.of(6, 6),
-                                ZoneId.of("Australia/Sydney")
-                        ).toInstant()
-                )
+                .setDeadline(deadline())
                 .setHost(host());
+    }
+
+    public static String zoneId() {
+        return ZONE_ID.getId();
+    }
+
+    public static Deadline deadline() {
+        return new Deadline()
+                .setZoneId(ZoneId.of("Australia/Sydney").getId())
+                .setLocalDateTime(
+                        LocalDateTime.of(
+                                LocalDate.of(2666, JUNE, 7),
+                                LocalTime.of(6, 6)
+                        )
+                );
     }
 
     public static Host host() {
@@ -64,9 +72,9 @@ public class TestData {
                 .setDescription(entity.getDescription())
                 .setCurrency(Monetary.getCurrency(entity.getMonetaryAmount().getCurrency()))
                 .setNumber(entity.getMonetaryAmount().getNumber())
-                .setLocalDate(entity.getDeadline().atZone(systemDefault()).toLocalDate())
-                .setLocalTime(entity.getDeadline().atZone(systemDefault()).toLocalTime())
-                .setTimezone(systemDefault())
+                .setLocalDate(entity.getDeadline().getLocalDateTime().atZone(ZoneId.of(entity.getDeadline().getZoneId())).toLocalDate())
+                .setLocalTime(entity.getDeadline().getLocalDateTime().atZone(ZoneId.of(entity.getDeadline().getZoneId())).toLocalTime())
+                .setTimezone(ZoneId.of(entity.getDeadline().getZoneId()))
                 .setHostName(entity.getHost().getName())
                 .setHostEmail(entity.getHost().getEmail());
     }

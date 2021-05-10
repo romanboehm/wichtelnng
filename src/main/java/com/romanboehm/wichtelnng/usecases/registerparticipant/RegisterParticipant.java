@@ -6,11 +6,7 @@ import lombok.Data;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
