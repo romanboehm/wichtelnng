@@ -43,75 +43,71 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="monetary-amount-number">How much to spend on a gift?</label>
-                    <input th:field="*{number}"
-                           id="monetary-amount-number"
-                           th:class="'form-control ' + ${#fields.hasErrors('number') ? 'is-invalid' : ''}"
-                           type="number"
-                           step="0.01"
-                           placeholder="78"
-                           required/>
-                    <div id="monetary-amount-number-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('number')}">
-                        Must be greater than or equal to 0.
-                    </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="monetary-amount-currency">In what currency?</label>
-                    <select id="monetary-amount-currency"
-                            class="form-control"
-                            th:field="*{currency}">
-                        <option th:each="currency : *{currencies}"
-                                th:value="${currency}"
-                                th:text="${currency}"
-                                th:selected="*{currency}">
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <p style="display:inline-block;margin-bottom:.5rem">What's the registration deadline?</p>
-            <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="local-date">Day</label>
-                    <input th:field="*{{localDate}}"
-                           id="local-date"
-                           th:class="'form-control ' + ${#fields.hasErrors('instant') ? 'is-invalid' : ''}"
-                           type="date"
-                           required/>
-                    <div id="local-date-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('instant')}">
-                        Must take place in the future.
-                    </div>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="local-time">Hour</label>
-                    <input th:field="*{{localTime}}"
-                           id="local-time"
-                           th:class="'form-control ' + ${#fields.hasErrors('instant') ? 'is-invalid' : ''}"
-                           type="time"
-                           required/>
-                    <div id="local-time-error"
-                         class="invalid-feedback"
-                         th:if="${#fields.hasErrors('instant')}">
-                        Must take place in the future.
+                <div class="form-group col-sm-12">
+                    <label for="monetary-amount">How much to spend on a gift?</label>
+                    <div class="input-group" id="monetary-amount">
+                        <input th:field="*{number}"
+                               id="monetary-amount-number"
+                               th:class="'form-control ' + ${#fields.hasErrors('number') ? 'is-invalid' : ''}"
+                               type="number"
+                               step="0.01"
+                               placeholder="78"
+                               required/>
+                        <div id="monetary-amount-number-error"
+                             class="invalid-feedback"
+                             th:if="${#fields.hasErrors('number')}">
+                            Must be greater than or equal to 0.
+                        </div>
+                        <div class="input-group-append">
+                            <select id="monetary-amount-currency"
+                                    class="form-control btn btn-outline-secondary"
+                                    name="currency">
+                                <option th:each="currency : *{currencies}"
+                                        th:value="${currency}"
+                                        th:text="${currency}"
+                                        th:selected="${#strings.equals(currency, 'AUD')}">
+                                </option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="timezone">Timezone</label>
-                    <select id="timezone"
-                            class="form-control"
-                            th:field="*{timezone}">
-                        <option th:each="timezone : *{timezones}"
-                                th:value="${timezone.zoneId}"
-                                th:text="${timezone}"
-                                th:selected="*{timezone}">
-                        </option>
-                    </select>
+                <div class="form-group col-sm-12">
+                    <label for="deadline">What's the registration deadline?</label>
+                    <div class="input-group" id="deadline">
+                        <input th:field="*{{localDate}}"
+                               id="local-date"
+                               th:class="'form-control ' + ${#fields.hasErrors('instant') ? 'is-invalid' : ''}"
+                               type="date"
+                               required/>
+                        <div id="local-date-error"
+                             class="invalid-feedback"
+                             th:if="${#fields.hasErrors('instant')}">
+                            Must take place in the future.
+                        </div>
+                        <input th:field="*{{localTime}}"
+                               id="local-time"
+                               th:class="'form-control ' + ${#fields.hasErrors('instant') ? 'is-invalid' : ''}"
+                               type="time"
+                               required/>
+                        <div id="local-time-error"
+                             class="invalid-feedback"
+                             th:if="${#fields.hasErrors('instant')}">
+                            Must take place in the future.
+                        </div>
+                        <div class="input-group-append">
+                            <select id="timezone"
+                                    class="form-control btn btn-outline-secondary"
+                                    name="timezone">
+                                <option th:each="timezone : *{timezones}"
+                                        th:value="${timezone.zoneId}"
+                                        th:text="${timezone}"
+                                        th:selected="${#strings.equals(timezone.zoneId, 'Australia/Sydney')}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row">

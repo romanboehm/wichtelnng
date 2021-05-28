@@ -40,25 +40,26 @@
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-sm-6">
-                    <label for="monetary-amount-number">How much to spend on a gift?</label>
-                    <input th:field="*{number}"
-                           id="monetary-amount-number"
-                           class="form-control"
-                           type="number"
-                           step="0.01"
-                           placeholder="78"
-                           required
-                           readonly/>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="title">In what currency?</label>
-                    <select id="monetary-amount-currency"
-                            class="form-control"
-                            th:field="*{currency}"
-                            readonly>
-                        <option th:value="*{currency}" th:text="*{currency}"></option>
-                    </select>
+                <div class="form-group col-sm-12">
+                    <label for="monetary-amount">How much to spend on a gift?</label>
+                    <div class="input-group" id="monetary-amount">
+                        <input th:field="*{number}"
+                               id="monetary-amount-number"
+                               class="form-control"
+                               type="number"
+                               step="0.01"
+                               placeholder="78"
+                               required
+                               readonly/>
+                        <div class="input-group-append">
+                            <select id="monetary-amount-currency"
+                                    class="form-control btn btn-outline-secondary"
+                                    name="currency"
+                                    readonly>
+                                <option th:value="*{currency}" th:text="*{currency}"></option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-row">
