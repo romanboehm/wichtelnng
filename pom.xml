@@ -16,6 +16,14 @@
 
     <properties>
         <java.version>16</java.version>
+        <lombok.version>1.18.20</lombok.version>
+        <moneta.version>1.4.2</moneta.version>
+        <postgres.driver.version>42.2.19</postgres.driver.version>
+        <flyway.version>7.7.0</flyway.version>
+        <webjars.bootstrap.version>4.5.3</webjars.bootstrap.version>
+        <webjars.jquery.version>3.5.1</webjars.jquery.version>
+        <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
+        <assertj.version>3.15.0</assertj.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <greenmail.version>1.6.1</greenmail.version>
     </properties>
@@ -36,7 +44,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -50,7 +58,7 @@
         <dependency>
             <groupId>org.javamoney</groupId>
             <artifactId>moneta</artifactId>
-            <version>1.4.2</version>
+            <version>${moneta.version}</version>
             <type>pom</type>
         </dependency>
 
@@ -76,7 +84,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.19</version>
+            <version>${postgres.driver.version}</version>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
@@ -85,25 +93,25 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>7.7.0</version>
+            <version>${flyway.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>4.5.3</version>
+            <version>${webjars.bootstrap.version}</version>
         </dependency>
         <!-- For Bootstrap -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>3.5.1</version>
+            <version>${webjars.jquery.version}</version>
         </dependency>
         <!-- For icon(s) -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>font-awesome</artifactId>
-            <version>5.15.1</version>
+            <version>${webjars.fontawesome.version}</version>
         </dependency>
 
         <!-- Testing -->
@@ -121,7 +129,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>3.15.0</version>
+            <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
