@@ -15,7 +15,7 @@
     <description>Secret Santa demo</description>
 
     <properties>
-        <java.version>15</java.version>
+        <java.version>16</java.version>
         <testcontainers.version>1.15.3</testcontainers.version>
         <greenmail.version>1.6.1</greenmail.version>
     </properties>
@@ -36,7 +36,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
 
