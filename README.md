@@ -8,7 +8,7 @@ A demo/testbed for various technologies in form of a Secret Santa (German: "Wich
 
 ## How to try it out?
 ### a) Web
-Navigate to https://wichteln.romanboehm.com (N.B.: Initial load might take a while in case of cold starts with the Heroku free tier)
+Navigate to https://wichtelnng-app.herokuapp.com (N.B.: Initial load might take a while in case of cold starts with the Heroku free tier)
 ### b) On your machine
 Make sure you have `docker` and `docker-compose` installed. Then
 1) Clone this repo
