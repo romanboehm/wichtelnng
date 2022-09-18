@@ -2,6 +2,7 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -28,7 +29,7 @@ public class CreateEventController {
 
     @GetMapping("/")
     public ModelAndView redirect() {
-        return new ModelAndView("redirect:/event", OK);
+        return new ModelAndView("redirect:/event", HttpStatus.FOUND);
     }
 
     @GetMapping("/event")

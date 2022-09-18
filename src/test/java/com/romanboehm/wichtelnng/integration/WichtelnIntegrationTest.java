@@ -51,6 +51,12 @@ class WichtelnIntegrationTest {
     }
 
     @Test
+    void redirectsFromRootToEvent() throws Exception {
+        mockMvc.perform(get("/"))
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
     void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {
         // Fetch page where event can be created
         mockMvc.perform(get("/event"))
