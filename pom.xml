@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.0</version>
+        <version>2.7.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.romanboehm</groupId>
@@ -15,17 +15,17 @@
     <description>Secret Santa demo</description>
 
     <properties>
-        <java.version>16</java.version>
+        <java.version>17</java.version>
         <lombok.version>1.18.20</lombok.version>
         <moneta.version>1.4.2</moneta.version>
-        <postgres.driver.version>42.2.19</postgres.driver.version>
+        <postgres.driver.version>42.5.0</postgres.driver.version>
         <flyway.version>7.7.0</flyway.version>
         <webjars.bootstrap.version>4.5.3</webjars.bootstrap.version>
-        <webjars.jquery.version>3.5.1</webjars.jquery.version>
+        <webjars.jquery.version>3.6.1</webjars.jquery.version>
         <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
         <assertj.version>3.15.0</assertj.version>
-        <testcontainers.version>1.15.3</testcontainers.version>
-        <greenmail.version>1.6.1</greenmail.version>
+        <testcontainers.version>1.17.3</testcontainers.version>
+        <greenmail.version>1.6.9</greenmail.version>
     </properties>
 
     <dependencies>
