@@ -5,7 +5,7 @@ import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.EventRepository;
 import com.romanboehm.wichtelnng.data.Participant;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,9 @@ import static com.romanboehm.wichtelnng.TestData.zoneId;
 import static java.time.LocalDateTime.now;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class MatchAndNotifyServiceTest {
 
     @RegisterExtension
@@ -34,7 +35,7 @@ class MatchAndNotifyServiceTest {
     @Autowired
     private MatchAndNotifyService service;
 
-    @AfterEach
+    @BeforeEach
     public void cleanup() {
         eventRepository.deleteAll();
     }

@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
 import com.romanboehm.wichtelnng.data.EventRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,8 +15,9 @@ import static com.romanboehm.wichtelnng.TestData.createEvent;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class CreateEventServiceTest {
 
     @Autowired
@@ -25,7 +26,7 @@ class CreateEventServiceTest {
     @Autowired
     private CreateEventService service;
 
-    @AfterEach
+    @BeforeEach
     public void cleanup() {
         eventRepository.deleteAll();
     }

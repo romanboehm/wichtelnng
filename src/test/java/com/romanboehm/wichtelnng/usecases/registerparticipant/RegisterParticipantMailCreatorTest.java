@@ -14,11 +14,9 @@ import static com.romanboehm.wichtelnng.TestData.event;
 import static javax.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@SpringBootTest(properties = {
-        "com.romanboehm.wichtelnng.domain=https://wichtelnng.romanboehm.com",
-        "com.romanboehm.wichtelnng.mail.from=wichteln@romanboehm.com",
-})
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 public class RegisterParticipantMailCreatorTest {
 
     @Autowired

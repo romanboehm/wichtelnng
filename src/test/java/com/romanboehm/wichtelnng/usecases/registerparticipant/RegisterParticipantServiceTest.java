@@ -1,25 +1,33 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
+import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.EventRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
+import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.TestData.event;
 import static com.romanboehm.wichtelnng.TestData.zoneId;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 class RegisterParticipantServiceTest {
+
+    @RegisterExtension
+    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
+            .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
     private EventRepository eventRepository;
@@ -27,10 +35,7 @@ class RegisterParticipantServiceTest {
     @Autowired
     private RegisterParticipantService service;
 
-    @MockBean
-    private RegisterParticipantNotifier participantNotifier;
-
-    @AfterEach
+    @BeforeEach
     public void cleanup() {
         eventRepository.deleteAll();
     }

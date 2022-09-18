@@ -2,7 +2,7 @@ package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.EventRepository;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,17 +23,18 @@ import static com.romanboehm.wichtelnng.TestData.participantFormParams;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
 class WichtelnIntegrationTest {
 
     @RegisterExtension
-    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
+    protected static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
             .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
@@ -45,7 +46,7 @@ class WichtelnIntegrationTest {
     @Value("${com.romanboehm.wichtelnng.domain}")
     private String domain;
 
-    @AfterEach
+    @BeforeEach
     void cleanup() {
         eventRepository.deleteAll();
     }
@@ -65,9 +66,9 @@ class WichtelnIntegrationTest {
         // Fill out and submit form for event
         MultiValueMap<String, String> params = eventFormParams();
         ResultActions createEventRedirect = mockMvc.perform(post("/event")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params)
-        )
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(params)
+                )
                 .andExpect(status().is3xxRedirection());
 
         // Hacky way to retrieve event's ID since we cannot spy `EventRepository`.
@@ -95,13 +96,13 @@ class WichtelnIntegrationTest {
         params.addAll(participantFormParams());
         params.add("id", eventId.toString());
         mockMvc.perform(post(registrationUrl)
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params)
-        )
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(params)
+                )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/event/%s/registration/finish", eventId)));
 
-        assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        assertThat(greenMail.waitForIncomingEmail(2500, 1)).isTrue();
         assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
                 .extracting(Address::toString)
