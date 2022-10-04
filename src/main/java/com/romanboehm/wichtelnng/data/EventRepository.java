@@ -1,31 +1,43 @@
 package com.romanboehm.wichtelnng.data;
 
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, UUID> {
 
     @Override
-    @EntityGraph(attributePaths = "participants", type = FETCH)
+    @Query("""
+                SELECT DISTINCT e FROM Event e
+                LEFT JOIN FETCH e.participants
+            """)
     List<Event> findAll();
 
     @Override
-    @EntityGraph(attributePaths = "participants", type = FETCH)
+    @Query("""
+                SELECT DISTINCT e FROM Event e
+                LEFT JOIN FETCH e.participants
+                WHERE e.id = :id
+            """)
     Optional<Event> findById(UUID id);
 
-    @Query(
-            nativeQuery = true,
-            value = "SELECT * FROM event e " +
-                    "WHERE (e.local_date_time AT TIME ZONE e.zone_id) <= now()"
-    )
-    List<Event> findAllByDeadlineBeforeNow(); // Extra query for participants is fine for now.
+    @Query("""
+                SELECT DISTINCT e FROM Event e
+                LEFT JOIN FETCH e.participants
+                WHERE e.id = :id AND e.deadline.instant > :instant
+            """)
+    Optional<Event> findByIdAndDeadlineAfter(UUID id, Instant instant);
+
+    @Query("""
+                SELECT DISTINCT e FROM Event e
+                LEFT JOIN FETCH e.participants
+                WHERE e.deadline.instant <= :instant
+            """)
+    List<Event> findAllByDeadlineBefore(Instant instant);
 }

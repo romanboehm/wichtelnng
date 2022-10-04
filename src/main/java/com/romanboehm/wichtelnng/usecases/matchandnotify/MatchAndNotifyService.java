@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class MatchAndNotifyService {
     )
     @Transactional
     public void matchAndNotify() {
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBeforeNow();
+        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBefore(Instant.now());
         for (Event event : eventsWhereDeadlineHasPassed) {
             try {
                 List<Match> matches = participantsMatcher.match(new ArrayList<>(event.getParticipants()));
