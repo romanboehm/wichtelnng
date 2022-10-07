@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import com.romanboehm.wichtelnng.data.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,14 +16,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
-public class MatchMailCreator {
+class MatchMailCreator {
 
     private final String domain;
     private final String from;
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
 
-    public MatchMailCreator(
+    MatchMailCreator(
             @Value("${com.romanboehm.wichtelnng.domain}") String domain,
             @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
             TemplateEngine templateEngine,
@@ -36,28 +35,20 @@ public class MatchMailCreator {
         this.mailSender = mailSender;
     }
 
-    MimeMessage createMessage(Event event, Match match) {
-        try {
-            MimeMessage mimeMessage = mailSender.createMimeMessage();
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
-            message.setSubject(format("You have been matched to wichtel at '%s'", event.getTitle()));
-            message.setFrom(from);
-            message.setTo(match.getDonor().getEmail());
+    MimeMessage createMessage(MatchMailEvent matchMailEvent) throws MessagingException {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
+        message.setSubject(format("You have been matched to wichtel at '%s'", matchMailEvent.getTitle()));
+        message.setFrom(from);
+        message.setTo(matchMailEvent.getDonor().getEmail());
 
-            Context ctx = new Context();
-            ctx.setVariable("event", event);
-            ctx.setVariable("donor", match.getDonor().getName());
-            ctx.setVariable("recipient", match.getRecipient().getName());
-            ctx.setVariable("domain", domain);
-            String textContent = templateEngine.process("matchmail.txt", ctx);
-            message.setText(textContent);
+        Context ctx = new Context();
+        ctx.setVariable("event", matchMailEvent);
+        ctx.setVariable("domain", domain);
+        String textContent = templateEngine.process("matchmail.txt", ctx);
+        message.setText(textContent);
 
-            log.debug("Created mail for {} matching {}", event, match);
-            return mimeMessage;
-        } catch (MessagingException e) {
-            log.error("Failed to create mail for {} with {}", event, match, e);
-            // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
-            throw new RuntimeException("Failed to create match mail");
-        }
+        log.debug("Created mail for {}", matchMailEvent);
+        return mimeMessage;
     }
 }

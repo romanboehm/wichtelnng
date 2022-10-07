@@ -5,6 +5,7 @@ import com.romanboehm.wichtelnng.data.Participant;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,30 +13,34 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ParticipantsMatcherTest {
 
     @Test
-    void shouldShuffle() throws TooFewParticipants {
-        List<Match> matches = new ParticipantsMatcher().match(List.of(
-                new Participant()
-                        .setName("Angus Young"),
-                new Participant()
-                        .setName("Malcolm Young"),
-                new Participant()
-                        .setName("Phil Rudd")
-        ));
-
-        assertThat(matches).allSatisfy(match ->
-                assertThat(match.getDonor().getParticipant())
-                        .isNotEqualTo(match.getRecipient().getParticipant())
+    void shouldShuffle() {
+        List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(
+                Set.of(new Participant()
+                                .setName("Angus Young")
+                                .setEmail("angusyoung@acdc.net"),
+                        new Participant()
+                                .setName("Malcolm Young")
+                                .setEmail("malcolmyoung@acdc.net"),
+                        new Participant()
+                                .setName("Phil Rudd")
+                                .setEmail("philrudd@acdc.net")
+                )
         );
+
+        assertThat(matches).allSatisfy(match -> {
+            assertThat(match.getDonor().getName()).isNotEqualTo(match.getRecipient().getName());
+            assertThat(match.getDonor().getEmail()).isNotEqualTo(match.getRecipient().getEmail());
+        });
     }
 
     @Test
     void shouldNotShuffleIfTooFewParticipants() {
-        List<Participant> oneTooFew = List.of(
-                new Participant()
-                        .setName("Angus Young")
+        Set<Participant> oneTooFewParticipants = Set.of(new Participant()
+                .setName("Angus Young")
+                .setEmail("angusyoung@acdc.net")
         );
 
-        assertThatThrownBy(() -> new ParticipantsMatcher().match(oneTooFew))
-                .isInstanceOf(TooFewParticipants.class);
+        assertThatThrownBy(() -> ParticipantsMatcher.match(oneTooFewParticipants))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

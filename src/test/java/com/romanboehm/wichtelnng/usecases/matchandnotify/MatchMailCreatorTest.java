@@ -1,7 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Participant;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +24,15 @@ class MatchMailCreatorTest {
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        Participant angusYoung = new Participant()
-                .setName("Angus Young")
-                .setEmail("angusyoung@acdc.net");
-        Participant malcolmYoung = new Participant()
-                .setName("Malcolm Young")
-                .setEmail("malcolmyoung@acdc.net");
-        Event event = event()
-                .addParticipant(angusYoung)
-                .addParticipant(malcolmYoung);
-        Match angusGiftsToMalcolm = new Match(
-                new Donor(angusYoung),
-                new Recipient(malcolmYoung)
+        Donor angusYoung = new Donor("Angus Young", "angusyoung@acdc.net");
+        Recipient malcolmYoung = new Recipient("Malcolm Young", "malcolmyoung@acdc.net");
+
+        MatchMailEvent matchMailEvent = MatchMailEvent.from(
+                event(),
+                angusYoung, malcolmYoung
         );
 
-        MimeMessage mail = mailCreator.createMessage(event, angusGiftsToMalcolm);
+        MimeMessage mail = mailCreator.createMessage(matchMailEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -53,21 +45,15 @@ class MatchMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        Participant angusYoung = new Participant()
-                .setName("Angus Young")
-                .setEmail("angusyoung@acdc.net");
-        Participant malcolmYoung = new Participant()
-                .setName("Malcolm Young")
-                .setEmail("malcolmyoung@acdc.net");
-        Event event = event()
-                .addParticipant(angusYoung)
-                .addParticipant(malcolmYoung);
-        Match angusGiftsToMalcolm = new Match(
-                new Donor(angusYoung),
-                new Recipient(malcolmYoung)
+        Donor angusYoung = new Donor("Angus Young", "angusyoung@acdc.net");
+        Recipient malcolmYoung = new Recipient("Malcolm Young", "malcolmyoung@acdc.net");
+
+        MatchMailEvent matchMailEvent = MatchMailEvent.from(
+                event(),
+                angusYoung, malcolmYoung
         );
 
-        MimeMessage mail = mailCreator.createMessage(event, angusGiftsToMalcolm);
+        MimeMessage mail = mailCreator.createMessage(matchMailEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("You have been matched to wichtel at 'AC/DC Secret Santa'");

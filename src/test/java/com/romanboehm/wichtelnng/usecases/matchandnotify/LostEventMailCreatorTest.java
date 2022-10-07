@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.data.Host;
 import com.romanboehm.wichtelnng.data.Participant;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
@@ -26,14 +26,21 @@ class LostEventMailCreatorTest {
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        Event event = event()
-                .addParticipant(
-                        new Participant()
-                                .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                );
+        LostMailEvent lostMailEvent = LostMailEvent.from(
+                event()
+                        .setHost(
+                                new Host()
+                                        .setEmail("georgeyoung@acdc.net")
+                        )
+                        // Only one participant
+                        .addParticipant(
+                                new Participant()
+                                        .setName("Angus Young")
+                                        .setEmail("angusyoung@acdc.net")
+                        )
+        );
 
-        MimeMessage mail = mailCreator.createMessage(event);
+        MimeMessage mail = mailCreator.createMessage(lostMailEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -46,14 +53,21 @@ class LostEventMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        Event event = event()
-                .addParticipant(
-                        new Participant()
-                                .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                );
+        LostMailEvent lostMailEvent = LostMailEvent.from(
+                event()
+                        .setHost(
+                                new Host()
+                                        .setEmail("georgeyoung@acdc.net")
+                                        .setName("George Young")
+                        )
+                        .addParticipant(
+                                new Participant()
+                                        .setName("Angus Young")
+                                        .setEmail("angusyoung@acdc.net")
+                        )
+        );
 
-        MimeMessage mail = mailCreator.createMessage(event);
+        MimeMessage mail = mailCreator.createMessage(lostMailEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("Unfortunately, nobody has registered for 'AC/DC Secret Santa'");

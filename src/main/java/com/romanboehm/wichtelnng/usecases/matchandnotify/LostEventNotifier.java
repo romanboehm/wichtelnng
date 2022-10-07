@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import com.romanboehm.wichtelnng.data.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,14 +10,14 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class LostEventNotifier {
+class LostEventNotifier {
 
     private final LostEventMailCreator mailCreator;
     private final JavaMailSender mailSender;
 
-    public void send(Event event) {
-        MimeMessage message = mailCreator.createMessage(event);
+    void send(LostMailEvent event) {
         try {
+            MimeMessage message = mailCreator.createMessage(event);
             mailSender.send(message);
             log.info("Sent mail to inform about empty event: {}", event);
         } catch (Exception e) {

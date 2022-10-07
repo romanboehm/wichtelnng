@@ -9,18 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.stream.Collectors.joining;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MatchAndNotifyService {
+class MatchAndNotifyService {
 
     private final EventRepository eventRepository;
-    private final ParticipantsMatcher participantsMatcher;
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
 
@@ -29,22 +25,24 @@ public class MatchAndNotifyService {
             fixedRateString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.rate.in.ms}"
     )
     @Transactional
-    public void matchAndNotify() {
+    void matchAndNotify() {
         List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBefore(Instant.now());
         for (Event event : eventsWhereDeadlineHasPassed) {
-            try {
-                List<Match> matches = participantsMatcher.match(new ArrayList<>(event.getParticipants()));
-                matchNotifier.send(event, matches);
-                log.info(
-                        "Matched {} and informed about {}",
-                        matches.stream().map(Match::toString).collect(joining(", ")),
-                        event
-                );
-            } catch (TooFewParticipants e) {
-                lostEventNotifier.send(event);
+            if (!hasEnoughParticipants(event)) {
+                lostEventNotifier.send(LostMailEvent.from(event));
+            } else {
+                List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(event.getParticipants());
+                List<MatchMailEvent> matchMailEvents = matches.stream()
+                        .map(m -> MatchMailEvent.from(event, m.getDonor(), m.getRecipient()))
+                        .toList();
+                matchNotifier.send(matchMailEvents);
             }
+
             eventRepository.delete(event);
-            log.debug("Deleted {}", event);
         }
+    }
+
+    private static boolean hasEnoughParticipants(Event event) {
+        return event.getParticipants().size() > 2;
     }
 }

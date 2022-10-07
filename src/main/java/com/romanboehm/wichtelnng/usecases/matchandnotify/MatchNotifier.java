@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import com.romanboehm.wichtelnng.data.Event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -12,19 +11,19 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class MatchNotifier {
+class MatchNotifier {
 
     private final MatchMailCreator mailCreator;
     private final JavaMailSender mailSender;
-    
-    void send(Event event, List<Match> matches) {
-        for (Match match : matches) {
-            MimeMessage message = mailCreator.createMessage(event, match);
+
+    void send(List<MatchMailEvent> matchMailEvents) {
+        for (MatchMailEvent matchMailEvent : matchMailEvents) {
             try {
+                MimeMessage message = mailCreator.createMessage(matchMailEvent);
                 mailSender.send(message);
-                log.info("Sent mail for {}", match);
+                log.info("Sent mail for {}", matchMailEvent);
             } catch (Exception e) {
-                log.error("Failed to send mail for {}", match, e);
+                log.error("Failed to send mail for {}", matchMailEvent, e);
             }
         }
     }
