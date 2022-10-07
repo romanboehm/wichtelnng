@@ -3,6 +3,7 @@ package com.romanboehm.wichtelnng.usecases.matchandnotify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
@@ -15,6 +16,7 @@ class LostEventNotifier {
     private final LostEventMailCreator mailCreator;
     private final JavaMailSender mailSender;
 
+    @Async
     void send(LostMailEvent event) {
         try {
             MimeMessage message = mailCreator.createMessage(event);

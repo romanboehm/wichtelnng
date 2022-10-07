@@ -3,6 +3,7 @@ package com.romanboehm.wichtelnng.usecases.matchandnotify;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
@@ -16,6 +17,7 @@ class MatchNotifier {
     private final MatchMailCreator mailCreator;
     private final JavaMailSender mailSender;
 
+    @Async
     void send(List<MatchMailEvent> matchMailEvents) {
         for (MatchMailEvent matchMailEvent : matchMailEvents) {
             try {
