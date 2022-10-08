@@ -14,9 +14,19 @@ public class TestWichtelnNgApplication {
     public static void main(String[] args) {
         var application = WichtelnNgApplication.createSpringApplication();
 
-        application.addInitializers(new DbInitializer(), new MailInitializer());
+        application.addInitializers(new HostInitializer(), new DbInitializer(), new MailInitializer());
 
         application.run(args);
+    }
+
+    private static class HostInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+        @Override
+        public void initialize(ConfigurableApplicationContext context) {
+            context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("host", Map.of(
+                    "com.romanboehm.wichtelnng.domain", "http://localhost:8080"
+            )));
+        }
     }
 
     private static class DbInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
