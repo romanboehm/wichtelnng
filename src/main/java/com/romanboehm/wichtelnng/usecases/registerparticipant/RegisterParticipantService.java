@@ -1,7 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.EventRepository;
 import com.romanboehm.wichtelnng.data.Participant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,16 +18,16 @@ import static java.time.Instant.now;
 class RegisterParticipantService {
 
     private final RegisterParticipantNotifier participantNotifier;
-    private final EventRepository eventRepository;
+    private final RegisterParticipantRepository repository;
 
     @Transactional(readOnly = true)
     Optional<Event> getEvent(UUID eventId) {
-        return eventRepository.findByIdAndDeadlineAfter(eventId, now());
+        return repository.findByIdAndDeadlineAfter(eventId, now());
     }
 
     @Transactional
     void register(UUID eventId, RegisterParticipant registerParticipant) {
-        Optional<Event> possibleEvent = eventRepository.findById(eventId);
+        Optional<Event> possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
@@ -39,7 +38,7 @@ class RegisterParticipantService {
                         .setName(registerParticipant.getParticipantName())
                         .setEmail(registerParticipant.getParticipantEmail())
         );
-        eventRepository.save(event);
+        repository.save(event);
         log.info("Registered {}", registerParticipant);
         participantNotifier.send(registerParticipant);
     }

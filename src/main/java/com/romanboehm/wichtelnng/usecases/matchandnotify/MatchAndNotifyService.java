@@ -1,7 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +15,7 @@ import java.util.List;
 @Service
 class MatchAndNotifyService {
 
-    private final EventRepository eventRepository;
+    private final MatchAndNotifyRepository repository;
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
 
@@ -26,7 +25,7 @@ class MatchAndNotifyService {
     )
     @Transactional
     void matchAndNotify() {
-        List<Event> eventsWhereDeadlineHasPassed = eventRepository.findAllByDeadlineBefore(Instant.now());
+        List<Event> eventsWhereDeadlineHasPassed = repository.findAllByDeadlineBefore(Instant.now());
         for (Event event : eventsWhereDeadlineHasPassed) {
             if (!hasEnoughParticipants(event)) {
                 lostEventNotifier.send(LostMailEvent.from(event));
@@ -38,7 +37,7 @@ class MatchAndNotifyService {
                 matchNotifier.send(matchMailEvents);
             }
 
-            eventRepository.delete(event);
+            repository.delete(event);
         }
     }
 

@@ -1,6 +1,9 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import com.romanboehm.wichtelnng.data.*;
+import com.romanboehm.wichtelnng.data.Deadline;
+import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.data.Host;
+import com.romanboehm.wichtelnng.data.MonetaryAmount;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,12 +18,12 @@ import java.util.UUID;
 @Service
 class CreateEventService {
 
-    private final EventRepository eventRepository;
+    private final CreateEventRepository repository;
 
     @Transactional
     UUID save(CreateEvent createEvent) {
         try {
-            Event saved = eventRepository.save(new Event()
+            Event saved = repository.save(new Event()
                     .setTitle(createEvent.getTitle())
                     .setDescription(createEvent.getDescription())
                     .setDeadline(
