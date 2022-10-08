@@ -15,8 +15,8 @@ import java.util.Optional;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.TestData.event;
-import static com.romanboehm.wichtelnng.TestData.zoneId;
+import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -46,7 +46,7 @@ class RegisterParticipantServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(LocalDateTime.now().minus(1, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
                 )
         );
 
@@ -61,21 +61,21 @@ class RegisterParticipantServiceTest {
 
         service.register(
                 eventA.getId(),
-                RegisterParticipant.with(eventA)
+                RegisterParticipant.registerFor(eventA)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
         service.register(
                 eventA.getId(),
-                RegisterParticipant.with(eventA)
+                RegisterParticipant.registerFor(eventA)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
         service.register(
                 eventB.getId(),
-                RegisterParticipant.with(eventB)
+                RegisterParticipant.registerFor(eventB)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")
         );

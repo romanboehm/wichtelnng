@@ -10,8 +10,9 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+// Class may be package-private, but properties (i.e. getters) need be public for validator.
 @Data
-public class RegisterParticipant {
+class RegisterParticipant {
 
     @NotNull
     private UUID id;
@@ -47,7 +48,7 @@ public class RegisterParticipant {
     @Email
     private String participantEmail;
 
-    public static RegisterParticipant with(Event event) {
+    static RegisterParticipant registerFor(Event event) {
         return new RegisterParticipant()
                 .setId(event.getId())
                 .setTitle(event.getTitle())

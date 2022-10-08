@@ -15,14 +15,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
 @Component
-public class RegisterParticipantMailCreator {
+class RegisterParticipantMailCreator {
 
     private final String domain;
     private final String from;
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
 
-    public RegisterParticipantMailCreator(
+    RegisterParticipantMailCreator(
             @Value("${com.romanboehm.wichtelnng.domain}") String domain,
             @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
             TemplateEngine templateEngine,

@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.data;
 
-import com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipant;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,12 +32,6 @@ public class Participant {
     @ManyToOne
     @JoinColumn(name = "event_id")
     private Event event;
-
-    public static Participant from(RegisterParticipant registerParticipant) {
-        return new Participant()
-                .setName(registerParticipant.getParticipantName())
-                .setEmail(registerParticipant.getParticipantEmail());
-    }
 
     @Override
     public boolean equals(Object o) {

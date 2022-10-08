@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.config;
+package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,10 +9,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 
 @Configuration
-public class MailConfig {
+class MailConfig {
 
     @Bean
-    public ClassLoaderTemplateResolver textTemplateResolver() {
+    ClassLoaderTemplateResolver textTemplateResolver() {
         ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setOrder(1);
         templateResolver.setResolvablePatterns(Set.of("*.txt"));

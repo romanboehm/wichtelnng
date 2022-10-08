@@ -20,8 +20,9 @@ import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 
 
+// Class may be package-private, but properties (i.e. getters) need be public for validator.
 @Data
-public class CreateEvent {
+class CreateEvent {
 
     @Value
     static class EventZoneId {

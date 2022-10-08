@@ -10,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class RegisterParticipantNotifier {
+class RegisterParticipantNotifier {
 
     private final JavaMailSender mailSender;
     private final RegisterParticipantMailCreator mailCreator;

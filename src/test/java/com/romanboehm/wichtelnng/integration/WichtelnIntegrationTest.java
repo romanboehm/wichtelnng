@@ -18,8 +18,8 @@ import java.util.UUID;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.TestData.eventFormParams;
-import static com.romanboehm.wichtelnng.TestData.participantFormParams;
+import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
+import static com.romanboehm.wichtelnng.GlobalTestData.participantFormParams;
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;

@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.data;
 
-import com.romanboehm.wichtelnng.usecases.createevent.CreateEvent;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -51,32 +49,6 @@ public class Event implements Persistable<UUID> {
 
     @OneToMany(mappedBy = "event", cascade = ALL, orphanRemoval = true, fetch = LAZY)
     private Set<Participant> participants = new HashSet<>();
-
-    public static Event from(CreateEvent createEvent) {
-        return new Event()
-                .setTitle(createEvent.getTitle())
-                .setDescription(createEvent.getDescription())
-                .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(
-                                        LocalDateTime.of(
-                                                createEvent.getLocalDate(),
-                                                createEvent.getLocalTime()
-                                        )
-                                )
-                                .setZoneId(createEvent.getTimezone().getId())
-                )
-                .setHost(
-                        new Host()
-                                .setName(createEvent.getHostName())
-                                .setEmail(createEvent.getHostEmail())
-                )
-                .setMonetaryAmount(
-                        new MonetaryAmount()
-                                .setNumber(createEvent.getNumber())
-                                .setCurrency(createEvent.getCurrency().getCurrencyCode())
-                );
-    }
 
     public Event addParticipant(Participant participant) {
         participants.add(participant);

@@ -25,22 +25,22 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class RegisterParticipantController {
+class RegisterParticipantController {
 
     private final RegisterParticipantService service;
 
     @GetMapping("/event/{eventId}/registration")
-    public ModelAndView get(@PathVariable UUID eventId) {
+    ModelAndView get(@PathVariable UUID eventId) {
         Optional<Event> possibleEvent = service.getEvent(eventId);
         if (possibleEvent.isEmpty()) {
             return new ModelAndView("redirect:/event");
         }
-        RegisterParticipant registerParticipant = RegisterParticipant.with(possibleEvent.get());
+        RegisterParticipant registerParticipant = RegisterParticipant.registerFor(possibleEvent.get());
         return new ModelAndView("registration", Map.of("registerParticipant", registerParticipant), OK);
     }
 
     @PostMapping("/event/{eventId}/registration")
-    public ModelAndView post(
+    ModelAndView post(
             @PathVariable UUID eventId,
             @ModelAttribute @Valid RegisterParticipant registerParticipant,
             BindingResult bindingResult

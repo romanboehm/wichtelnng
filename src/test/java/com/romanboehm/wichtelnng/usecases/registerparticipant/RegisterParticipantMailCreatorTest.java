@@ -10,7 +10,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 
-import static com.romanboehm.wichtelnng.TestData.event;
+import static com.romanboehm.wichtelnng.GlobalTestData.event;
 import static javax.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -24,7 +24,7 @@ public class RegisterParticipantMailCreatorTest {
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        RegisterParticipant registration = RegisterParticipant.with(event())
+        RegisterParticipant registration = RegisterParticipant.registerFor(event())
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
@@ -41,7 +41,7 @@ public class RegisterParticipantMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        RegisterParticipant registration = RegisterParticipant.with(event())
+        RegisterParticipant registration = RegisterParticipant.registerFor(event())
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 

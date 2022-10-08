@@ -15,9 +15,9 @@ import javax.mail.Address;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.TestData.event;
-import static com.romanboehm.wichtelnng.TestData.zoneId;
+import static com.romanboehm.wichtelnng.GlobalTestData.event;
 import static java.time.LocalDateTime.now;
+import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -46,7 +46,7 @@ class MatchAndNotifyServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
 
                 ) // Should be included
                 .addParticipant(
@@ -68,7 +68,7 @@ class MatchAndNotifyServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().plus(1, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
 
                 ) // Should not be included
                 .addParticipant(
@@ -105,7 +105,7 @@ class MatchAndNotifyServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
 
                 ) // Should be included
                 .addParticipant(
@@ -127,7 +127,7 @@ class MatchAndNotifyServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().plus(2, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
 
                 ) // Should not be included
                 .addParticipant(
@@ -160,7 +160,7 @@ class MatchAndNotifyServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
-                                .setZoneId(zoneId())
+                                .setZoneId(systemDefault().getId())
 
                 ) // Should be included
                 .addParticipant(

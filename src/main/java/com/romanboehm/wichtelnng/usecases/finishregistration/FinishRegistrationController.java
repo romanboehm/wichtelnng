@@ -12,10 +12,10 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class FinishRegistrationController {
+class FinishRegistrationController {
 
     @GetMapping("/event/{eventId}/registration/finish")
-    public ModelAndView get(@PathVariable UUID eventId) {
+    ModelAndView get(@PathVariable UUID eventId) {
         return new ModelAndView("finishregistration");
     }
 }

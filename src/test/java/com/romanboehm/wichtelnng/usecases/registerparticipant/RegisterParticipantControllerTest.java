@@ -7,8 +7,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MultiValueMap;
 
-import static com.romanboehm.wichtelnng.TestData.eventFormParams;
-import static com.romanboehm.wichtelnng.TestData.participantFormParams;
+import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
+import static com.romanboehm.wichtelnng.GlobalTestData.participantFormParams;
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.Matchers.containsString;

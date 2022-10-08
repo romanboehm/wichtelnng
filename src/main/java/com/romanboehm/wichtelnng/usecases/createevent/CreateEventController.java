@@ -23,22 +23,22 @@ import static org.springframework.http.HttpStatus.OK;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-public class CreateEventController {
+class CreateEventController {
 
     private final CreateEventService service;
 
     @GetMapping("/")
-    public ModelAndView redirect() {
+    ModelAndView redirect() {
         return new ModelAndView("redirect:/event", HttpStatus.FOUND);
     }
 
     @GetMapping("/event")
-    public ModelAndView get() {
+    ModelAndView get() {
         return new ModelAndView("event", Map.of("createEvent", new CreateEvent()), OK);
     }
 
     @PostMapping("/event")
-    public ModelAndView post(@ModelAttribute @Valid CreateEvent createEvent, BindingResult bindingResult) {
+    ModelAndView post(@ModelAttribute @Valid CreateEvent createEvent, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",

@@ -16,7 +16,7 @@ import static java.time.Instant.now;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RegisterParticipantService {
+class RegisterParticipantService {
 
     private final RegisterParticipantNotifier participantNotifier;
     private final EventRepository eventRepository;
@@ -34,7 +34,11 @@ public class RegisterParticipantService {
             throw new IllegalArgumentException();
         }
         Event event = possibleEvent.get();
-        event.addParticipant(Participant.from(registerParticipant));
+        event.addParticipant(
+                new Participant()
+                        .setName(registerParticipant.getParticipantName())
+                        .setEmail(registerParticipant.getParticipantEmail())
+        );
         eventRepository.save(event);
         log.info("Registered {}", registerParticipant);
         participantNotifier.send(registerParticipant);

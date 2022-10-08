@@ -10,7 +10,7 @@ import org.springframework.util.MultiValueMap;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static com.romanboehm.wichtelnng.TestData.eventFormParams;
+import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;

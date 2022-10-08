@@ -1,7 +1,5 @@
-package com.romanboehm.wichtelnng.validation;
+package com.romanboehm.wichtelnng.usecases.createevent;
 
-import com.romanboehm.wichtelnng.usecases.createevent.CreateEvent;
-import com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipant;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -13,13 +11,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.romanboehm.wichtelnng.TestData.createEvent;
-import static com.romanboehm.wichtelnng.TestData.participantRegistration;
+import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class EventValidationTest {
+class EventValidationTest {
 
     private Validator validator;
     private ValidatorFactory validatorFactory;
@@ -43,7 +40,7 @@ public class EventValidationTest {
     }
 
     @Nested
-    public class EventMonetaryAmount {
+    class EventMonetaryAmount {
 
         @Test
         void shouldFailEventWithInvalidNumber() {
@@ -72,7 +69,7 @@ public class EventValidationTest {
     }
 
     @Nested
-    public class EventTitle {
+    class EventTitle {
 
         @Test
         void shouldFailEventWithTooLongTitle() {
@@ -108,7 +105,7 @@ public class EventValidationTest {
     }
 
     @Nested
-    public class EventDescription {
+    class EventDescription {
 
         @Test
         void shouldFailEventWithTooLongDescription() {
@@ -145,7 +142,7 @@ public class EventValidationTest {
     }
 
     @Nested
-    public class EventZonedDateTime {
+    class EventZonedDateTime {
 
         @Test
         void shouldFailEventWithPastZonedDateTime() {
@@ -182,7 +179,7 @@ public class EventValidationTest {
     }
 
     @Nested
-    public class EventHost {
+    class EventHost {
 
         @Test
         void shouldFailEventWithTooLongHostName() {
@@ -238,74 +235,6 @@ public class EventValidationTest {
                     .setHostEmail(" ");
 
             assertThat(validator.validate(event)).isNotEmpty();
-        }
-    }
-
-    @Nested
-    public class EventParticipant {
-
-        @Test
-        void shouldFailParticipantWithTooLongName() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantName("foo".repeat(100));
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithEmptyName() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantName("");
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithWhitespaceName() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantName(" ");
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithNullName() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantName(null);
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithInvalidEmail() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantEmail("notavalid.email");
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithEmptyEmail() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantEmail("");
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithWhitespaceEmail() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantEmail(" ");
-
-            assertThat(validator.validate(registration)).isNotEmpty();
-        }
-
-        @Test
-        void shouldFailParticipantWithNullEmail() {
-            RegisterParticipant registration = participantRegistration()
-                    .setParticipantEmail(null);
-
-            assertThat(validator.validate(registration)).isNotEmpty();
         }
     }
 

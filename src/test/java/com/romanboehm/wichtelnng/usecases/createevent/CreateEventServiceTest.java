@@ -11,7 +11,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static com.romanboehm.wichtelnng.TestData.createEvent;
+import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
