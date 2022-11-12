@@ -1,9 +1,8 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.romanboehm.wichtelnng.data.Participant;
-import lombok.NoArgsConstructor;
-import lombok.Value;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,26 +10,22 @@ import java.util.Random;
 import java.util.Set;
 
 import static java.util.Collections.rotate;
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
-import static lombok.AccessLevel.PRIVATE;
 
-@Slf4j
-@NoArgsConstructor(access = PRIVATE)
 class ParticipantsMatcher {
 
-    @Value
-    static class Match {
-        Donor donor;
-        Recipient recipient;
+    private static final Logger LOG = LoggerFactory.getLogger(ParticipantsMatcher.class);
 
-        Match(Donor donor, Recipient recipient) {
-            this.donor = requireNonNull(donor);
-            this.recipient = requireNonNull(recipient);
-            if (donor.getName().equals(recipient.getName()) && donor.getEmail().equals(recipient.getEmail())) {
+    private ParticipantsMatcher() {
+    }
+
+    record Match(Donor donor, Recipient recipient) {
+        static Match of(Donor donor, Recipient recipient) {
+            if (donor.name().equals(recipient.name()) && donor.email().equals(recipient.email())) {
                 throw new IllegalArgumentException("Donor and recipient must not match.");
             }
+            return new Match(donor, recipient);
         }
     }
 
@@ -49,8 +44,8 @@ class ParticipantsMatcher {
                 .mapToObj(i -> {
                     Donor donor = new Donor(original.get(i).getName(), original.get(i).getEmail());
                     Recipient recipient = new Recipient(copy.get(i).getName(), copy.get(i).getEmail());
-                    Match match = new Match(donor, recipient);
-                    log.debug("Created match {}", match);
+                    Match match = Match.of(donor, recipient);
+                    LOG.debug("Created match {}", match);
                     return match;
                 }).collect(toList());
     }

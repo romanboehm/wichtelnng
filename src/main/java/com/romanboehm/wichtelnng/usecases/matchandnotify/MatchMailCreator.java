@@ -1,6 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -14,9 +15,10 @@ import javax.mail.internet.MimeMessage;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Slf4j
 @Component
 class MatchMailCreator {
+
+    private final Logger log = LoggerFactory.getLogger(MatchMailCreator.class);
 
     private final String domain;
     private final String from;
@@ -38,9 +40,9 @@ class MatchMailCreator {
     MimeMessage createMessage(MatchMailEvent matchMailEvent) throws MessagingException {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
-        message.setSubject(format("You have been matched to wichtel at '%s'", matchMailEvent.getTitle()));
+        message.setSubject(format("You have been matched to wichtel at '%s'", matchMailEvent.title()));
         message.setFrom(from);
-        message.setTo(matchMailEvent.getDonor().getEmail());
+        message.setTo(matchMailEvent.donor().email());
 
         Context ctx = new Context();
         ctx.setVariable("event", matchMailEvent);

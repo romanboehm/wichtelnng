@@ -102,7 +102,7 @@
                                     name="timezone">
                                 <option th:each="timezone : *{timezones}"
                                         th:value="${timezone.zoneId}"
-                                        th:text="${timezone}"
+                                        th:text="${timezone.displayString}"
                                         th:selected="${#strings.equals(timezone.zoneId, 'Australia/Sydney')}">
                                 </option>
                             </select>

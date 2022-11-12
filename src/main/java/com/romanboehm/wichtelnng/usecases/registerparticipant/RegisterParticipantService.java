@@ -2,8 +2,8 @@ package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.Participant;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,13 +12,18 @@ import java.util.UUID;
 
 import static java.time.Instant.now;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
 class RegisterParticipantService {
 
+    private final Logger log = LoggerFactory.getLogger(RegisterParticipantService.class);
+
     private final RegisterParticipantNotifier participantNotifier;
     private final RegisterParticipantRepository repository;
+
+    RegisterParticipantService(RegisterParticipantNotifier participantNotifier, RegisterParticipantRepository repository) {
+        this.participantNotifier = participantNotifier;
+        this.repository = repository;
+    }
 
     @Transactional(readOnly = true)
     Optional<Event> getEvent(UUID eventId) {

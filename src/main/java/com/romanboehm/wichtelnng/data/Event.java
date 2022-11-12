@@ -1,9 +1,5 @@
 package com.romanboehm.wichtelnng.data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.Persistable;
 
@@ -15,10 +11,6 @@ import java.util.UUID;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString(exclude = "participants")
 @Entity(name = "Event")
 @Table(name = "event")
 public class Event implements Persistable<UUID> {
@@ -49,6 +41,9 @@ public class Event implements Persistable<UUID> {
 
     @OneToMany(mappedBy = "event", cascade = ALL, orphanRemoval = true, fetch = LAZY)
     private Set<Participant> participants = new HashSet<>();
+
+    public Event() {
+    }
 
     public Event addParticipant(Participant participant) {
         participants.add(participant);
@@ -85,5 +80,81 @@ public class Event implements Persistable<UUID> {
     @Override
     public boolean isNew() {
         return id == null;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public MonetaryAmount getMonetaryAmount() {
+        return this.monetaryAmount;
+    }
+
+    public Deadline getDeadline() {
+        return this.deadline;
+    }
+
+    public Host getHost() {
+        return this.host;
+    }
+
+    public Set<Participant> getParticipants() {
+        return this.participants;
+    }
+
+    public Event setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
+    public Event setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public Event setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Event setMonetaryAmount(MonetaryAmount monetaryAmount) {
+        this.monetaryAmount = monetaryAmount;
+        return this;
+    }
+
+    public Event setDeadline(Deadline deadline) {
+        this.deadline = deadline;
+        return this;
+    }
+
+    public Event setHost(Host host) {
+        this.host = host;
+        return this;
+    }
+
+    public Event setParticipants(Set<Participant> participants) {
+        this.participants = participants;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", monetaryAmount=" + monetaryAmount +
+                ", deadline=" + deadline +
+                ", host=" + host +
+                '}';
     }
 }

@@ -1,11 +1,8 @@
 package com.romanboehm.wichtelnng.data;
 
-import lombok.Data;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-@Data
 @Embeddable
 public class Host {
 
@@ -14,4 +11,33 @@ public class Host {
 
     @Column(nullable = false, length = 255)
     private String email;
+
+    public Host() {
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public Host setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Host setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Host{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

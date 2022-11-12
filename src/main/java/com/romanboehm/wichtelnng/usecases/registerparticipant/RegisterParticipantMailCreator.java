@@ -1,6 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,9 +14,10 @@ import javax.mail.internet.MimeMessage;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-@Slf4j
 @Component
 class RegisterParticipantMailCreator {
+
+    private final Logger log = LoggerFactory.getLogger(RegisterParticipantMailCreator.class);
 
     private final String domain;
     private final String from;

@@ -4,8 +4,8 @@ import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.Host;
 import com.romanboehm.wichtelnng.data.MonetaryAmount;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +13,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
 class CreateEventService {
 
+    private final Logger log = LoggerFactory.getLogger(CreateEventService.class);
+
     private final CreateEventRepository repository;
+
+    CreateEventService(CreateEventRepository repository) {
+        this.repository = repository;
+    }
 
     @Transactional
     UUID save(CreateEvent createEvent) {

@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.showlink;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,12 +13,16 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.OK;
 
-@Slf4j
-@RequiredArgsConstructor
 @Controller
 public class ShowLinkController {
 
+    private final Logger log = LoggerFactory.getLogger(ShowLinkController.class);
+
     private final ShowLinkService service;
+
+    public ShowLinkController(ShowLinkService service) {
+        this.service = service;
+    }
 
     @GetMapping("/event/{eventId}/link")
     public ModelAndView showResult(@PathVariable UUID eventId) {

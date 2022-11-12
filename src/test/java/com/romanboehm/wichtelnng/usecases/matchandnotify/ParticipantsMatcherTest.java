@@ -28,8 +28,8 @@ class ParticipantsMatcherTest {
         );
 
         assertThat(matches).allSatisfy(match -> {
-            assertThat(match.getDonor().getName()).isNotEqualTo(match.getRecipient().getName());
-            assertThat(match.getDonor().getEmail()).isNotEqualTo(match.getRecipient().getEmail());
+            assertThat(match.donor().name()).isNotEqualTo(match.recipient().name());
+            assertThat(match.donor().email()).isNotEqualTo(match.recipient().email());
         });
     }
 

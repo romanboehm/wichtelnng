@@ -1,7 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import lombok.Data;
-import lombok.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.money.CurrencyUnit;
@@ -13,7 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-import static java.lang.String.format;
 import static java.time.ZoneId.getAvailableZoneIds;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
@@ -21,15 +18,13 @@ import static java.util.stream.Collectors.toList;
 
 
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
-@Data
 class CreateEvent {
 
-    @Value
-    static class EventZoneId {
+    record EventZoneId(ZoneId zoneId) {
         private static final LocalDateTime NOW = LocalDateTime.now();
 
         private static final Comparator<EventZoneId> COMPARATOR = comparing(
-                eventZoneId -> NOW.atZone(eventZoneId.getZoneId()).getOffset(), reverseOrder()
+                eventZoneId -> NOW.atZone(eventZoneId.zoneId()).getOffset(), reverseOrder()
         );
         private static final List<EventZoneId> ALL_ZONES = getAvailableZoneIds().stream()
                 .map(ZoneId::of)
@@ -37,19 +32,15 @@ class CreateEvent {
                 .sorted(COMPARATOR)
                 .collect(toList());
 
-        ZoneId zoneId;
-
-        @Override
-        public String toString() {
-            return format("%s (UTC %s)", zoneId.getId(), getOffset());
-        }
-
-        private String getOffset() {
-            return NOW
-                    .atZone(zoneId)
-                    .getOffset()
-                    .getId()
-                    .replace("Z", "+00:00");
+        public String getDisplayString() {
+            return "%s (UTC %s)".formatted(
+                    zoneId.getId(),
+                    NOW
+                            .atZone(zoneId)
+                            .getOffset()
+                            .getId()
+                            .replace("Z", "+00:00")
+            );
         }
 
     }
@@ -129,4 +120,111 @@ class CreateEvent {
     public List<EventZoneId> getTimezones() {
         return EventZoneId.ALL_ZONES;
     }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public CreateEvent setId(UUID id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public CreateEvent setTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public CreateEvent setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public BigDecimal getNumber() {
+        return number;
+    }
+
+    public CreateEvent setNumber(BigDecimal number) {
+        this.number = number;
+        return this;
+    }
+
+    public CurrencyUnit getCurrency() {
+        return currency;
+    }
+
+    public CreateEvent setCurrency(CurrencyUnit currency) {
+        this.currency = currency;
+        return this;
+    }
+
+    public LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public CreateEvent setLocalDate(LocalDate localDate) {
+        this.localDate = localDate;
+        return this;
+    }
+
+    public LocalTime getLocalTime() {
+        return localTime;
+    }
+
+    public CreateEvent setLocalTime(LocalTime localTime) {
+        this.localTime = localTime;
+        return this;
+    }
+
+    public ZoneId getTimezone() {
+        return timezone;
+    }
+
+    public CreateEvent setTimezone(ZoneId timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public CreateEvent setHostName(String hostName) {
+        this.hostName = hostName;
+        return this;
+    }
+
+    public String getHostEmail() {
+        return hostEmail;
+    }
+
+    public CreateEvent setHostEmail(String hostEmail) {
+        this.hostEmail = hostEmail;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CreateEvent{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", number=" + number +
+                ", currency=" + currency +
+                ", localDate=" + localDate +
+                ", localTime=" + localTime +
+                ", timezone=" + timezone +
+                ", hostName='" + hostName + '\'' +
+                ", hostEmail='" + hostEmail + '\'' +
+                '}';
+    }
+
 }

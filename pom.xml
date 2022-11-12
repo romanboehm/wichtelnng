@@ -16,7 +16,6 @@
 
     <properties>
         <java.version>17</java.version>
-        <lombok.version>1.18.24</lombok.version>
         <moneta.version>1.4.2</moneta.version>
         <postgres.driver.version>42.5.0</postgres.driver.version>
         <flyway.version>7.7.0</flyway.version>
@@ -40,12 +39,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- For sending mail to participants -->

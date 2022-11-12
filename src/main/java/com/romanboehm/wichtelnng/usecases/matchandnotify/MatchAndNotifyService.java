@@ -1,8 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.romanboehm.wichtelnng.data.Event;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,14 +8,18 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
 import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
 @Service
 class MatchAndNotifyService {
 
     private final MatchAndNotifyRepository repository;
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
+
+    MatchAndNotifyService(MatchAndNotifyRepository repository, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier) {
+        this.repository = repository;
+        this.matchNotifier = matchNotifier;
+        this.lostEventNotifier = lostEventNotifier;
+    }
 
     @Scheduled(
             initialDelayString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.initial.delay.in.ms}",
@@ -32,7 +34,7 @@ class MatchAndNotifyService {
             } else {
                 List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(event.getParticipants());
                 List<MatchMailEvent> matchMailEvents = matches.stream()
-                        .map(m -> MatchMailEvent.from(event, m.getDonor(), m.getRecipient()))
+                        .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))
                         .toList();
                 matchNotifier.send(matchMailEvents);
             }

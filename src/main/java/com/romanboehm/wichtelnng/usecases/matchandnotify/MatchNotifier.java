@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -9,13 +9,18 @@ import org.springframework.stereotype.Component;
 import javax.mail.internet.MimeMessage;
 import java.util.List;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 class MatchNotifier {
 
+    private final Logger log = LoggerFactory.getLogger(MatchNotifier.class);
+
     private final MatchMailCreator mailCreator;
     private final JavaMailSender mailSender;
+
+    MatchNotifier(MatchMailCreator mailCreator, JavaMailSender mailSender) {
+        this.mailCreator = mailCreator;
+        this.mailSender = mailSender;
+    }
 
     @Async
     void send(List<MatchMailEvent> matchMailEvents) {

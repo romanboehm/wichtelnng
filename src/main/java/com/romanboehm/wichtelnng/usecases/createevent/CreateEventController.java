@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,12 +20,16 @@ import static java.util.stream.Collectors.joining;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.OK;
 
-@Slf4j
-@RequiredArgsConstructor
 @Controller
 class CreateEventController {
 
+    private final Logger log = LoggerFactory.getLogger(CreateEventController.class);
+
     private final CreateEventService service;
+
+    CreateEventController(CreateEventService service) {
+        this.service = service;
+    }
 
     @GetMapping("/")
     ModelAndView redirect() {

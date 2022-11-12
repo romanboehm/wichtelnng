@@ -2,7 +2,7 @@ Hey [( ${registerParticipant.participantName} )],
 
 You have successfully registered to wichtel at '[( ${registerParticipant.title} )]' ([( ${domain} )]/about)!
 You'll be provided with the name of your gift's recipient through an email to [( ${registerParticipant.participantEmail} )] once everybody has registered.
-The gift's monetary value should not exceed [( ${registerParticipant.monetaryAmount} )].
+The gift's monetary value should not exceed [( ${registerParticipant.monetaryAmount.displayString} )].
 
 Here's what the event's host says about it:
 

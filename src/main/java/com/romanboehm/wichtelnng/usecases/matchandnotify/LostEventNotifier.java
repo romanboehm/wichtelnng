@@ -1,20 +1,25 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
 
-@Slf4j
-@RequiredArgsConstructor
 @Component
 class LostEventNotifier {
 
+    private final Logger log = LoggerFactory.getLogger(LostEventNotifier.class);
+
     private final LostEventMailCreator mailCreator;
     private final JavaMailSender mailSender;
+
+    LostEventNotifier(LostEventMailCreator mailCreator, JavaMailSender mailSender) {
+        this.mailCreator = mailCreator;
+        this.mailSender = mailSender;
+    }
 
     @Async
     void send(LostMailEvent event) {

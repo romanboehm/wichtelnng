@@ -1,14 +1,8 @@
 package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.romanboehm.wichtelnng.data.Event;
-import lombok.Value;
 
-@Value
-class LostMailEvent {
-
-    String title;
-    String recipientEmail;
-    String recipientName;
+record LostMailEvent(String title, String recipientEmail, String recipientName) {
 
     static LostMailEvent from(Event event) {
         return new LostMailEvent(

@@ -1,18 +1,10 @@
 package com.romanboehm.wichtelnng.data;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
 import java.util.Objects;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString(exclude = "event")
 @Entity(name = "Participant")
 @Table(name = "participant")
 public class Participant {
@@ -33,6 +25,9 @@ public class Participant {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    public Participant() {
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -48,5 +43,50 @@ public class Participant {
     @Override
     public int hashCode() {
         return Objects.hash(name, email);
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public Event getEvent() {
+        return this.event;
+    }
+
+    public Participant setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Participant setName(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public Participant setEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public Participant setEvent(Event event) {
+        this.event = event;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
