@@ -1,13 +1,13 @@
-Hey [( ${registerParticipant.participantName} )],
+Hey [( ${registrationMailEvent.participantName} )],
 
-You have successfully registered to wichtel at '[( ${registerParticipant.title} )]' ([( ${domain} )]/about)!
-You'll be provided with the name of your gift's recipient through an email to [( ${registerParticipant.participantEmail} )] once everybody has registered.
-The gift's monetary value should not exceed [( ${registerParticipant.monetaryAmount.displayString} )].
+You have successfully registered to wichtel at '[( ${registrationMailEvent.title} )]' ([( ${domain} )]/about)!
+You'll be provided with the name of your gift's recipient through an email to [( ${registrationMailEvent.participantEmail} )] once everybody has registered.
+The gift's monetary value should not exceed [( ${registrationMailEvent.price} )].
 
 Here's what the event's host says about it:
 
-"[( ${registerParticipant.description} )]"
+"[( ${registrationMailEvent.description} )]"
 
-If you have any questions, contact the event's host [( ${registerParticipant.hostName} )] at [( ${registerParticipant.hostEmail} )].
+If you have any questions, contact the event's host [( ${registrationMailEvent.hostName} )] at [( ${registrationMailEvent.hostEmail} )].
 
 This mail was generated using [( ${domain} )]

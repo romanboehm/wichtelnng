@@ -2,7 +2,7 @@ package com.romanboehm.wichtelnng.usecases.matchandnotify;
 
 import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.MonetaryAmount;
+import org.javamoney.moneta.Money;
 
 record MatchMailEvent(
         Donor donor,
@@ -10,7 +10,7 @@ record MatchMailEvent(
         String title,
         String description,
         Host host,
-        MonetaryAmount monetaryAmount
+        String price
 ) {
 
     static MatchMailEvent from(Event event, Donor donor, Recipient recipient) {
@@ -20,7 +20,7 @@ record MatchMailEvent(
                 event.getTitle(),
                 event.getDescription(),
                 event.getHost(),
-                event.getMonetaryAmount()
+                Money.of(event.getMonetaryAmount().getNumber(), event.getMonetaryAmount().getCurrency()).toString()
         );
     }
 }

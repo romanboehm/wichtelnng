@@ -28,7 +28,7 @@ public class RegisterParticipantMailCreatorTest {
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(registration);
+        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -45,7 +45,7 @@ public class RegisterParticipantMailCreatorTest {
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(registration);
+        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("You have registered to wichtel at 'AC/DC Secret Santa'");

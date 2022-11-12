@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.MonetaryAmount;
+import org.javamoney.moneta.Money;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
@@ -138,10 +138,8 @@ class RegisterParticipant {
         return this;
     }
 
-    public MonetaryAmount getMonetaryAmount() {
-        return new MonetaryAmount()
-                .setNumber(number)
-                .setCurrency(currency.getCurrencyCode());
+    public String getPrice() {
+        return Money.of(number, currency).toString();
     }
 
     @Override

@@ -45,6 +45,6 @@ class RegisterParticipantService {
         );
         repository.save(event);
         log.info("Registered {}", registerParticipant);
-        participantNotifier.send(registerParticipant);
+        participantNotifier.send(RegistrationMailEvent.from(registerParticipant));
     }
 }

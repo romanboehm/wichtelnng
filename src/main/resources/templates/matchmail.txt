@@ -1,7 +1,7 @@
 Hey [( ${event.donor.name} )],
 
 You registered to wichtel at '[( ${event.title} )]' ([( ${domain} )]/about)!
-We matched the event's participants and you're therefore now asked to give a gift to [( ${event.recipient.name} )]. The gift's monetary value should not exceed [( ${event.monetaryAmount.displayString} )].
+We matched the event's participants and you're therefore now asked to give a gift to [( ${event.recipient.name} )]. The gift's monetary value should not exceed [( ${event.price} )].
 
 Here's what the event's host says about it:
 

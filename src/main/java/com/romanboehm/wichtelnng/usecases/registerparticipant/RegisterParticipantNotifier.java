@@ -20,13 +20,13 @@ class RegisterParticipantNotifier {
         this.mailCreator = mailCreator;
     }
 
-    void send(RegisterParticipant registerParticipant) {
-        MimeMessage message = mailCreator.createMessage(registerParticipant);
+    void send(RegistrationMailEvent registrationMailEvent) {
+        MimeMessage message = mailCreator.createMessage(registrationMailEvent);
         try {
             mailSender.send(message);
-            log.info("Sent mail for {}", registerParticipant);
+            log.info("Sent mail for {}", registrationMailEvent);
         } catch (Exception e) {
-            log.error("Failed to send mail for {}", registerParticipant, e);
+            log.error("Failed to send mail for {}", registrationMailEvent, e);
         }
     }
 }

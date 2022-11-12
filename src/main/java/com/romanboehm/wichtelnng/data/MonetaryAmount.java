@@ -1,7 +1,5 @@
 package com.romanboehm.wichtelnng.data;
 
-import org.javamoney.moneta.Money;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
@@ -34,11 +32,6 @@ public class MonetaryAmount {
     public MonetaryAmount setCurrency(String currency) {
         this.currency = currency;
         return this;
-    }
-
-    // FIXME: This is a workaround as long as long as we still (mis-) use the `@Embeddable` classes for display purposes.
-    public String getDisplayString() {
-        return Money.of(number, currency).toString();
     }
 
     @Override
