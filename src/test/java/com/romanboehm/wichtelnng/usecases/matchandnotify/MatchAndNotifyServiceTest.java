@@ -11,8 +11,6 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.mail.Address;
-
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.GlobalTestData.event;
@@ -91,7 +89,7 @@ class MatchAndNotifyServiceTest {
         assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
         assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
-                .extracting(Address::toString)
+                .extracting(addr -> addr.toString())
                 .containsExactlyInAnyOrder(
                         "angusyoung@acdc.net",
                         "malcolmyoung@acdc.net",
@@ -175,7 +173,7 @@ class MatchAndNotifyServiceTest {
         assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
         assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
-                .extracting(Address::toString)
+                .extracting(addr -> addr.toString())
                 .contains("georgeyoung@acdc.net")
                 .doesNotContain("angusyoung@acdc.net");
     }

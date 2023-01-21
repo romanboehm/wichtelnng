@@ -1,11 +1,11 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.data.Event;
+import jakarta.validation.constraints.*;
 import org.javamoney.moneta.Money;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;
-import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.UUID;
 

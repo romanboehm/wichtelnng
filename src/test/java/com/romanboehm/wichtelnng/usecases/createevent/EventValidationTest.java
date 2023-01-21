@@ -1,19 +1,19 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
+import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static java.time.temporal.ChronoUnit.HOURS;
-import static javax.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class EventValidationTest {

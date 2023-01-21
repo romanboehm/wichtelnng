@@ -1,9 +1,9 @@
 package com.romanboehm.wichtelnng.data;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import org.hibernate.annotations.Formula;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 import java.time.Instant;
 import java.time.LocalDateTime;
 

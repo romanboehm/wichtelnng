@@ -1,8 +1,8 @@
 package com.romanboehm.wichtelnng.data;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.*;
 import java.util.Objects;
 
 @Entity(name = "Participant")
@@ -10,7 +10,8 @@ import java.util.Objects;
 public class Participant {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+    @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "hibernate_sequence", allocationSize = 1)
     private Long id;
 
     @NaturalId

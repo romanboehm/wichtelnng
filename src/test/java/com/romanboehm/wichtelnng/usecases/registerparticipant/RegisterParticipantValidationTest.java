@@ -1,14 +1,13 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-
 import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.participantRegistration;
-import static javax.validation.Validation.buildDefaultValidatorFactory;
+import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RegisterParticipantValidationTest {

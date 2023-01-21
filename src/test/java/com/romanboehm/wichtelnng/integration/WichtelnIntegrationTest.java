@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.MultiValueMap;
 
-import javax.mail.Address;
 import java.util.UUID;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
@@ -105,7 +104,7 @@ class WichtelnIntegrationTest {
         assertThat(greenMail.waitForIncomingEmail(2500, 1)).isTrue();
         assertThat(greenMail.getReceivedMessages())
                 .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
-                .extracting(Address::toString)
+                .extracting(addr -> addr.toString())
                 .containsExactly("angusyoung@acdc.net");
     }
 }

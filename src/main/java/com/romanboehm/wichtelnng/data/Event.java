@@ -1,15 +1,15 @@
 package com.romanboehm.wichtelnng.data;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.NaturalId;
 import org.springframework.data.domain.Persistable;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity(name = "Event")
 @Table(name = "event")
