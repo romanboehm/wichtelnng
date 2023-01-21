@@ -18,24 +18,17 @@
         <java.version>17</java.version>
         <moneta.version>1.4.2</moneta.version>
         <webjars.bootstrap.version>4.5.3</webjars.bootstrap.version>
-        <webjars.jquery.version>3.6.1</webjars.jquery.version>
+        <webjars.jquery.version>3.6.2</webjars.jquery.version>
         <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <greenmail.version>2.0.0-alpha-3</greenmail.version>
     </properties>
 
     <dependencies>
-
-        <!-- Quality of life dependencies -->
+        <!-- Actuator -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
         </dependency>
 
         <!-- For sending mail to participants -->
