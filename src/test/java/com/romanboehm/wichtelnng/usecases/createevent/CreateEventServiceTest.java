@@ -35,7 +35,8 @@ class CreateEventServiceTest {
     void shouldSave() {
         service.save(createEvent());
         assertThat(eventRepository.findAll())
-                .hasOnlyOneElementSatisfying(event -> {
+                .singleElement()
+                .satisfies(event -> {
                     assertThat(event.getId()).isNotNull();
 
                     assertThat(event.getTitle()).isEqualTo("AC/DC Secret Santa");
