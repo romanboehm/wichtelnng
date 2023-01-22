@@ -6,6 +6,7 @@ import com.romanboehm.wichtelnng.data.Host;
 import com.romanboehm.wichtelnng.data.MonetaryAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +20,16 @@ class CreateEventService {
     private final Logger log = LoggerFactory.getLogger(CreateEventService.class);
 
     private final CreateEventRepository repository;
+    private final ApplicationEventPublisher eventPublisher;
 
-    CreateEventService(CreateEventRepository repository) {
+    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
     UUID save(CreateEvent createEvent) {
+        UUID eventId;
         try {
             Event saved = repository.save(new Event()
                     .setTitle(createEvent.getTitle())
@@ -51,11 +55,15 @@ class CreateEventService {
                                     .setCurrency(createEvent.getCurrency().getCurrencyCode())
                     ));
             log.debug("Saved {}", saved);
-            return saved.getId();
+            eventId = saved.getId();
         } catch (DataIntegrityViolationException e) {
             log.debug("Failed to save {}", createEvent, e);
             // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
             throw new RuntimeException("Duplicate event");
         }
+
+        eventPublisher.publishEvent(new EventCreatedEvent(this, eventId, createEvent.getInstant()));
+
+        return eventId;
     }
 }

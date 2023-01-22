@@ -44,11 +44,6 @@ public class Deadline {
         return this;
     }
 
-    public Deadline setInstant(Instant instant) {
-        this.instant = instant;
-        return this;
-    }
-
     @Override
     public String toString() {
         return "Deadline{" +

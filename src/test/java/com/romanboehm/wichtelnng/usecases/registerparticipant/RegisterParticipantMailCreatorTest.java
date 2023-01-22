@@ -14,9 +14,9 @@ import static com.romanboehm.wichtelnng.GlobalTestData.event;
 import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = NONE)
 public class RegisterParticipantMailCreatorTest {
 
     @Autowired

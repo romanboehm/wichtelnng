@@ -2,9 +2,8 @@ package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.EventRepository;
 import com.romanboehm.wichtelnng.data.Participant;
+import com.romanboehm.wichtelnng.data.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -18,9 +17,9 @@ import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = NONE)
 class NotifyServiceTest {
 
     @RegisterExtension
@@ -28,7 +27,7 @@ class NotifyServiceTest {
             .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
-    private EventRepository eventRepository;
+    private TestEventRepository eventRepository;
 
     @Autowired
     private NotifyService service;
@@ -36,17 +35,18 @@ class NotifyServiceTest {
     @BeforeEach
     public void cleanup() {
         eventRepository.deleteAll();
+        eventRepository.flush();
     }
 
     @Test
     void shouldMatchAndNotify() {
-        eventRepository.save(event()
+        var event = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
                                 .setZoneId(systemDefault().getId())
 
-                ) // Should be included
+                )
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -62,29 +62,7 @@ class NotifyServiceTest {
                 )
         );
 
-        eventRepository.save(event()
-                .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(now().plus(1, MINUTES))
-                                .setZoneId(systemDefault().getId())
-
-                ) // Should not be included
-                .addParticipant(
-                        new Participant()
-                                .setName("Phil Rudd")
-                                .setEmail("philrudd@acdc.net")
-                ).addParticipant(
-                        new Participant()
-                                .setName("Bon Scott")
-                                .setEmail("bonscott@acdc.net")
-                ).addParticipant(
-                        new Participant()
-                                .setName("Cliff Williams")
-                                .setEmail("cliffwilliams@acdc.net")
-                )
-        );
-
-        service.matchAndNotify();
+        service.notify(event.getId());
 
         assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
         assertThat(greenMail.getReceivedMessages())
@@ -98,14 +76,14 @@ class NotifyServiceTest {
     }
 
     @Test
-    void shouldDeleteEventsWhoseDeadlineHasPassed() {
-        Event deleted = eventRepository.save(event()
+    void shouldDeleteEventsAfterNotification() {
+        var deleted = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
                                 .setZoneId(systemDefault().getId())
 
-                ) // Should be included
+                )
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -121,46 +99,20 @@ class NotifyServiceTest {
                 )
         );
 
-        Event open = eventRepository.save(event()
-                .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(now().plus(2, MINUTES))
-                                .setZoneId(systemDefault().getId())
+        service.notify(deleted.getId());
 
-                ) // Should not be included
-                .addParticipant(
-                        new Participant()
-                                .setName("Phil Rudd")
-                                .setEmail("philrudd@acdc.net")
-                ).addParticipant(
-                        new Participant()
-                                .setName("Bon Scott")
-                                .setEmail("bonscott@acdc.net")
-                ).addParticipant(
-                        new Participant()
-                                .setName("Cliff Williams")
-                                .setEmail("cliffwilliams@acdc.net")
-                )
-        );
-
-        service.matchAndNotify();
-
-        assertThat(greenMail.waitForIncomingEmail(1500, 3)).isTrue();
-
-        assertThat(eventRepository.findAll())
-                .contains(open)
-                .doesNotContain(deleted);
+        assertThat(eventRepository.findById(deleted.getId())).isEmpty();
     }
 
     @Test
     void shouldInformHostAboutEmptyEvent() {
-        eventRepository.save(event()
+        var emptyEvent = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
                                 .setZoneId(systemDefault().getId())
 
-                ) // Should be included
+                )
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -168,7 +120,7 @@ class NotifyServiceTest {
                 )
         );
 
-        service.matchAndNotify();
+        service.notify(emptyEvent.getId());
 
         assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
         assertThat(greenMail.getReceivedMessages())

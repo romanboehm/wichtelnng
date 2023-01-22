@@ -1,15 +1,17 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.data.Event;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.List;
+import java.util.UUID;
 
 @Service
 class NotifyService {
+
+    private final Logger log = LoggerFactory.getLogger(NotifyService.class);
 
     private final NotifyRepository repository;
     private final MatchNotifier matchNotifier;
@@ -21,26 +23,24 @@ class NotifyService {
         this.lostEventNotifier = lostEventNotifier;
     }
 
-    @Scheduled(
-            initialDelayString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.initial.delay.in.ms}",
-            fixedRateString = "${com.romanboehm.wichtelnng.usecases.matchandnotify.rate.in.ms}"
-    )
     @Transactional
-    void matchAndNotify() {
-        List<Event> eventsWhereDeadlineHasPassed = repository.findAllByDeadlineBefore(Instant.now());
-        for (Event event : eventsWhereDeadlineHasPassed) {
-            if (!hasEnoughParticipants(event)) {
-                lostEventNotifier.send(LostMailEvent.from(event));
-            } else {
-                List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(event.getParticipants());
-                List<MatchMailEvent> matchMailEvents = matches.stream()
-                        .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))
-                        .toList();
-                matchNotifier.send(matchMailEvents);
-            }
-
-            repository.delete(event);
+    void notify(UUID eventId) {
+        var possibleEvent = repository.findById(eventId);
+        if (possibleEvent.isEmpty()) {
+            log.warn("Event {} not found for notification", eventId);
+            return;
         }
+        var event = possibleEvent.get();
+        if (!hasEnoughParticipants(event)) {
+            lostEventNotifier.send(LostMailEvent.from(event));
+        } else {
+            var matches = ParticipantsMatcher.match(event.getParticipants());
+            var matchMailEvents = matches.stream()
+                    .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))
+                    .toList();
+            matchNotifier.send(matchMailEvents);
+        }
+        repository.delete(event);
     }
 
     private static boolean hasEnoughParticipants(Event event) {

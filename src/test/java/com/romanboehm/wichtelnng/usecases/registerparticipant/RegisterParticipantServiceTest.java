@@ -3,7 +3,7 @@ package com.romanboehm.wichtelnng.usecases.registerparticipant;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.EventRepository;
+import com.romanboehm.wichtelnng.data.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -20,9 +20,9 @@ import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@SpringBootTest(webEnvironment = NONE)
 class RegisterParticipantServiceTest {
 
     @RegisterExtension
@@ -30,7 +30,7 @@ class RegisterParticipantServiceTest {
             .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
-    private EventRepository eventRepository;
+    private TestEventRepository eventRepository;
 
     @Autowired
     private RegisterParticipantService service;
@@ -38,11 +38,12 @@ class RegisterParticipantServiceTest {
     @BeforeEach
     public void cleanup() {
         eventRepository.deleteAll();
+        eventRepository.flush();
     }
 
     @Test
     void shouldNoticeWhenEventPastDeadline() {
-        Event pastDeadline = eventRepository.save(event()
+        Event pastDeadline = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(LocalDateTime.now().minus(1, MINUTES))
@@ -56,8 +57,8 @@ class RegisterParticipantServiceTest {
 
     @Test
     void shouldPreventParticipantFromRegisteringMultipleTimesForSameEvent() {
-        Event eventA = eventRepository.save(event().setTitle("A"));
-        Event eventB = eventRepository.save(event().setTitle("B"));
+        Event eventA = eventRepository.saveAndFlush(event().setTitle("A"));
+        Event eventB = eventRepository.saveAndFlush(event().setTitle("B"));
 
         service.register(
                 eventA.getId(),

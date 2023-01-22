@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event, UUID> {
+public interface TestEventRepository extends JpaRepository<Event, UUID> {
 
     @Override
     @Query("""

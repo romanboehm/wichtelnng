@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.data.EventRepository;
+import com.romanboehm.wichtelnng.data.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -40,7 +40,7 @@ class WichtelnIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private EventRepository eventRepository;
+    private TestEventRepository eventRepository;
 
     @Value("${com.romanboehm.wichtelnng.domain}")
     private String domain;
