@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.data.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-interface MatchAndNotifyRepository extends JpaRepository<Event, UUID> {
+interface NotifyRepository extends JpaRepository<Event, UUID> {
 
     @Query("""
                 SELECT DISTINCT e FROM Event e

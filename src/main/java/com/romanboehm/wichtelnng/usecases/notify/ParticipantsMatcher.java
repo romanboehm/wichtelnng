@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.data.Participant;
 import org.slf4j.Logger;

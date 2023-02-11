@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.data.Event;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,13 +9,13 @@ import java.time.Instant;
 import java.util.List;
 
 @Service
-class MatchAndNotifyService {
+class NotifyService {
 
-    private final MatchAndNotifyRepository repository;
+    private final NotifyRepository repository;
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
 
-    MatchAndNotifyService(MatchAndNotifyRepository repository, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier) {
+    NotifyService(NotifyRepository repository, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier) {
         this.repository = repository;
         this.matchNotifier = matchNotifier;
         this.lostEventNotifier = lostEventNotifier;

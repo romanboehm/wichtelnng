@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.Deadline;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
-class MatchAndNotifyServiceTest {
+class NotifyServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
@@ -31,7 +31,7 @@ class MatchAndNotifyServiceTest {
     private EventRepository eventRepository;
 
     @Autowired
-    private MatchAndNotifyService service;
+    private NotifyService service;
 
     @BeforeEach
     public void cleanup() {

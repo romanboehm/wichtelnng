@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.usecases.matchandnotify;
+package com.romanboehm.wichtelnng.usecases.notify;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
