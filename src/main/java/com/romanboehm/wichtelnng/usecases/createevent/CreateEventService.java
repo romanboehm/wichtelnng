@@ -7,9 +7,8 @@ import com.romanboehm.wichtelnng.data.MonetaryAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,48 +20,51 @@ class CreateEventService {
 
     private final CreateEventRepository repository;
     private final ApplicationEventPublisher eventPublisher;
+    private final TransactionTemplate tx;
 
-    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher) {
+    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher, TransactionTemplate tx) {
         this.repository = repository;
         this.eventPublisher = eventPublisher;
+        this.tx = tx;
     }
 
-    @Transactional
     UUID save(CreateEvent createEvent) {
-        UUID eventId;
+        Event saved;
         try {
-            Event saved = repository.save(new Event()
-                    .setTitle(createEvent.getTitle())
-                    .setDescription(createEvent.getDescription())
-                    .setDeadline(
-                            new Deadline()
-                                    .setLocalDateTime(
-                                            LocalDateTime.of(
-                                                    createEvent.getLocalDate(),
-                                                    createEvent.getLocalTime()
+            saved = tx.execute(status ->
+                    repository.save(new Event()
+                            .setTitle(createEvent.getTitle())
+                            .setDescription(createEvent.getDescription())
+                            .setDeadline(
+                                    new Deadline()
+                                            .setLocalDateTime(
+                                                    LocalDateTime.of(
+                                                            createEvent.getLocalDate(),
+                                                            createEvent.getLocalTime()
+                                                    )
                                             )
-                                    )
-                                    .setZoneId(createEvent.getTimezone().getId())
-                    )
-                    .setHost(
-                            new Host()
-                                    .setName(createEvent.getHostName())
-                                    .setEmail(createEvent.getHostEmail())
-                    )
-                    .setMonetaryAmount(
-                            new MonetaryAmount()
-                                    .setNumber(createEvent.getNumber())
-                                    .setCurrency(createEvent.getCurrency().getCurrencyCode())
-                    ));
-            log.debug("Saved {}", saved);
-            eventId = saved.getId();
-        } catch (DataIntegrityViolationException e) {
-            log.debug("Failed to save {}", createEvent, e);
-            // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
-            throw new RuntimeException("Duplicate event");
+                                            .setZoneId(createEvent.getTimezone().getId())
+                            )
+                            .setHost(
+                                    new Host()
+                                            .setName(createEvent.getHostName())
+                                            .setEmail(createEvent.getHostEmail())
+                            )
+                            .setMonetaryAmount(
+                                    new MonetaryAmount()
+                                            .setNumber(createEvent.getNumber())
+                                            .setCurrency(createEvent.getCurrency().getCurrencyCode())
+                            )));
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
         }
 
-        eventPublisher.publishEvent(new EventCreatedEvent(this, eventId, createEvent.getInstant()));
+        log.debug("Saved {}", saved);
+        var eventId = saved.getId();
+
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, createEvent.getInstant());
+        eventPublisher.publishEvent(eventCreatedEvent);
+        log.debug("Published {}", eventCreatedEvent);
 
         return eventId;
     }

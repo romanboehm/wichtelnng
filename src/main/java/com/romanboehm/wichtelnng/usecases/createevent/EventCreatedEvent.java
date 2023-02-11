@@ -23,4 +23,13 @@ public class EventCreatedEvent extends ApplicationEvent {
     public Instant getEventDeadline() {
         return eventDeadline;
     }
+
+    @Override
+    public String toString() {
+        return "EventCreatedEvent{" +
+                "eventId=" + eventId +
+                ", eventDeadline=" + eventDeadline +
+                ", source=" + source +
+                '}';
+    }
 }

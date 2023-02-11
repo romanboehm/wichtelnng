@@ -44,6 +44,7 @@ class CreateEventServiceTest {
 
     @BeforeEach
     public void cleanup() {
+        applicationEvents.clear();
         eventRepository.deleteAll();
         eventRepository.flush();
     }
@@ -101,9 +102,13 @@ class CreateEventServiceTest {
 
     @Test
     void shouldThrowOnDuplicateEvent() {
-        service.save(createEvent());
-        assertThatThrownBy(() -> service.save(createEvent()))
-                .isInstanceOf(RuntimeException.class);
+        service.save(createEvent().setLocalTime(LocalTime.MIDNIGHT));
+        assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
+        applicationEvents.clear();
+
+        assertThatThrownBy(() -> service.save(createEvent().setLocalTime(LocalTime.MIDNIGHT))).isInstanceOf(RuntimeException.class);
+
+        assertThat(applicationEvents.stream(EventCreatedEvent.class)).isEmpty();
     }
 
 }
