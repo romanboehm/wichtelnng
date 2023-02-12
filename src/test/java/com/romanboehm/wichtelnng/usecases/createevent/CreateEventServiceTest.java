@@ -41,12 +41,13 @@ class CreateEventServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication());
+            .withConfiguration(aConfig().withDisabledAuthentication())
+            .withPerMethodLifecycle(true);
 
     @BeforeEach
     public void cleanup() {
         applicationEvents.clear();
-        eventRepository.deleteAll();
+        eventRepository.deleteAllInBatch();
         eventRepository.flush();
     }
 

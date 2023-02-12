@@ -27,7 +27,8 @@ class RegisterParticipantServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication());
+            .withConfiguration(aConfig().withDisabledAuthentication())
+            .withPerMethodLifecycle(true);
 
     @Autowired
     private TestEventRepository eventRepository;
@@ -37,7 +38,7 @@ class RegisterParticipantServiceTest {
 
     @BeforeEach
     public void cleanup() {
-        eventRepository.deleteAll();
+        eventRepository.deleteAllInBatch();
         eventRepository.flush();
     }
 
@@ -81,7 +82,7 @@ class RegisterParticipantServiceTest {
                         .setParticipantEmail("angusyoung@acdc.net")
         );
 
-        assertThat(eventRepository.findAll())
+        assertThat(eventRepository.findAllWithParticipants())
                 .extracting(Event::getTitle, event -> event.getParticipants().size())
                 .containsExactlyInAnyOrder(
                         tuple("A", 1),

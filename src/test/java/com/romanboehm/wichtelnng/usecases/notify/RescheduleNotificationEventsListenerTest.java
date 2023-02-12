@@ -39,7 +39,7 @@ class RescheduleNotificationEventsListenerTest {
 
     @BeforeEach
     public void setUp() {
-        eventRepository.deleteAll();
+        eventRepository.deleteAllInBatch();
         eventRepository.flush();
     }
 

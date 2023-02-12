@@ -33,8 +33,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class WichtelnIntegrationTest {
 
     @RegisterExtension
-    protected static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication());
+    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
+            .withConfiguration(aConfig().withDisabledAuthentication())
+            .withPerMethodLifecycle(true);
 
     @Autowired
     private MockMvc mockMvc;
@@ -47,7 +48,8 @@ class WichtelnIntegrationTest {
 
     @BeforeEach
     void cleanup() {
-        eventRepository.deleteAll();
+        eventRepository.deleteAllInBatch();
+        eventRepository.flush();
     }
 
     @Test

@@ -24,7 +24,8 @@ class NotifyServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication());
+            .withConfiguration(aConfig().withDisabledAuthentication())
+            .withPerMethodLifecycle(true);
 
     @Autowired
     private TestEventRepository eventRepository;
@@ -34,7 +35,7 @@ class NotifyServiceTest {
 
     @BeforeEach
     public void cleanup() {
-        eventRepository.deleteAll();
+        eventRepository.deleteAllInBatch();
         eventRepository.flush();
     }
 

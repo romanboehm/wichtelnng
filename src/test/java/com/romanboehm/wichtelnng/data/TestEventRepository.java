@@ -10,10 +10,9 @@ import java.util.UUID;
 @Repository
 public interface TestEventRepository extends JpaRepository<Event, UUID> {
 
-    @Override
     @Query("""
                 SELECT DISTINCT e FROM Event e
                 LEFT JOIN FETCH e.participants
             """)
-    List<Event> findAll();
+    List<Event> findAllWithParticipants();
 }
