@@ -15,9 +15,7 @@ class CreateEventTest {
         List<CreateEvent.EventZoneId> timezones = new CreateEvent().getTimezones();
 
         LocalDateTime now = LocalDateTime.now();
-        assertThat(timezones).isSortedAccordingTo((t1, t2) ->
-            t2.zoneId().getRules().getOffset(now).compareTo(t1.zoneId().getRules().getOffset(now))
-        );
+        assertThat(timezones).isSortedAccordingTo((t1, t2) -> t2.zoneId().getRules().getOffset(now).compareTo(t1.zoneId().getRules().getOffset(now)));
     }
 
     @Test

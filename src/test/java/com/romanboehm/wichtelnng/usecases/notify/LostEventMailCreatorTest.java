@@ -30,15 +30,12 @@ class LostEventMailCreatorTest {
                 event()
                         .setHost(
                                 new Host()
-                                        .setEmail("georgeyoung@acdc.net")
-                        )
+                                        .setEmail("georgeyoung@acdc.net"))
                         // Only one participant
                         .addParticipant(
                                 new Participant()
                                         .setName("Angus Young")
-                                        .setEmail("angusyoung@acdc.net")
-                        )
-        );
+                                        .setEmail("angusyoung@acdc.net")));
 
         MimeMessage mail = mailCreator.createMessage(lostMailEvent);
 
@@ -58,14 +55,11 @@ class LostEventMailCreatorTest {
                         .setHost(
                                 new Host()
                                         .setEmail("georgeyoung@acdc.net")
-                                        .setName("George Young")
-                        )
+                                        .setName("George Young"))
                         .addParticipant(
                                 new Participant()
                                         .setName("Angus Young")
-                                        .setEmail("angusyoung@acdc.net")
-                        )
-        );
+                                        .setEmail("angusyoung@acdc.net")));
 
         MimeMessage mail = mailCreator.createMessage(lostMailEvent);
 
@@ -75,8 +69,7 @@ class LostEventMailCreatorTest {
                 "Hey George Young,",
                 "Unfortunately nobody has registered to wichtel at 'AC/DC Secret Santa'.",
                 "Try creating a new event: https://wichtelnng.romanboehm.com!",
-                "This mail was generated using https://wichtelnng.romanboehm.com"
-        ));
+                "This mail was generated using https://wichtelnng.romanboehm.com"));
     }
 
 }

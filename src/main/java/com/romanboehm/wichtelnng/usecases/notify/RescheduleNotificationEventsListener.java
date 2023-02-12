@@ -28,13 +28,13 @@ class RescheduleNotificationEventsListener {
         this.scheduler = scheduler;
     }
 
-    @EventListener({ApplicationReadyEvent.class, RescheduleNotificationEvent.class})
+    @EventListener({ ApplicationReadyEvent.class, RescheduleNotificationEvent.class })
     @Transactional
     public void scheduleOutstandingEventNotifications() {
         var count = repository.count();
         // FIXME:
-        //   Find a better solution for this.
-        //   For now, safeguard this, so we don't have `findAll` go crazy.
+        // Find a better solution for this.
+        // For now, safeguard this, so we don't have `findAll` go crazy.
         if (count > 200) {
             log.warn("Too many events ({}) still pending notification, skipping back-filling scheduler from database.", count);
             return;
@@ -43,11 +43,8 @@ class RescheduleNotificationEventsListener {
             return;
         }
         var eventsPendingNotification = repository.findAll();
-        eventsPendingNotification.forEach(e ->
-                scheduler.schedule(
-                        () -> service.notify(e.getId()),
-                        e.getDeadline().getInstant()
-                )
-        );
+        eventsPendingNotification.forEach(e -> scheduler.schedule(
+                () -> service.notify(e.getId()),
+                e.getDeadline().getInstant()));
     }
 }

@@ -15,6 +15,7 @@
     <description>Secret Santa demo</description>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <moneta.version>1.4.2</moneta.version>
         <webjars.bootstrap.version>4.5.3</webjars.bootstrap.version>
@@ -22,6 +23,7 @@
         <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
         <testcontainers.version>1.17.6</testcontainers.version>
         <greenmail.version>2.0.0-alpha-3</greenmail.version>
+        <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -139,6 +141,21 @@
                         <name>${project.groupId}/${project.artifactId}:latest</name>
                     </image>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>${formatter-maven-plugin.version}</version>
+                <configuration>
+                    <configFile>${project.basedir}/eclipse-formatter-config.xml</configFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

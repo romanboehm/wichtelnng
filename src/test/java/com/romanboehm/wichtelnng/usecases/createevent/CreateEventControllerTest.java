@@ -37,34 +37,29 @@ class CreateEventControllerTest {
                 "localDate",
                 LocalDate
                         .now().minus(1, DAYS)
-                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-        );
+                        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(params)
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString(
-                        "Must take place in the future."
-                )));
+                        "Must take place in the future.")));
     }
 
     @Test
     void shouldRedirectFromApiRoot() throws Exception {
         mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(eventFormParams())
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(eventFormParams()))
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     void shouldRedirectAfterCreateComplete() throws Exception {
         mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(eventFormParams())
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(eventFormParams()))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -76,18 +71,15 @@ class CreateEventControllerTest {
                 .thenReturn(UUID.randomUUID())
                 .thenThrow(DuplicateEventException.class);
         mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(params)
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
                 .andExpect(status().is3xxRedirection());
 
         mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(params)
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString(
-                        "You're seeing this page because you tried to create a Wichteln event which already exists."
-                )));
+                        "You're seeing this page because you tried to create a Wichteln event which already exists.")));
     }
 }

@@ -16,7 +16,6 @@ import static java.util.Comparator.comparing;
 import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 
-
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
 class CreateEvent {
 
@@ -65,7 +64,6 @@ class CreateEvent {
     @NotNull
     private CurrencyUnit currency;
 
-
     // Keep date and time apart since we replaced `input[@type='datetime-local']` with two separate `inputs` for reasons
     // of browser compatibility and ease of use.
     @NotNull
@@ -89,8 +87,7 @@ class CreateEvent {
         return ZonedDateTime.of(
                 localDate != null ? localDate : LocalDate.now(),
                 localTime != null ? localTime : LocalTime.now(),
-                timezone != null ? timezone : ZoneId.systemDefault()
-        ).toInstant();
+                timezone != null ? timezone : ZoneId.systemDefault()).toInstant();
     }
 
     // Needed to delegate validation for event's "when" (its local date and local time at the respective timezone) to
@@ -101,8 +98,7 @@ class CreateEvent {
         return ZonedDateTime.of(
                 localDate != null ? localDate : LocalDate.now(),
                 localTime != null ? localTime : LocalTime.now(),
-                timezone != null ? timezone : ZoneId.systemDefault()
-        );
+                timezone != null ? timezone : ZoneId.systemDefault());
     }
 
     @NotBlank

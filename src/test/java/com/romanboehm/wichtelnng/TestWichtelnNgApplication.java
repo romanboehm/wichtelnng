@@ -24,8 +24,7 @@ public class TestWichtelnNgApplication {
         @Override
         public void initialize(ConfigurableApplicationContext context) {
             context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("host", Map.of(
-                    "com.romanboehm.wichtelnng.domain", "http://localhost:8080"
-            )));
+                    "com.romanboehm.wichtelnng.domain", "http://localhost:8080")));
         }
     }
 
@@ -39,8 +38,7 @@ public class TestWichtelnNgApplication {
             context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("db", Map.of(
                     "spring.datasource.url", postgres.getJdbcUrl(),
                     "spring.datasource.username", postgres.getUsername(),
-                    "spring.datasource.password", postgres.getPassword()
-            )));
+                    "spring.datasource.password", postgres.getPassword())));
         }
     }
 
@@ -71,8 +69,7 @@ public class TestWichtelnNgApplication {
             context.getEnvironment().getPropertySources().addFirst(new MapPropertySource("mail", Map.of(
                     "spring.mail.host", greenmail.getHost(),
                     "spring.mail.port", smtp.toString(),
-                    "spring.mail.protocol", "smtp"
-            )));
+                    "spring.mail.protocol", "smtp")));
         }
     }
 }

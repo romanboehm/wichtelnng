@@ -34,8 +34,7 @@ class RegisterParticipantControllerTest {
 
         mockMvc.perform(post(format("/event/%s/registration", randomUUID()))
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params)
-        )
+                .params(params))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Must be a valid email address.")));
     }

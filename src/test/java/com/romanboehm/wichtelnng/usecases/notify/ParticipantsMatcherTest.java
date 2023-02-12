@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-
 import com.romanboehm.wichtelnng.data.Participant;
 import org.junit.jupiter.api.Test;
 
@@ -16,16 +15,14 @@ class ParticipantsMatcherTest {
     void shouldShuffle() {
         List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(
                 Set.of(new Participant()
-                                .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net"),
+                        .setName("Angus Young")
+                        .setEmail("angusyoung@acdc.net"),
                         new Participant()
                                 .setName("Malcolm Young")
                                 .setEmail("malcolmyoung@acdc.net"),
                         new Participant()
                                 .setName("Phil Rudd")
-                                .setEmail("philrudd@acdc.net")
-                )
-        );
+                                .setEmail("philrudd@acdc.net")));
 
         assertThat(matches).allSatisfy(match -> {
             assertThat(match.donor().name()).isNotEqualTo(match.recipient().name());
@@ -37,8 +34,7 @@ class ParticipantsMatcherTest {
     void shouldNotShuffleIfTooFewParticipants() {
         Set<Participant> oneTooFewParticipants = Set.of(new Participant()
                 .setName("Angus Young")
-                .setEmail("angusyoung@acdc.net")
-        );
+                .setEmail("angusyoung@acdc.net"));
 
         assertThatThrownBy(() -> ParticipantsMatcher.match(oneTooFewParticipants))
                 .isInstanceOf(IllegalArgumentException.class);

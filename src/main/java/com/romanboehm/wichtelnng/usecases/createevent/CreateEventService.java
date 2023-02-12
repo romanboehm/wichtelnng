@@ -33,7 +33,8 @@ class CreateEventService {
         Event saved;
         try {
             saved = tx.execute(status -> repository.save(eventFrom(createEvent)));
-        } catch (DataIntegrityViolationException e) {
+        }
+        catch (DataIntegrityViolationException e) {
             log.warn("Failed to create event", e);
             throw new DuplicateEventException("Failed to create event as it is a duplicate.");
         }
@@ -56,20 +57,15 @@ class CreateEventService {
                                 .setLocalDateTime(
                                         LocalDateTime.of(
                                                 createEvent.getLocalDate(),
-                                                createEvent.getLocalTime()
-                                        )
-                                )
-                                .setZoneId(createEvent.getTimezone().getId())
-                )
+                                                createEvent.getLocalTime()))
+                                .setZoneId(createEvent.getTimezone().getId()))
                 .setHost(
                         new Host()
                                 .setName(createEvent.getHostName())
-                                .setEmail(createEvent.getHostEmail())
-                )
+                                .setEmail(createEvent.getHostEmail()))
                 .setMonetaryAmount(
                         new MonetaryAmount()
                                 .setNumber(createEvent.getNumber())
-                                .setCurrency(createEvent.getCurrency().getCurrencyCode())
-                );
+                                .setCurrency(createEvent.getCurrency().getCurrencyCode()));
     }
 }

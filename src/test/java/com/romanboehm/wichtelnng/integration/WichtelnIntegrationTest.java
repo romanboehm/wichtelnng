@@ -67,9 +67,8 @@ class WichtelnIntegrationTest {
         // Fill out and submit form for event
         MultiValueMap<String, String> params = eventFormParams();
         ResultActions createEventRedirect = mockMvc.perform(post("/event")
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(params)
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
                 .andExpect(status().is3xxRedirection());
 
         // Hacky way to retrieve event's ID since we cannot spy `EventRepository`.
@@ -86,8 +85,7 @@ class WichtelnIntegrationTest {
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(stringContainsInOrder(
                         "Provide this link to everyone you wish to participate in your Wichteln event",
-                        registrationUrl
-                )));
+                        registrationUrl)));
 
         // Fetch page for participant registration
         mockMvc.perform(get(registrationUrl))
@@ -97,9 +95,8 @@ class WichtelnIntegrationTest {
         params.addAll(participantFormParams());
         params.add("id", eventId.toString());
         mockMvc.perform(post(registrationUrl)
-                        .contentType(APPLICATION_FORM_URLENCODED)
-                        .params(params)
-                )
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/event/%s/registration/finish", eventId)));
 

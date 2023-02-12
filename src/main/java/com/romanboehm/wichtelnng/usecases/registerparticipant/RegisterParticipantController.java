@@ -45,18 +45,16 @@ class RegisterParticipantController {
 
     @PostMapping("/event/{eventId}/registration")
     ModelAndView post(
-            @PathVariable UUID eventId,
-            @ModelAttribute @Valid RegisterParticipant registerParticipant,
-            BindingResult bindingResult
-    ) {
+                      @PathVariable UUID eventId,
+                      @ModelAttribute @Valid RegisterParticipant registerParticipant,
+                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",
                     registerParticipant,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
-                            .collect(joining(", "))
-            );
+                            .collect(joining(", ")));
             return new ModelAndView("registration", BAD_REQUEST);
         }
         service.register(eventId, registerParticipant);

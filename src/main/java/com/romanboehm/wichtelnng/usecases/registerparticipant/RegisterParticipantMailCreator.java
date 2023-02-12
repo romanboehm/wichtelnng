@@ -24,17 +24,15 @@ class RegisterParticipantMailCreator {
     private final JavaMailSender mailSender;
 
     RegisterParticipantMailCreator(
-            @Value("${com.romanboehm.wichtelnng.domain}") String domain,
-            @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
-            TemplateEngine templateEngine,
-            JavaMailSender mailSender
-    ) {
+                                   @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+                                   @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+                                   TemplateEngine templateEngine,
+                                   JavaMailSender mailSender) {
         this.domain = domain;
         this.from = from;
         this.templateEngine = templateEngine;
         this.mailSender = mailSender;
     }
-
 
     MimeMessage createMessage(RegistrationMailEvent registrationMailEvent) {
         try {
@@ -52,7 +50,8 @@ class RegisterParticipantMailCreator {
 
             log.debug("Created mail for {}", registrationMailEvent);
             return mimeMessage;
-        } catch (MessagingException e) {
+        }
+        catch (MessagingException e) {
             log.error("Failed to create mail for {}", registrationMailEvent, e);
             // Re-throw as `RuntimeException` to be handled by upstream by `ErrorController`
             throw new RuntimeException("Failed to create registration mail");

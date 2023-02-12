@@ -20,8 +20,7 @@ class EventCreatedEventListener {
     public void scheduleEventNotification(EventCreatedEvent eventCreatedEvent) {
         scheduler.schedule(
                 () -> notifyService.notify(eventCreatedEvent.getEventId()),
-                eventCreatedEvent.getEventDeadline()
-        );
+                eventCreatedEvent.getEventDeadline());
     }
 
 }

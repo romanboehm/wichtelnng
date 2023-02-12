@@ -33,7 +33,8 @@ class NotifyService {
         var event = possibleEvent.get();
         if (!hasEnoughParticipants(event)) {
             lostEventNotifier.send(LostMailEvent.from(event));
-        } else {
+        }
+        else {
             var matches = ParticipantsMatcher.match(event.getParticipants());
             var matchMailEvents = matches.stream()
                     .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))

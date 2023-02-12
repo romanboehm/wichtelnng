@@ -51,17 +51,15 @@ class NotifyServiceTest {
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                ).addParticipant(
+                                .setEmail("angusyoung@acdc.net"))
+                .addParticipant(
                         new Participant()
                                 .setName("Malcolm Young")
-                                .setEmail("malcolmyoung@acdc.net")
-                ).addParticipant(
+                                .setEmail("malcolmyoung@acdc.net"))
+                .addParticipant(
                         new Participant()
                                 .setName("George Young")
-                                .setEmail("georgeyoung@acdc.net")
-                )
-        );
+                                .setEmail("georgeyoung@acdc.net")));
 
         service.notify(event.getId());
 
@@ -72,8 +70,7 @@ class NotifyServiceTest {
                 .containsExactlyInAnyOrder(
                         "angusyoung@acdc.net",
                         "malcolmyoung@acdc.net",
-                        "georgeyoung@acdc.net"
-                );
+                        "georgeyoung@acdc.net");
     }
 
     @Test
@@ -88,17 +85,15 @@ class NotifyServiceTest {
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                ).addParticipant(
+                                .setEmail("angusyoung@acdc.net"))
+                .addParticipant(
                         new Participant()
                                 .setName("Malcolm Young")
-                                .setEmail("malcolmyoung@acdc.net")
-                ).addParticipant(
+                                .setEmail("malcolmyoung@acdc.net"))
+                .addParticipant(
                         new Participant()
                                 .setName("George Young")
-                                .setEmail("georgeyoung@acdc.net")
-                )
-        );
+                                .setEmail("georgeyoung@acdc.net")));
 
         service.notify(deleted.getId());
 
@@ -117,9 +112,7 @@ class NotifyServiceTest {
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net")
-                )
-        );
+                                .setEmail("angusyoung@acdc.net")));
 
         service.notify(emptyEvent.getId());
 

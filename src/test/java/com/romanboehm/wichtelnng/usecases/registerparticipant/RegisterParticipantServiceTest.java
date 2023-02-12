@@ -48,9 +48,7 @@ class RegisterParticipantServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(LocalDateTime.now().minus(1, MINUTES))
-                                .setZoneId(systemDefault().getId())
-                )
-        );
+                                .setZoneId(systemDefault().getId())));
 
         Optional<Event> possibleEvent = service.getEvent(pastDeadline.getId());
         assertThat(possibleEvent).isEmpty();
@@ -65,29 +63,25 @@ class RegisterParticipantServiceTest {
                 eventA.getId(),
                 RegisterParticipant.registerFor(eventA)
                         .setParticipantName("Angus Young")
-                        .setParticipantEmail("angusyoung@acdc.net")
-        );
+                        .setParticipantEmail("angusyoung@acdc.net"));
 
         service.register(
                 eventA.getId(),
                 RegisterParticipant.registerFor(eventA)
                         .setParticipantName("Angus Young")
-                        .setParticipantEmail("angusyoung@acdc.net")
-        );
+                        .setParticipantEmail("angusyoung@acdc.net"));
 
         service.register(
                 eventB.getId(),
                 RegisterParticipant.registerFor(eventB)
                         .setParticipantName("Angus Young")
-                        .setParticipantEmail("angusyoung@acdc.net")
-        );
+                        .setParticipantEmail("angusyoung@acdc.net"));
 
         assertThat(eventRepository.findAllWithParticipants())
                 .extracting(Event::getTitle, event -> event.getParticipants().size())
                 .containsExactlyInAnyOrder(
                         tuple("A", 1),
-                        tuple("B", 1)
-                );
+                        tuple("B", 1));
 
     }
 

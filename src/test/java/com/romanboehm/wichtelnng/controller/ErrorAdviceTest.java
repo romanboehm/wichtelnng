@@ -20,7 +20,8 @@ public class ErrorAdviceTest {
     public static class ThrowingController {
 
         @GetMapping(path = "throw")
-        void get() throws Throwable { }
+        void get() throws Throwable {
+        }
     }
 
     @Autowired

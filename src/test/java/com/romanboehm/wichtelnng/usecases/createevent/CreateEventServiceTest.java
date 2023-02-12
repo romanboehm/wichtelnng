@@ -62,8 +62,7 @@ class CreateEventServiceTest {
                 .setHostEmail("georgeyoung@acdc.net")
                 .setLocalDate(LocalDate.of(2666, JUNE, 7))
                 .setLocalTime(LocalTime.of(6, 6))
-                .setTimezone(ZoneId.of("Australia/Sydney"))
-        );
+                .setTimezone(ZoneId.of("Australia/Sydney")));
 
         assertThat(eventRepository.findAll())
                 .singleElement()
@@ -82,9 +81,7 @@ class CreateEventServiceTest {
                             ZonedDateTime.of(
                                     LocalDate.of(2666, JUNE, 7),
                                     LocalTime.of(6, 6),
-                                    ZoneId.of("Australia/Sydney")
-                            ).toInstant()
-                    );
+                                    ZoneId.of("Australia/Sydney")).toInstant());
                 });
     }
 

@@ -26,7 +26,8 @@ class LostEventNotifier {
             MimeMessage message = mailCreator.createMessage(event);
             mailSender.send(message);
             log.info("Sent mail to inform about empty event: {}", event);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed to send mail informing about empty event: {}", event, e);
         }
     }

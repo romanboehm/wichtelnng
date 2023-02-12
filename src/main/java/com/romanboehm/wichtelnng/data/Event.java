@@ -82,7 +82,6 @@ public class Event implements Persistable<UUID> {
         return id == null;
     }
 
-
     public UUID getId() {
         return this.id;
     }

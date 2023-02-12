@@ -24,7 +24,8 @@ class RegisterParticipantNotifier {
         try {
             mailSender.send(message);
             log.info("Sent mail for {}", registrationMailEvent);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed to send mail for {}", registrationMailEvent, e);
         }
     }

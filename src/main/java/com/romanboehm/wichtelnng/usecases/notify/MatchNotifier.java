@@ -29,7 +29,8 @@ class MatchNotifier {
                 MimeMessage message = mailCreator.createMessage(matchMailEvent);
                 mailSender.send(message);
                 log.info("Sent mail for {}", matchMailEvent);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 log.error("Failed to send mail for {}", matchMailEvent, e);
             }
         }

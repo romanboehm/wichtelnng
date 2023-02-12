@@ -57,8 +57,7 @@ public class RegisterParticipantMailCreatorTest {
                 "Here's what the event's host says about it:",
                 "\"There's gonna be some santa'ing\"",
                 "If you have any questions, contact the event's host George Young at georgeyoung@acdc.net.",
-                "This mail was generated using https://wichtelnng.romanboehm.com"
-        ));
+                "This mail was generated using https://wichtelnng.romanboehm.com"));
     }
 
 }

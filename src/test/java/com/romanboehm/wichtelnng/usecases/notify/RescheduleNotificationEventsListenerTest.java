@@ -53,15 +53,11 @@ class RescheduleNotificationEventsListenerTest {
                                 .setTitle(i.toString())
                                 .setDeadline(new Deadline()
                                         .setZoneId(ZoneId.of("UTC").getId())
-                                        .setLocalDateTime(deadline.plus(i, ChronoUnit.SECONDS))
-                                )
-                        ).toList()
-        );
+                                        .setLocalDateTime(deadline.plus(i, ChronoUnit.SECONDS))))
+                        .toList());
 
         eventPublisher.publishEvent(new RescheduleNotificationEventsListener.RescheduleNotificationEvent());
 
-        l.forEach(i ->
-                verify(scheduler, times(1)).schedule(any(Runnable.class), eq(deadline.plus(i, ChronoUnit.SECONDS).toInstant(ZoneOffset.UTC)))
-        );
+        l.forEach(i -> verify(scheduler, times(1)).schedule(any(Runnable.class), eq(deadline.plus(i, ChronoUnit.SECONDS).toInstant(ZoneOffset.UTC))));
     }
 }

@@ -25,23 +25,18 @@ public class GlobalTestData {
                 .setMonetaryAmount(
                         new MonetaryAmount()
                                 .setCurrency(getCurrency("AUD").getCurrencyCode())
-                                .setNumber(BigDecimal.valueOf(78.50))
-                )
+                                .setNumber(BigDecimal.valueOf(78.50)))
                 .setDeadline(
                         new Deadline()
                                 .setZoneId(ZoneId.of("Australia/Sydney").getId())
                                 .setLocalDateTime(
                                         LocalDateTime.of(
                                                 LocalDate.of(2666, JUNE, 7),
-                                                LocalTime.of(6, 6)
-                                        )
-                                )
-                )
+                                                LocalTime.of(6, 6))))
                 .setHost(
                         new Host()
                                 .setName("George Young")
-                                .setEmail("georgeyoung@acdc.net")
-                );
+                                .setEmail("georgeyoung@acdc.net"));
     }
 
     public static MultiValueMap<String, String> eventFormParams() {

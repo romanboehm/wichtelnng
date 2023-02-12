@@ -25,11 +25,10 @@ class MatchMailCreator {
     private final JavaMailSender mailSender;
 
     MatchMailCreator(
-            @Value("${com.romanboehm.wichtelnng.domain}") String domain,
-            @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
-            TemplateEngine templateEngine,
-            JavaMailSender mailSender
-    ) {
+                     @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+                     @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+                     TemplateEngine templateEngine,
+                     JavaMailSender mailSender) {
         this.domain = domain;
         this.from = from;
         this.templateEngine = templateEngine;

@@ -22,10 +22,9 @@ class LostEventMailCreator {
     private final JavaMailSender mailSender;
 
     LostEventMailCreator(
-            @Value("${com.romanboehm.wichtelnng.domain}") String domain,
-            @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
-            JavaMailSender mailSender
-    ) {
+                         @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+                         @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+                         JavaMailSender mailSender) {
         this.domain = domain;
         this.from = from;
         this.mailSender = mailSender;
@@ -43,8 +42,7 @@ class LostEventMailCreator {
                 event.recipientName(),
                 event.title(),
                 domain,
-                domain
-        ));
+                domain));
 
         log.debug("Created mail to inform about empty event: {}", event);
         return mimeMessage;

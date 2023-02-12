@@ -41,8 +41,7 @@ class RegisterParticipantService {
         event.addParticipant(
                 new Participant()
                         .setName(registerParticipant.getParticipantName())
-                        .setEmail(registerParticipant.getParticipantEmail())
-        );
+                        .setEmail(registerParticipant.getParticipantEmail()));
         repository.save(event);
         log.info("Registered {}", registerParticipant);
         participantNotifier.send(RegistrationMailEvent.from(registerParticipant));
