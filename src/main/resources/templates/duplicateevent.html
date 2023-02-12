@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="fragments/head :: head"/>
+
+<body>
+<div th:replace="fragments/header :: header"/>
+<div style="background:transparent !important" class="jumbotron bg-light">
+    <div class="container-lg">
+        <h1 class="display-4">Duplicate Event</h1>
+        <p class="lead">You're seeing this page because you tried to create a Wichteln event which already exists.</p>
+        <hr class="my-4">
+        <p>Don't worry, you can either just close this page or create a different event. Just click the button
+            below.</p>
+        <a id="back-button" class="btn btn-primary btn-lg" onclick="history.back()" role="button">New event</a>
+    </div>
+</div>
+</body>
+</html>

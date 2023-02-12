@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
@@ -50,7 +51,7 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldSaveEvent() {
+    void shouldSaveEvent() throws DuplicateEventException {
         service.save(new CreateEvent()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
@@ -87,10 +88,10 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldNotifyOfEventCreation() {
+    void shouldNotifyOfEventCreation() throws DuplicateEventException {
         var createEvent = createEvent();
 
-        var eventId = service.save(createEvent);
+        UUID eventId = service.save(createEvent);
 
         assertThat(applicationEvents.stream(EventCreatedEvent.class))
                 .singleElement()
@@ -101,12 +102,12 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldThrowOnDuplicateEvent() {
-        service.save(createEvent().setLocalTime(LocalTime.MIDNIGHT));
+    void shouldThrowOnDuplicateEvent() throws DuplicateEventException {
+        service.save(createEvent());
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
         applicationEvents.clear();
 
-        assertThatThrownBy(() -> service.save(createEvent().setLocalTime(LocalTime.MIDNIGHT))).isInstanceOf(RuntimeException.class);
+        assertThatThrownBy(() -> service.save(createEvent())).isInstanceOf(DuplicateEventException.class);
 
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).isEmpty();
     }

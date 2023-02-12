@@ -7,6 +7,7 @@ import com.romanboehm.wichtelnng.data.MonetaryAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -28,38 +29,15 @@ class CreateEventService {
         this.tx = tx;
     }
 
-    UUID save(CreateEvent createEvent) {
+    UUID save(CreateEvent createEvent) throws DuplicateEventException {
         Event saved;
         try {
-            saved = tx.execute(status ->
-                    repository.save(new Event()
-                            .setTitle(createEvent.getTitle())
-                            .setDescription(createEvent.getDescription())
-                            .setDeadline(
-                                    new Deadline()
-                                            .setLocalDateTime(
-                                                    LocalDateTime.of(
-                                                            createEvent.getLocalDate(),
-                                                            createEvent.getLocalTime()
-                                                    )
-                                            )
-                                            .setZoneId(createEvent.getTimezone().getId())
-                            )
-                            .setHost(
-                                    new Host()
-                                            .setName(createEvent.getHostName())
-                                            .setEmail(createEvent.getHostEmail())
-                            )
-                            .setMonetaryAmount(
-                                    new MonetaryAmount()
-                                            .setNumber(createEvent.getNumber())
-                                            .setCurrency(createEvent.getCurrency().getCurrencyCode())
-                            )));
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
+            saved = tx.execute(status -> repository.save(eventFrom(createEvent)));
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Failed to create event", e);
+            throw new DuplicateEventException("Failed to create event as it is a duplicate.");
         }
 
-        log.debug("Saved {}", saved);
         var eventId = saved.getId();
 
         var eventCreatedEvent = new EventCreatedEvent(this, eventId, createEvent.getInstant());
@@ -67,5 +45,31 @@ class CreateEventService {
         log.debug("Published {}", eventCreatedEvent);
 
         return eventId;
+    }
+
+    private static Event eventFrom(CreateEvent createEvent) {
+        return new Event()
+                .setTitle(createEvent.getTitle())
+                .setDescription(createEvent.getDescription())
+                .setDeadline(
+                        new Deadline()
+                                .setLocalDateTime(
+                                        LocalDateTime.of(
+                                                createEvent.getLocalDate(),
+                                                createEvent.getLocalTime()
+                                        )
+                                )
+                                .setZoneId(createEvent.getTimezone().getId())
+                )
+                .setHost(
+                        new Host()
+                                .setName(createEvent.getHostName())
+                                .setEmail(createEvent.getHostEmail())
+                )
+                .setMonetaryAmount(
+                        new MonetaryAmount()
+                                .setNumber(createEvent.getNumber())
+                                .setCurrency(createEvent.getCurrency().getCurrencyCode())
+                );
     }
 }

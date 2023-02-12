@@ -53,8 +53,12 @@ class CreateEventController {
             );
             return new ModelAndView("event", BAD_REQUEST);
         }
-        UUID uuid = service.save(createEvent);
-        log.info("Saved {}", createEvent);
-        return new ModelAndView(format("redirect:/event/%s/link", uuid));
+        try {
+            UUID uuid = service.save(createEvent);
+            log.info("Saved {}", createEvent);
+            return new ModelAndView(format("redirect:/event/%s/link", uuid));
+        } catch (DuplicateEventException dee) {
+            return new ModelAndView("duplicateevent", BAD_REQUEST);
+        }
     }
 }

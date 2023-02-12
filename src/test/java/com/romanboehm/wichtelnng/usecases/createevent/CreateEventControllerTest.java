@@ -9,10 +9,13 @@ import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,9 +41,9 @@ class CreateEventControllerTest {
         );
 
         mockMvc.perform(post("/event")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params)
-        )
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(params)
+                )
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString(
                         "Must take place in the future."
@@ -50,18 +53,41 @@ class CreateEventControllerTest {
     @Test
     void shouldRedirectFromApiRoot() throws Exception {
         mockMvc.perform(post("/event")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(eventFormParams())
-        )
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(eventFormParams())
+                )
                 .andExpect(status().is3xxRedirection());
     }
 
     @Test
     void shouldRedirectAfterCreateComplete() throws Exception {
         mockMvc.perform(post("/event")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(eventFormParams())
-        )
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(eventFormParams())
+                )
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    void shouldHighlightDuplicateEvent() throws Exception {
+        MultiValueMap<String, String> params = eventFormParams();
+
+        when(service.save(any(CreateEvent.class)))
+                .thenReturn(UUID.randomUUID())
+                .thenThrow(DuplicateEventException.class);
+        mockMvc.perform(post("/event")
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(params)
+                )
+                .andExpect(status().is3xxRedirection());
+
+        mockMvc.perform(post("/event")
+                        .contentType(APPLICATION_FORM_URLENCODED)
+                        .params(params)
+                )
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString(
+                        "You're seeing this page because you tried to create a Wichteln event which already exists."
+                )));
     }
 }
