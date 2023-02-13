@@ -4,6 +4,8 @@ import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -11,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -19,7 +22,6 @@ import java.util.List;
 
 import static com.romanboehm.wichtelnng.GlobalTestData.event;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -36,6 +38,17 @@ class RescheduleNotificationEventsListenerTest {
 
     @SpyBean
     private TaskScheduler scheduler;
+
+    private static Instant millisEq(Instant instant) {
+        var matcher = new ArgumentMatcher<Instant>() {
+            @Override
+            public boolean matches(Instant otherInstant) {
+                var thisInstant = instant.toEpochMilli();
+                return thisInstant == otherInstant.toEpochMilli();
+            }
+        };
+        return ArgumentMatchers.argThat(matcher);
+    }
 
     @BeforeEach
     public void setUp() {
@@ -58,6 +71,6 @@ class RescheduleNotificationEventsListenerTest {
 
         eventPublisher.publishEvent(new RescheduleNotificationEventsListener.RescheduleNotificationEvent());
 
-        l.forEach(i -> verify(scheduler, times(1)).schedule(any(Runnable.class), eq(deadline.plus(i, ChronoUnit.SECONDS).toInstant(ZoneOffset.UTC))));
+        l.forEach(i -> verify(scheduler, times(1)).schedule(any(Runnable.class), millisEq(deadline.plus(i, ChronoUnit.SECONDS).toInstant(ZoneOffset.UTC))));
     }
 }
