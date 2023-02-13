@@ -5,18 +5,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.time.Instant;
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 interface NotifyRepository extends JpaRepository<Event, UUID> {
 
+    @Override
     @Query("""
-                SELECT DISTINCT e FROM Event e
+                SELECT e FROM Event e
                 LEFT JOIN FETCH e.participants
-                WHERE e.deadline.instant <= :instant
+                WHERE e.id = :id
             """)
-    List<Event> findAllByDeadlineBefore(Instant instant);
+    Optional<Event> findById(UUID id);
 
 }
