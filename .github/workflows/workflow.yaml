@@ -1,4 +1,4 @@
-name: build
+name: build and potentially deploy
 on: [ push ]
 
 jobs:
@@ -14,3 +14,24 @@ jobs:
           distribution: 'adopt'
       - name: build with Maven
         run: ./mvnw --batch-mode verify
+      - name: provide artifacts
+        # if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@v3
+        with:
+          name: fly-io-artifacts
+          path: |
+            target/*.jar
+            Dockerfile
+            fly.toml
+  deploy:
+    # if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: download source distribution
+        id: download-source-distribution
+        uses: actions/download-artifact@v3
+        with:
+          name: fly-io-artifacts
+      - name: Display structure of downloaded files
+        run: ls -R
