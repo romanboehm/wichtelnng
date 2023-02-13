@@ -14,7 +14,7 @@ jobs:
           distribution: 'adopt'
       - name: build with Maven
         run: ./mvnw --batch-mode verify
-      - name: provide artifacts
+      - name: provide artifacts for fly.io deployment
         # if: startsWith(github.ref, 'refs/tags/')
         uses: actions/upload-artifact@v3
         with:
@@ -28,10 +28,23 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: download source distribution
-        id: download-source-distribution
+      - name: download artifacts for fly.io deployment
         uses: actions/download-artifact@v3
         with:
           name: fly-io-artifacts
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: setup flyctl
+        uses: superfly/flyctl-actions/setup-flyctl@master
+      - name: provide secrets for fly.io deployment
+        run: |
+          flyctl secrets set \
+            "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
+            "SPRING_MAIL_PASSWORD=${{ secrets.SPRING_MAIL_PASSWORD }}"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: deploy to fly.io
+        run: |
+          flyctl deploy \
+            --config fly.toml \
+            --dockerfile Dockerfile
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
