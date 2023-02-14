@@ -12,9 +12,9 @@ SPRING_DATASOURCE_PASSWORD = "<override-with-fly-secret>"
 SPRING_MAIL_HOST = "mail.manitu.de"
 SPRING_MAIL_PORT = "465"
 SPRING_MAIL_PASSWORD = "<override-with-fly-secret>"
-SPRING_MAIL_USER = "u23774"
+SPRING_MAIL_USER = "<override-with-fly-secret>"
 COM_ROMANBOEHM_WICHTELNNG_MAIL_FROM = "contact@wichteln.romanboehm.com"
-COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "wichtelnng.fly.dev"
+COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.fly.dev"
 
 [experimental]
 auto_rollback = true
