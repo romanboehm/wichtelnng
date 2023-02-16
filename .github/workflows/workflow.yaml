@@ -38,6 +38,7 @@ jobs:
         run: |
           flyctl secrets set \
             "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
+            "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
             "SPRING_MAIL_PASSWORD=${{ secrets.SPRING_MAIL_PASSWORD }}" \
             "SPRING_MAIL_USERNAME=${{ secrets.SPRING_MAIL_USERNAME }}"
         env:
