@@ -35,14 +35,22 @@ jobs:
       - name: setup flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master
       - name: provide secrets for fly.io deployment
+        env:
+          # If you must pass secrets within a command line, then enclose them within the proper quoting rules.
+          # Secrets often contain special characters that may unintentionally affect your shell.
+          # To escape these special characters, use quoting with your environment variables.
+          # Cf. https://docs.github.com/en/actions/security-guides/encrypted-secrets.
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          SECRETS_SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
+          SECRETS_SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
+          SECRETS_SPRING_MAIL_PASSWORD: ${{ secrets.SPRING_MAIL_PASSWORD }}
+          SECRETS_SPRING_MAIL_USERNAME: ${{ secrets.SPRING_MAIL_USERNAME }}
         run: |
           flyctl secrets set \
-            "SPRING_DATASOURCE_PASSWORD=${{ secrets.SPRING_DATASOURCE_PASSWORD }}" \
-            "SPRING_DATASOURCE_USERNAME=${{ secrets.SPRING_DATASOURCE_USERNAME }}" \
-            "SPRING_MAIL_PASSWORD=${{ secrets.SPRING_MAIL_PASSWORD }}" \
-            "SPRING_MAIL_USERNAME=${{ secrets.SPRING_MAIL_USERNAME }}"
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+            "SPRING_DATASOURCE_PASSWORD=$SECRETS_SPRING_DATASOURCE_PASSWORD" \
+            "SPRING_DATASOURCE_USERNAME=$SECRETS_SPRING_DATASOURCE_USERNAME" \
+            "SPRING_MAIL_PASSWORD=$SECRETS_SPRING_MAIL_PASSWORD" \
+            "SPRING_MAIL_USERNAME=$SECRETS_SPRING_MAIL_USERNAME"
       - name: deploy to fly.io
         run: |
           flyctl deploy \
