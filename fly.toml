@@ -5,6 +5,12 @@ kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
+[build]
+builder = "paketobuildpacks/builder:base"
+buildpacks = ["gcr.io/paketo-buildpacks/java"]
+[build.args]
+BP_JVM_VERSION = 17
+
 [env]
 SPRING_DATASOURCE_URL = "jdbc:postgresql://top2.nearest.of.wichtelnng-db.internal:5432/wichtelnng?sslmode=disable"
 SPRING_DATASOURCE_USERNAME = "<override-with-fly-secret>"

@@ -10,8 +10,8 @@
     </parent>
     <groupId>com.romanboehm</groupId>
     <artifactId>wichtelnng</artifactId>
-    <version>1.0</version>
-    <name>wichteln</name>
+    <version>undefined</version>
+    <name>wichtelnng</name>
     <description>Secret Santa demo</description>
 
     <properties>
@@ -137,15 +137,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <image>
-                        <env>
-                            <!-- Necessary, else Buildpack would default to 11 -->
-                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
-                        </env>
-                        <name>${project.groupId}/${project.artifactId}:latest</name>
-                    </image>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>net.revelc.code.formatter</groupId>
