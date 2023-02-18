@@ -139,6 +139,10 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <image>
+                        <env>
+                            <!-- Necessary, else Buildpack would default to 11 -->
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
                         <name>${project.groupId}/${project.artifactId}:latest</name>
                     </image>
                 </configuration>
