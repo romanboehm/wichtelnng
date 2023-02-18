@@ -23,6 +23,10 @@ SPRING_MAIL_USERNAME = "<override-with-fly-secret>"
 COM_ROMANBOEHM_WICHTELNNG_MAIL_FROM = "wichtelnng@romanboehm.com"
 COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.fly.dev"
 
+[metrics]
+port = 8081
+path = "/actuator/prometheus" # default for most prometheus clients
+
 [experimental]
 auto_rollback = true
 
