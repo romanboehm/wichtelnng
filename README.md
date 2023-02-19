@@ -17,7 +17,7 @@ Navigate to https://wichtelnng.fly.dev/.
 
 You can check mail via a local roundcube instance like so:
 
-1) Navigate to roundcube's UI port by clicking the output of the following command:
+1) Navigate to roundcube's UI port by opening the output of the following command in your browser:
    ```shell
    docker port $(docker ps --filter ancestor=roundcube/roundcubemail --format "{{.Names}}") 80/tcp
    ```
