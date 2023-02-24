@@ -2,7 +2,8 @@
 
 ## What is it?
 
-The next generation of Secret Santa web apps. Based on Java, Spring MVC, Thymeleaf, Spring Data, JPA, and Postgres.
+The next generation of Secret Santa web apps. Based on Java, Spring Boot, Spring MVC, Thymeleaf, Spring Data, JPA, and
+Postgres.
 
 ## How to try it out?
 
