@@ -31,18 +31,22 @@ class RegisterParticipantService {
     }
 
     @Transactional
-    void register(UUID eventId, RegisterParticipant registerParticipant) {
+    void register(UUID eventId, RegisterParticipant registerParticipant) throws DuplicateParticipantException {
         Optional<Event> possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
         }
-        Event event = possibleEvent.get();
-        event.addParticipant(
+        var eventBefore = possibleEvent.get();
+        var participantsCountBefore = eventBefore.getParticipants().size();
+        eventBefore.addParticipant(
                 new Participant()
                         .setName(registerParticipant.getParticipantName())
                         .setEmail(registerParticipant.getParticipantEmail()));
-        repository.save(event);
+        var eventAfter = repository.save(eventBefore);
+        if (eventAfter.getParticipants().size() == participantsCountBefore) {
+            throw new DuplicateParticipantException("Failed to register because of duplicate %s".formatted(registerParticipant));
+        }
         log.info("Registered {}", registerParticipant);
         participantNotifier.send(RegistrationMailEvent.from(registerParticipant));
     }

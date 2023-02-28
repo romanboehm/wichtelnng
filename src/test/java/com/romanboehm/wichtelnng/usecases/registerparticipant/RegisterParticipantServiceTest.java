@@ -1,9 +1,10 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.icegreen.greenmail.store.FolderException;
 import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.Event;
 import com.romanboehm.wichtelnng.data.TestEventRepository;
+import jakarta.mail.Address;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
@@ -19,7 +19,7 @@ import static com.romanboehm.wichtelnng.GlobalTestData.event;
 import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
@@ -37,52 +37,58 @@ class RegisterParticipantServiceTest {
     private RegisterParticipantService service;
 
     @BeforeEach
-    public void cleanup() {
+    public void cleanup() throws FolderException {
         eventRepository.deleteAllInBatch();
         eventRepository.flush();
     }
 
     @Test
-    void shouldNoticeWhenEventPastDeadline() {
-        Event pastDeadline = eventRepository.saveAndFlush(event()
+    void handlesEventPastDeadline() {
+        var pastDeadline = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(LocalDateTime.now().minus(1, MINUTES))
                                 .setZoneId(systemDefault().getId())));
 
-        Optional<Event> possibleEvent = service.getEvent(pastDeadline.getId());
+        var possibleEvent = service.getEvent(pastDeadline.getId());
         assertThat(possibleEvent).isEmpty();
     }
 
     @Test
-    void shouldPreventParticipantFromRegisteringMultipleTimesForSameEvent() {
-        Event eventA = eventRepository.saveAndFlush(event().setTitle("A"));
-        Event eventB = eventRepository.saveAndFlush(event().setTitle("B"));
+    void preventsParticipantFromRegisteringMultipleTimes() throws DuplicateParticipantException {
+        var event = eventRepository.saveAndFlush(event());
 
         service.register(
-                eventA.getId(),
-                RegisterParticipant.registerFor(eventA)
+                event.getId(),
+                RegisterParticipant.registerFor(event)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net"));
 
+        assertThatThrownBy(() -> service.register(
+                event.getId(),
+                RegisterParticipant.registerFor(event)
+                        .setParticipantName("Angus Young")
+                        .setParticipantEmail("angusyoung@acdc.net")))
+                .isInstanceOf(DuplicateParticipantException.class);
+
+        assertThat(eventRepository.findByIdWithParticipants(event.getId())).hasValueSatisfying(e -> assertThat(e.getParticipants()).hasSize(1));
+    }
+
+    @Test
+    void sendsRegistrationMailToParticipant() throws DuplicateParticipantException {
+        var event = eventRepository.saveAndFlush(event());
+
         service.register(
-                eventA.getId(),
-                RegisterParticipant.registerFor(eventA)
+                event.getId(),
+                RegisterParticipant.registerFor(event)
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net"));
 
-        service.register(
-                eventB.getId(),
-                RegisterParticipant.registerFor(eventB)
-                        .setParticipantName("Angus Young")
-                        .setParticipantEmail("angusyoung@acdc.net"));
-
-        assertThat(eventRepository.findAllWithParticipants())
-                .extracting(Event::getTitle, event -> event.getParticipants().size())
-                .containsExactlyInAnyOrder(
-                        tuple("A", 1),
-                        tuple("B", 1));
-
+        assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
+        assertThat(greenMail.getReceivedMessages())
+                .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
+                .extracting(Address::toString)
+                .containsExactly("angusyoung@acdc.net");
     }
 
 }

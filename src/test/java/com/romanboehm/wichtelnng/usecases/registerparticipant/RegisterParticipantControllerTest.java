@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.MultiValueMap;
 
 import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
 import static com.romanboehm.wichtelnng.GlobalTestData.participantFormParams;
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -27,8 +29,8 @@ class RegisterParticipantControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void shouldValidateParticipant() throws Exception {
-        MultiValueMap<String, String> params = eventFormParams();
+    void validatesParticipant() throws Exception {
+        var params = eventFormParams();
         params.addAll(participantFormParams());
         params.set("participantEmail", "notavalidemail.address");
 
@@ -37,5 +39,22 @@ class RegisterParticipantControllerTest {
                 .params(params))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Must be a valid email address.")));
+    }
+
+    @Test
+    void highlightsDuplicateParticipant() throws Exception {
+        var id = randomUUID();
+
+        var params = eventFormParams();
+        params.addAll(participantFormParams());
+        params.add("id", id.toString());
+
+        doThrow(DuplicateParticipantException.class).when(service).register(eq(id), any(RegisterParticipant.class));
+
+        mockMvc.perform(post(format("/event/%s/registration", id))
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .params(params))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("Duplicate Participant")));
     }
 }

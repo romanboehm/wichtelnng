@@ -57,8 +57,13 @@ class RegisterParticipantController {
                             .collect(joining(", ")));
             return new ModelAndView("registration", BAD_REQUEST);
         }
-        service.register(eventId, registerParticipant);
-        log.info("Registered {} for {}", registerParticipant, eventId);
-        return new ModelAndView(format("redirect:/event/%s/registration/finish", eventId));
+        try {
+            service.register(eventId, registerParticipant);
+            log.info("Registered {} for {}", registerParticipant, eventId);
+            return new ModelAndView(format("redirect:/event/%s/registration/finish", eventId));
+        }
+        catch (DuplicateParticipantException e) {
+            return new ModelAndView("duplicateparticipant", BAD_REQUEST);
+        }
     }
 }
