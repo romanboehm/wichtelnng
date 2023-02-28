@@ -2,22 +2,24 @@ package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;
+import com.romanboehm.wichtelnng.MailUtils;
 import com.romanboehm.wichtelnng.data.Deadline;
 import com.romanboehm.wichtelnng.data.TestEventRepository;
-import jakarta.mail.Address;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.concurrent.TimeUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.GlobalTestData.event;
-import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
@@ -27,8 +29,7 @@ class RegisterParticipantServiceTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication())
-            .withPerMethodLifecycle(true);
+            .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
     private TestEventRepository eventRepository;
@@ -40,6 +41,7 @@ class RegisterParticipantServiceTest {
     public void cleanup() throws FolderException {
         eventRepository.deleteAllInBatch();
         eventRepository.flush();
+        greenMail.purgeEmailFromAllMailboxes();
     }
 
     @Test
@@ -82,13 +84,14 @@ class RegisterParticipantServiceTest {
                 event.getId(),
                 RegisterParticipant.registerFor(event)
                         .setParticipantName("Angus Young")
-                        .setParticipantEmail("angusyoung@acdc.net"));
+                        .setParticipantEmail("angusyoung@participantregistration.acdc.net"));
 
-        assertThat(greenMail.waitForIncomingEmail(1500, 1)).isTrue();
-        assertThat(greenMail.getReceivedMessages())
-                .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
-                .extracting(Address::toString)
-                .containsExactly("angusyoung@acdc.net");
+        Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
+            var possibleRegistrationMail = MailUtils.findMailFor(greenMail, "angusyoung@participantregistration.acdc.net");
+            assertThat(possibleRegistrationMail).isNotEmpty();
+            assertThat(possibleRegistrationMail.get().getContent()).asInstanceOf(InstanceOfAssertFactories.STRING).contains(
+                    "You have successfully registered to wichtel ");
+        });
     }
 
 }

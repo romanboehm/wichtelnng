@@ -17,6 +17,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
+        <surefire.runOrder>random</surefire.runOrder>
         <moneta.version>1.4.2</moneta.version>
         <!-- Match sure webjar versions match those in src/main/resources/templates/fragments/head.html. -->
         <webjars.bootstrap.version>4.6.2</webjars.bootstrap.version>
@@ -120,12 +121,6 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainers.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.icegreen</groupId>
-            <artifactId>greenmail-spring</artifactId>
-            <version>${greenmail.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

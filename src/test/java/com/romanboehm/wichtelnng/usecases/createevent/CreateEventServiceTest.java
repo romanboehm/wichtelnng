@@ -1,10 +1,8 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.data.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.event.ApplicationEvents;
@@ -18,8 +16,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
-import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,11 +35,6 @@ class CreateEventServiceTest {
     @Autowired
     private ApplicationEvents applicationEvents;
 
-    @RegisterExtension
-    static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication())
-            .withPerMethodLifecycle(true);
-
     @BeforeEach
     public void cleanup() {
         applicationEvents.clear();
@@ -52,7 +43,7 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldSaveEvent() throws DuplicateEventException {
+    void savesEvent() throws DuplicateEventException {
         service.save(new CreateEvent()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
@@ -86,7 +77,7 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldNotifyOfEventCreation() throws DuplicateEventException {
+    void notifiesOfEventCreation() throws DuplicateEventException {
         var createEvent = createEvent();
 
         UUID eventId = service.save(createEvent);
@@ -100,7 +91,7 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void shouldThrowOnDuplicateEvent() throws DuplicateEventException {
+    void throwsOnDuplicateEvent() throws DuplicateEventException {
         service.save(createEvent());
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
         applicationEvents.clear();

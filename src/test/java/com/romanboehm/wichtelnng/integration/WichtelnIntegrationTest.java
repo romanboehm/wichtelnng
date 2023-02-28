@@ -1,7 +1,9 @@
 package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
+import com.romanboehm.wichtelnng.MailUtils;
 import com.romanboehm.wichtelnng.data.TestEventRepository;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -10,16 +12,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.util.MultiValueMap;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
-import static com.romanboehm.wichtelnng.GlobalTestData.participantFormParams;
-import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -34,8 +34,7 @@ class WichtelnIntegrationTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
-            .withConfiguration(aConfig().withDisabledAuthentication())
-            .withPerMethodLifecycle(true);
+            .withConfiguration(aConfig().withDisabledAuthentication());
 
     @Autowired
     private MockMvc mockMvc;
@@ -59,29 +58,29 @@ class WichtelnIntegrationTest {
     }
 
     @Test
-    void shouldDoGetFormSaveProvideLinkRegisterFlow() throws Exception {
+    void providesGetFormSaveProvideLinkRegisterFlow() throws Exception {
         // Fetch page where event can be created
         mockMvc.perform(get("/event"))
                 .andExpect(status().is2xxSuccessful());
 
         // Fill out and submit form for event
-        MultiValueMap<String, String> params = eventFormParams();
-        ResultActions createEventRedirect = mockMvc.perform(post("/event")
+        var eventParams = eventFormParams();
+        var createEventRedirect = mockMvc.perform(post("/event")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params))
+                .params(eventParams))
                 .andExpect(status().is3xxRedirection());
 
         // Hacky way to retrieve event's ID since we cannot spy `EventRepository`.
         // Cf. https://github.com/spring-projects/spring-boot/issues/7033
-        UUID eventId = eventRepository.findAll().get(0).getId();
+        var eventId = eventRepository.findAll().get(0).getId();
 
         createEventRedirect
-                .andExpect(redirectedUrl(format("/event/%s/link", eventId)));
+                .andExpect(redirectedUrl("/event/%s/link".formatted(eventId)));
 
-        String registrationUrl = format("%s/event/%s/registration", domain, eventId);
+        String registrationUrl = "%s/event/%s/registration".formatted(domain, eventId);
 
         // "Redirect" to page showing registration link
-        mockMvc.perform(get(format("/event/%s/link", eventId)))
+        mockMvc.perform(get("/event/%s/link".formatted(eventId)))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().string(stringContainsInOrder(
                         "Provide this link to everyone you wish to participate in your Wichteln event",
@@ -92,18 +91,20 @@ class WichtelnIntegrationTest {
                 .andExpect(status().is2xxSuccessful());
 
         // Register participant for event
-        params.addAll(participantFormParams());
-        params.add("id", eventId.toString());
+        eventParams.add("participantName", "Angus Young");
+        eventParams.add("participantEmail", "angusyoung@workflow.acdc.net");
+        eventParams.put("id", List.of(eventId.toString()));
         mockMvc.perform(post(registrationUrl)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .params(params))
+                .params(eventParams))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/event/%s/registration/finish", eventId)));
+                .andExpect(redirectedUrl("/event/%s/registration/finish".formatted(eventId)));
 
-        assertThat(greenMail.waitForIncomingEmail(2500, 1)).isTrue();
-        assertThat(greenMail.getReceivedMessages())
-                .extracting(mimeMessage -> mimeMessage.getAllRecipients()[0])
-                .extracting(addr -> addr.toString())
-                .containsExactly("angusyoung@acdc.net");
+        Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
+            var mail = MailUtils.findMailFor(greenMail, "angusyoung@workflow.acdc.net");
+            assertThat(mail).isNotEmpty();
+            assertThat(mail.get().getContent()).asInstanceOf(InstanceOfAssertFactories.STRING).contains(
+                    "You have successfully registered to wichtel");
+        });
     }
 }

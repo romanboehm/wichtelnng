@@ -53,10 +53,4 @@ public class GlobalTestData {
         return map;
     }
 
-    public static MultiValueMap<String, String> participantFormParams() {
-        MultiValueMap<String, String> participantFormParams = new LinkedMultiValueMap<>();
-        participantFormParams.add("participantName", "Angus Young");
-        participantFormParams.add("participantEmail", "angusyoung@acdc.net");
-        return participantFormParams;
-    }
 }

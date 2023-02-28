@@ -7,7 +7,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
-import static com.romanboehm.wichtelnng.GlobalTestData.participantFormParams;
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.Matchers.containsString;
@@ -31,8 +30,8 @@ class RegisterParticipantControllerTest {
     @Test
     void validatesParticipant() throws Exception {
         var params = eventFormParams();
-        params.addAll(participantFormParams());
-        params.set("participantEmail", "notavalidemail.address");
+        params.add("participantName", "Angus Young");
+        params.add("participantEmail", "notavalidemail.address");
 
         mockMvc.perform(post(format("/event/%s/registration", randomUUID()))
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -46,7 +45,8 @@ class RegisterParticipantControllerTest {
         var id = randomUUID();
 
         var params = eventFormParams();
-        params.addAll(participantFormParams());
+        params.add("participantName", "Angus Young");
+        params.add("participantEmail", "angusyoung@acdc.net");
         params.add("id", id.toString());
 
         doThrow(DuplicateParticipantException.class).when(service).register(eq(id), any(RegisterParticipant.class));
