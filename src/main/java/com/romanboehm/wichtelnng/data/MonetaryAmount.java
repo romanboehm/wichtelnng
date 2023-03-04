@@ -21,13 +21,13 @@ public class MonetaryAmount {
         return this.number;
     }
 
-    public String getCurrency() {
-        return this.currency;
-    }
-
     public MonetaryAmount setNumber(BigDecimal number) {
         this.number = number;
         return this;
+    }
+
+    public String getCurrency() {
+        return this.currency;
     }
 
     public MonetaryAmount setCurrency(String currency) {

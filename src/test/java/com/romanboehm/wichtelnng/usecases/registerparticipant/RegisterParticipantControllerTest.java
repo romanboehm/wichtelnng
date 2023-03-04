@@ -14,6 +14,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +39,18 @@ class RegisterParticipantControllerTest {
                 .params(params))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Must be a valid email address.")));
+    }
+
+    @Test
+    void highlightsRegistrationAttemptTooLate() throws Exception {
+        var id = randomUUID();
+
+        doThrow(RegistrationAttemptTooLateException.class).when(service).getEvent(id);
+
+        mockMvc.perform(get(format("/event/%s/registration", id))
+                .contentType(APPLICATION_FORM_URLENCODED))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("It's too late to register")));
     }
 
     @Test

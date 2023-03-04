@@ -50,21 +50,13 @@ public class Participant {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getEmail() {
-        return this.email;
-    }
-
-    public Event getEvent() {
-        return this.event;
-    }
-
     public Participant setId(Long id) {
         this.id = id;
         return this;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public Participant setName(String name) {
@@ -72,9 +64,17 @@ public class Participant {
         return this;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
     public Participant setEmail(String email) {
         this.email = email;
         return this;
+    }
+
+    public Event getEvent() {
+        return this.event;
     }
 
     public Participant setEvent(Event event) {

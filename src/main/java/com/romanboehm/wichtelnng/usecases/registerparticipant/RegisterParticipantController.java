@@ -1,6 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
-import com.romanboehm.wichtelnng.data.Event;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -35,12 +33,14 @@ class RegisterParticipantController {
 
     @GetMapping("/event/{eventId}/registration")
     ModelAndView get(@PathVariable UUID eventId) {
-        Optional<Event> possibleEvent = service.getEvent(eventId);
-        if (possibleEvent.isEmpty()) {
-            return new ModelAndView("redirect:/event");
+        try {
+            var event = service.getEvent(eventId);
+            RegisterParticipant registerParticipant = RegisterParticipant.registerFor(event);
+            return new ModelAndView("registration", Map.of("registerParticipant", registerParticipant), OK);
         }
-        RegisterParticipant registerParticipant = RegisterParticipant.registerFor(possibleEvent.get());
-        return new ModelAndView("registration", Map.of("registerParticipant", registerParticipant), OK);
+        catch (RegistrationAttemptTooLateException e) {
+            return new ModelAndView("registrationattempttoolate", BAD_REQUEST);
+        }
     }
 
     @PostMapping("/event/{eventId}/registration")

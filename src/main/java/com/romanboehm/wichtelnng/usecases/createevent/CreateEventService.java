@@ -41,7 +41,7 @@ class CreateEventService {
 
         var eventId = saved.getId();
 
-        var eventCreatedEvent = new EventCreatedEvent(this, eventId, createEvent.getInstant());
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, saved.getDeadline().getInstant());
         eventPublisher.publishEvent(eventCreatedEvent);
         log.debug("Published {}", eventCreatedEvent);
 

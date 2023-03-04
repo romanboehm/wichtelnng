@@ -19,13 +19,13 @@ public class Host {
         return this.name;
     }
 
-    public String getEmail() {
-        return this.email;
-    }
-
     public Host setName(String name) {
         this.name = name;
         return this;
+    }
+
+    public String getEmail() {
+        return this.email;
     }
 
     public Host setEmail(String email) {

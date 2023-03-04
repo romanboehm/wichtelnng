@@ -10,10 +10,7 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 
 import javax.money.Monetary;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.UUID;
 
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
@@ -78,7 +75,11 @@ class CreateEventServiceTest {
 
     @Test
     void notifiesOfEventCreation() throws DuplicateEventException {
-        var createEvent = createEvent();
+        var now = LocalDateTime.now();
+        var createEvent = createEvent()
+                .setLocalTime(now.toLocalTime())
+                .setLocalDate(now.toLocalDate())
+                .setTimezone(ZoneId.systemDefault());
 
         UUID eventId = service.save(createEvent);
 
@@ -86,7 +87,7 @@ class CreateEventServiceTest {
                 .singleElement()
                 .satisfies(e -> {
                     assertThat(e.getEventId()).isEqualTo(eventId);
-                    assertThat(e.getEventDeadline()).isEqualTo(createEvent.getInstant());
+                    assertThat(e.getEventDeadline()).isEqualTo(now.atZone(ZoneId.systemDefault()).toInstant());
                 });
     }
 

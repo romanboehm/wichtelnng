@@ -86,33 +86,13 @@ public class Event implements Persistable<UUID> {
         return this.id;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public MonetaryAmount getMonetaryAmount() {
-        return this.monetaryAmount;
-    }
-
-    public Deadline getDeadline() {
-        return this.deadline;
-    }
-
-    public Host getHost() {
-        return this.host;
-    }
-
-    public Set<Participant> getParticipants() {
-        return this.participants;
-    }
-
     public Event setId(UUID id) {
         this.id = id;
         return this;
+    }
+
+    public String getTitle() {
+        return this.title;
     }
 
     public Event setTitle(String title) {
@@ -120,9 +100,17 @@ public class Event implements Persistable<UUID> {
         return this;
     }
 
+    public String getDescription() {
+        return this.description;
+    }
+
     public Event setDescription(String description) {
         this.description = description;
         return this;
+    }
+
+    public MonetaryAmount getMonetaryAmount() {
+        return this.monetaryAmount;
     }
 
     public Event setMonetaryAmount(MonetaryAmount monetaryAmount) {
@@ -130,14 +118,26 @@ public class Event implements Persistable<UUID> {
         return this;
     }
 
+    public Deadline getDeadline() {
+        return this.deadline;
+    }
+
     public Event setDeadline(Deadline deadline) {
         this.deadline = deadline;
         return this;
     }
 
+    public Host getHost() {
+        return this.host;
+    }
+
     public Event setHost(Host host) {
         this.host = host;
         return this;
+    }
+
+    public Set<Participant> getParticipants() {
+        return this.participants;
     }
 
     public Event setParticipants(Set<Participant> participants) {

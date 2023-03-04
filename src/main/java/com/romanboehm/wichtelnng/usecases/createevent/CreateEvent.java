@@ -19,95 +19,48 @@ import static java.util.stream.Collectors.toList;
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
 class CreateEvent {
 
-    record EventZoneId(ZoneId zoneId) {
-        private static final LocalDateTime NOW = LocalDateTime.now();
-
-        private static final Comparator<EventZoneId> COMPARATOR = comparing(
-                eventZoneId -> NOW.atZone(eventZoneId.zoneId()).getOffset(), reverseOrder()
-        );
-        private static final List<EventZoneId> ALL_ZONES = getAvailableZoneIds().stream()
-                .map(ZoneId::of)
-                .map(EventZoneId::new)
-                .sorted(COMPARATOR)
-                .collect(toList());
-
-        public String getDisplayString() {
-            return "%s (UTC %s)".formatted(
-                    zoneId.getId(),
-                    NOW
-                            .atZone(zoneId)
-                            .getOffset()
-                            .getId()
-                            .replace("Z", "+00:00")
-            );
-        }
-
-    }
-
     private static final List<CurrencyUnit> CURRENCIES = Monetary.getCurrencies().stream().sorted().collect(toList());
-
     // May be `null` first
     private UUID id;
-
     @NotBlank
     @Size(max = 100)
     private String title;
-
     @NotBlank
     @Size(max = 1000)
     private String description;
-
     @NotNull
     @Min(0)
     private BigDecimal number;
-
     @NotNull
     private CurrencyUnit currency;
-
     // Keep date and time apart since we replaced `input[@type='datetime-local']` with two separate `inputs` for reasons
     // of browser compatibility and ease of use.
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate localDate;
-
     // Keep date and time apart since we replaced `input[@type='datetime-local']` with two separate `inputs` for reasons
     // of browser compatibility and ease of use.
     @NotNull
     @DateTimeFormat(pattern = "HH:mm")
     private LocalTime localTime;
-
     @NotNull
     private ZoneId timezone;
+    @NotBlank
+    @Size(max = 100)
+    private String hostName;
+    @NotBlank
+    @Email
+    private String hostEmail;
 
     // Needed to delegate validation for event's "when" (its local date and local time at the respective timezone) to
     // the javax validator.
     // Non-nullability of the date, time, and timezone components is validated separately through field annotations.
     @FutureOrPresent
     public Instant getInstant() {
-        return ZonedDateTime.of(
-                localDate != null ? localDate : LocalDate.now(),
-                localTime != null ? localTime : LocalTime.now(),
-                timezone != null ? timezone : ZoneId.systemDefault()).toInstant();
+        var localDateTime = (localDate != null && localTime != null) ? LocalDateTime.of(localDate, localTime) : LocalDateTime.now();
+        var zone = timezone != null ? timezone : ZoneId.systemDefault();
+        return ZonedDateTime.of(localDateTime, zone).toInstant();
     }
-
-    // Needed to delegate validation for event's "when" (its local date and local time at the respective timezone) to
-    // the javax validator.
-    // Non-nullability of the date, time, and timezone components is validated separately through field annotations.
-    @FutureOrPresent
-    public ZonedDateTime getZonedDateTime() {
-        return ZonedDateTime.of(
-                localDate != null ? localDate : LocalDate.now(),
-                localTime != null ? localTime : LocalTime.now(),
-                timezone != null ? timezone : ZoneId.systemDefault());
-    }
-
-    @NotBlank
-    @Size(max = 100)
-    private String hostName;
-
-    @NotBlank
-    @Email
-    private String hostEmail;
 
     public List<CurrencyUnit> getCurrencies() {
         return CURRENCIES;
@@ -221,6 +174,31 @@ class CreateEvent {
                 ", hostName='" + hostName + '\'' +
                 ", hostEmail='" + hostEmail + '\'' +
                 '}';
+    }
+
+    record EventZoneId(ZoneId zoneId) {
+        private static final LocalDateTime NOW = LocalDateTime.now();
+
+        private static final Comparator<EventZoneId> COMPARATOR = comparing(
+                eventZoneId -> NOW.atZone(eventZoneId.zoneId()).getOffset(), reverseOrder()
+        );
+        private static final List<EventZoneId> ALL_ZONES = getAvailableZoneIds().stream()
+                .map(ZoneId::of)
+                .map(EventZoneId::new)
+                .sorted(COMPARATOR)
+                .collect(toList());
+
+        public String getDisplayString() {
+            return "%s (UTC %s)".formatted(
+                    zoneId.getId(),
+                    NOW
+                            .atZone(zoneId)
+                            .getOffset()
+                            .getId()
+                            .replace("Z", "+00:00")
+            );
+        }
+
     }
 
 }
