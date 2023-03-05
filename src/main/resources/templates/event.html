@@ -151,6 +151,30 @@
             </button>
         </form>
     </div> <!-- /container -->
+    <script>
+        document.addEventListener("DOMContentLoaded", _ => {
+            // Set timezone automatically if user has JavaScript activated.
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+            document.getElementById("timezone").value = timezone
+
+            // Let's also try some _rudimentary_ currency matching.
+            let currency = null
+            if (timezone.includes("Europe")) {
+                if (timezone.includes("Zurich")) {
+                    currency = "CHF"
+                } else {
+                    currency = "EUR"
+                }
+            } else if (timezone.includes("London") || timezone.includes("GMT")) {
+                currency = "GBP"
+            } else if (timezone.includes("US")) {
+                currency = "USD"
+            }
+            if (currency !== null) {
+                document.getElementById("monetary-amount-currency").value = currency;
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
