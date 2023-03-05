@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<div th:replace="~{fragments/head :: head}"/>
-
 <body>
-<div th:replace="~{fragments/header :: header}"/>
-<div style="background:transparent !important" class="jumbotron bg-light">
-    <div class="container-lg">
-        <h1 class="display-4">Duplicate Participant</h1>
-        <p class="lead">You're seeing this page because you tried to register twice for the same Wichteln event.</p>
-        <hr class="my-4">
-        <p>Don't worry, you don't need to do anything anymore, your registration should have succeeded.</p>
+<div th:fragment="content">
+    <div style="background:transparent !important" class="jumbotron bg-light">
+        <div class="container-lg">
+            <h1 class="display-4">Duplicate Participant</h1>
+            <p class="lead">You're seeing this page because you tried to register twice for the same Wichteln event.</p>
+            <hr class="my-4">
+            <p>Don't worry, you don't need to do anything anymore, your registration should have succeeded.</p>
+        </div>
     </div>
-</div>
 </body>
 </html>

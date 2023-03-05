@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<div th:replace="~{fragments/head :: head}"/>
-
 <body>
-<div th:replace="~{fragments/header :: header}"/>
-<div style="background:transparent !important" class="jumbotron bg-light">
-    <div class="container-lg">
-        <h1 class="display-4">What are the privacy implications?</h1>
-        <p class="lead">Rest assured: There are (next to) none.</p>
-        <hr class="my-4">
-        <p>The application might ask for names, email addresses, locations, etc., but
-        <ol>
-            <li>neither does it use it for anything but generating emails for the participants</li>
-            <li>nor does it keep it longer than absolutely necessary -- that is until the participants can be matched with each other after the registration deadline has passed.</li>
-        </ol>
-        </p>
-        <p>You have further questions? Send this site's author an <a href="mailto:m%61il@ro%6D%61nb%6Fehm.com">email</a>.
-        </p>
+<div th:fragment="content">
+    <div style="background:transparent !important" class="jumbotron bg-light">
+        <div class="container-lg">
+            <h1 class="display-4">What are the privacy implications?</h1>
+            <p class="lead">Rest assured: There are (next to) none.</p>
+            <hr class="my-4">
+            <p>The application might ask for names, email addresses, locations, etc., but
+            <ol>
+                <li>neither does it use it for anything but generating emails for the participants</li>
+                <li>nor does it keep it longer than absolutely necessary -- that is until the participants can be
+                    matched with each other after the registration deadline has passed.
+                </li>
+            </ol>
+            </p>
+            <p>You have further questions? Send this site's author an <a
+                    href="mailto:m%61il@ro%6D%61nb%6Fehm.com">email</a>.
+            </p>
+        </div>
     </div>
 </div>
 </body>
