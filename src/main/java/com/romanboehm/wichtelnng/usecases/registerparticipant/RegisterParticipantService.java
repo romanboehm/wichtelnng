@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Participant;
+import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Participant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

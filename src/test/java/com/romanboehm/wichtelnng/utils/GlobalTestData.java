@@ -1,9 +1,9 @@
-package com.romanboehm.wichtelnng;
+package com.romanboehm.wichtelnng.utils;
 
-import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.MonetaryAmount;
+import com.romanboehm.wichtelnng.common.data.Deadline;
+import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Host;
+import com.romanboehm.wichtelnng.common.data.MonetaryAmount;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 

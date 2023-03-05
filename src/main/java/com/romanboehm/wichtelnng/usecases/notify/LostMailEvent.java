@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.common.data.Event;
 
 record LostMailEvent(String title, String recipientEmail, String recipientName) {
 

@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng;
+package com.romanboehm.wichtelnng.utils;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import jakarta.mail.Message;

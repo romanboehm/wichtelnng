@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Participant;
+import com.romanboehm.wichtelnng.common.data.Participant;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

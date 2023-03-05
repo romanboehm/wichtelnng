@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.TestEventRepository;
+import com.romanboehm.wichtelnng.common.data.Deadline;
+import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatcher;
@@ -20,7 +20,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

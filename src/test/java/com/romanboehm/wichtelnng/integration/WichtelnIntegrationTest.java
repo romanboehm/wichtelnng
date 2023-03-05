@@ -1,8 +1,8 @@
 package com.romanboehm.wichtelnng.integration;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.MailUtils;
-import com.romanboehm.wichtelnng.data.TestEventRepository;
+import com.romanboehm.wichtelnng.utils.MailUtils;
+import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.eventFormParams;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;

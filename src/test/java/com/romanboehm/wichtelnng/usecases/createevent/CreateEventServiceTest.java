@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import com.romanboehm.wichtelnng.data.TestEventRepository;
+import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

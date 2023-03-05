@@ -6,7 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.romanboehm.wichtelnng.GlobalTestData.eventFormParams;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.eventFormParams;
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.Matchers.containsString;

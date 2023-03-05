@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Host;
+import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Host;
 import org.javamoney.moneta.Money;
 
 record MatchMailEvent(

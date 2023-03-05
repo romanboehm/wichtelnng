@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.common.data.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

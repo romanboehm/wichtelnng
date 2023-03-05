@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.data;
+package com.romanboehm.wichtelnng.common.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

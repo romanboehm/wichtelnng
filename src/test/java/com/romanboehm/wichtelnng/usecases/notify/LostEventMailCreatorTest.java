@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
-import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.Participant;
+import com.romanboehm.wichtelnng.common.data.Host;
+import com.romanboehm.wichtelnng.common.data.Participant;
 import jakarta.mail.Address;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 
-import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;

@@ -1,11 +1,11 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.MailUtils;
-import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.Participant;
-import com.romanboehm.wichtelnng.data.TestEventRepository;
+import com.romanboehm.wichtelnng.common.data.Deadline;
+import com.romanboehm.wichtelnng.common.data.Host;
+import com.romanboehm.wichtelnng.common.data.Participant;
+import com.romanboehm.wichtelnng.utils.MailUtils;
+import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import jakarta.mail.internet.MimeMessage;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
 import static java.time.temporal.ChronoUnit.MINUTES;

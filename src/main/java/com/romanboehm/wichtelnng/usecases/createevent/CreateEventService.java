@@ -1,9 +1,9 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.Event;
-import com.romanboehm.wichtelnng.data.Host;
-import com.romanboehm.wichtelnng.data.MonetaryAmount;
+import com.romanboehm.wichtelnng.common.data.Deadline;
+import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Host;
+import com.romanboehm.wichtelnng.common.data.MonetaryAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

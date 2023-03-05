@@ -2,9 +2,9 @@ package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.icegreen.greenmail.store.FolderException;
-import com.romanboehm.wichtelnng.MailUtils;
-import com.romanboehm.wichtelnng.data.Deadline;
-import com.romanboehm.wichtelnng.data.TestEventRepository;
+import com.romanboehm.wichtelnng.common.data.Deadline;
+import com.romanboehm.wichtelnng.utils.MailUtils;
+import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.icegreen.greenmail.configuration.GreenMailConfiguration.aConfig;
 import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
-import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;

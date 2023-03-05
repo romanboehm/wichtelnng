@@ -3,7 +3,7 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 import javax.money.Monetary;
 import java.time.ZoneId;
 
-import static com.romanboehm.wichtelnng.GlobalTestData.event;
+import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 
 class CreateEventTestData {
     static CreateEvent createEvent() {

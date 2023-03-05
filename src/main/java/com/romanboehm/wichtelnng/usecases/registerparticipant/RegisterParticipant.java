@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
-import com.romanboehm.wichtelnng.data.Event;
+import com.romanboehm.wichtelnng.common.data.Event;
 import jakarta.validation.constraints.*;
 import org.javamoney.moneta.Money;
 
