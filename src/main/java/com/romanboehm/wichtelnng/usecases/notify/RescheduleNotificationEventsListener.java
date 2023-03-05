@@ -46,5 +46,6 @@ class RescheduleNotificationEventsListener {
         eventsPendingNotification.forEach(e -> scheduler.schedule(
                 () -> service.notify(e.getId()),
                 e.getDeadline().getInstant()));
+        log.debug("Rescheduled notifications for {} events", count);
     }
 }
