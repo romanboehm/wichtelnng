@@ -9,7 +9,7 @@ processes = []
 builder = "paketobuildpacks/builder:base"
 buildpacks = ["gcr.io/paketo-buildpacks/java"]
 [build.args]
-BP_JVM_VERSION = 17
+BP_JVM_VERSION = "17"
 
 [env]
 SPRING_DATASOURCE_URL = "jdbc:postgresql://top2.nearest.of.wichtelnng-db.internal:5432/wichtelnng?sslmode=disable"
