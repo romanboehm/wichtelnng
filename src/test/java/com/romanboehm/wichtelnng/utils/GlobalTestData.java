@@ -31,7 +31,7 @@ public class GlobalTestData {
                                 .setZoneId(ZoneId.of("Australia/Sydney").getId())
                                 .setLocalDateTime(
                                         LocalDateTime.of(
-                                                LocalDate.of(2666, JUNE, 7),
+                                                LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
                                                 LocalTime.of(6, 6))))
                 .setHost(
                         new Host()
@@ -45,7 +45,7 @@ public class GlobalTestData {
         map.add("description", "There's gonna be some santa'ing");
         map.add("number", "78.50");
         map.add("currency", "AUD");
-        map.add("localDate", "2666-06-07");
+        map.add("localDate", "%s-06-07".formatted(LocalDate.now().getYear() + 1));
         map.add("localTime", "06:06");
         map.add("timezone", "Australia/Sydney");
         map.add("hostName", "George Young");

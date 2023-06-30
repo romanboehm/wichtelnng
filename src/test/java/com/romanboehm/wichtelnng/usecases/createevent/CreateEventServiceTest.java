@@ -10,7 +10,11 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 
 import javax.money.Monetary;
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
@@ -48,7 +52,7 @@ class CreateEventServiceTest {
                 .setCurrency(Monetary.getCurrency("AUD"))
                 .setHostName("George Young")
                 .setHostEmail("georgeyoung@acdc.net")
-                .setLocalDate(LocalDate.of(2666, JUNE, 7))
+                .setLocalDate(LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7))
                 .setLocalTime(LocalTime.of(6, 6))
                 .setTimezone(ZoneId.of("Australia/Sydney")));
 
@@ -67,7 +71,7 @@ class CreateEventServiceTest {
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
                     assertThat(event.getDeadline().getInstant()).isEqualTo(
                             ZonedDateTime.of(
-                                    LocalDate.of(2666, JUNE, 7),
+                                    LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
                                     LocalTime.of(6, 6),
                                     ZoneId.of("Australia/Sydney")).toInstant());
                 });
