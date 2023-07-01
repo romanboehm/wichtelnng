@@ -29,7 +29,7 @@ public class TestWichtelnNgApplication {
     }
 
     private static class DbInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:latest"));
+        private static final PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(DockerImageName.parse("postgres:15.3-alpine"));
 
         @Override
         public void initialize(ConfigurableApplicationContext context) {
@@ -44,8 +44,8 @@ public class TestWichtelnNgApplication {
 
     private static class MailInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
-        private static final GenericContainer<?> greenmail = new GenericContainer<>(DockerImageName.parse("greenmail/standalone:latest"));
-        private static final GenericContainer<?> roundcube = new GenericContainer<>(DockerImageName.parse("roundcube/roundcubemail:latest"));
+        private static final GenericContainer<?> greenmail = new GenericContainer<>(DockerImageName.parse("greenmail/standalone:2.0.0"));
+        private static final GenericContainer<?> roundcube = new GenericContainer<>(DockerImageName.parse("roundcube/roundcubemail:1.6.1-apache"));
 
         @Override
         public void initialize(ConfigurableApplicationContext context) {
