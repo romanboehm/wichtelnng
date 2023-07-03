@@ -1,0 +1,29 @@
+services:
+  wichtelnng-db:
+    image: 'postgres:15.3-alpine'
+    container_name: 'wichtelnng-db'
+    environment:
+      - 'POSTGRES_DB=mydatabase'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
+    ports:
+      - '5432:5432' # Static host port only to make it easier to connect.
+  wichtelnng-mail-server:
+    image: 'greenmail/standalone:2.0.0'
+    container_name: 'wichtelnng-mail-server'
+    expose:
+      - '3143'
+    ports:
+      - '3025:3025' # Expose for `spring.mail` properties.
+  wichtelnng-mail-ui:
+    image: 'roundcube/roundcubemail:1.6.1-apache'
+    container_name: 'wichtelnng-mail-ui'
+    depends_on:
+      - 'wichtelnng-mail-server'
+    ports:
+      - '8082:80'
+    environment:
+      - 'ROUNDCUBEMAIL_DEFAULT_PORT=3143'
+      - 'ROUNDCUBEMAIL_SMTP_PORT=3025'
+      - 'ROUNDCUBEMAIL_DEFAULT_HOST=wichtelnng-mail-server'
+      - 'ROUNDCUBEMAIL_SMTP_SERVER=wichtelnng-mail-server'

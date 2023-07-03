@@ -99,6 +99,12 @@
             <version>${webjars.fontawesome.version}</version>
         </dependency>
 
+        <!-- Local dev using Spring Boot docker compose support -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
