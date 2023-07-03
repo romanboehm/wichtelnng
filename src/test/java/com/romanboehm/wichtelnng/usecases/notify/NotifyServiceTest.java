@@ -118,13 +118,13 @@ class NotifyServiceTest {
         service.notify(lostevent.getId());
 
         Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
-            var possibleHostMail = MailUtils.findMailFor(greenMail, "georgeyoung@lostevent.acdc.net");
-            assertThat(possibleHostMail).isNotEmpty();
-            assertThat(possibleHostMail.get().getContent()).asInstanceOf(InstanceOfAssertFactories.STRING).contains(
-                    "Unfortunately nobody has registered to wichtel");
+            var hostMail = MailUtils.findMailFor(greenMail, "georgeyoung@lostevent.acdc.net");
+            assertThat(hostMail)
+                    .singleElement()
+                    .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("Unfortunately nobody has registered to wichtel"));
 
-            var possibleParticipantMail = MailUtils.findMailFor(greenMail, "angusyoung@lostevent.acdc.net");
-            assertThat(possibleParticipantMail).isEmpty();
+            var participantMail = MailUtils.findMailFor(greenMail, "angusyoung@lostevent.acdc.net");
+            assertThat(participantMail).isEmpty();
         });
     }
 }

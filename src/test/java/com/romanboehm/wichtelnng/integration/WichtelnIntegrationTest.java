@@ -3,7 +3,7 @@ package com.romanboehm.wichtelnng.integration;
 import com.icegreen.greenmail.junit5.GreenMailExtension;
 import com.romanboehm.wichtelnng.utils.MailUtils;
 import com.romanboehm.wichtelnng.utils.TestEventRepository;
-import org.assertj.core.api.InstanceOfAssertFactories;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,7 +25,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -102,9 +103,9 @@ class WichtelnIntegrationTest {
 
         Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
             var mail = MailUtils.findMailFor(greenMail, "angusyoung@workflow.acdc.net");
-            assertThat(mail).isNotEmpty();
-            assertThat(mail.get().getContent()).asInstanceOf(InstanceOfAssertFactories.STRING).contains(
-                    "You have successfully registered to wichtel");
+            assertThat(mail)
+                    .singleElement()
+                    .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("You have successfully registered to wichtel"));
         });
     }
 }

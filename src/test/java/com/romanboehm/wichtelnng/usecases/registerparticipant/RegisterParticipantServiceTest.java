@@ -86,10 +86,10 @@ class RegisterParticipantServiceTest {
                         .setParticipantEmail("angusyoung@participantregistration.acdc.net"));
 
         Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
-            var possibleRegistrationMail = MailUtils.findMailFor(greenMail, "angusyoung@participantregistration.acdc.net");
-            assertThat(possibleRegistrationMail).isNotEmpty();
-            assertThat(possibleRegistrationMail.get().getContent()).asInstanceOf(InstanceOfAssertFactories.STRING).contains(
-                    "You have successfully registered to wichtel ");
+            var registrationMail = MailUtils.findMailFor(greenMail, "angusyoung@participantregistration.acdc.net");
+            assertThat(registrationMail)
+                    .singleElement()
+                    .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("You have successfully registered to wichtel"));
         });
     }
 
