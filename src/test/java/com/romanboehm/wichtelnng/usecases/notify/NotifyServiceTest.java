@@ -7,13 +7,12 @@ import com.romanboehm.wichtelnng.common.data.Participant;
 import com.romanboehm.wichtelnng.utils.MailUtils;
 import com.romanboehm.wichtelnng.utils.TestEventRepository;
 import jakarta.mail.internet.MimeMessage;
-import org.assertj.core.api.InstanceOfAssertFactories;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.util.concurrent.TimeUnit;
 
