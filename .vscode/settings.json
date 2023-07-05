@@ -1,0 +1,4 @@
+{
+    "java.format.settings.url": "eclipse-formatter-config.xml",
+    "java.compile.nullAnalysis.mode": "automatic"
+}
