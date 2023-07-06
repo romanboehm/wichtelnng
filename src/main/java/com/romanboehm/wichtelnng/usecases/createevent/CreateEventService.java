@@ -7,9 +7,11 @@ import com.romanboehm.wichtelnng.common.data.MonetaryAmount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -21,27 +23,23 @@ class CreateEventService {
 
     private final CreateEventRepository repository;
     private final ApplicationEventPublisher eventPublisher;
-    private final TransactionTemplate tx;
 
-    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher, TransactionTemplate tx) {
+    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher) {
         this.repository = repository;
         this.eventPublisher = eventPublisher;
-        this.tx = tx;
     }
 
+    @Transactional
     UUID save(CreateEvent createEvent) throws DuplicateEventException {
-        Event saved;
-        try {
-            saved = tx.execute(status -> repository.save(eventFrom(createEvent)));
-        }
-        catch (DataIntegrityViolationException e) {
-            log.warn("Failed to create event", e);
+        var eventToCreate = eventFrom(createEvent);
+        if (repository.findOne(Example.of(eventToCreate, matching().withIgnorePaths("id"))).isPresent()) {
             throw new DuplicateEventException("Failed to create event as it is a duplicate.");
         }
 
-        var eventId = saved.getId();
+        var created = repository.save(eventToCreate);
 
-        var eventCreatedEvent = new EventCreatedEvent(this, eventId, saved.getDeadline().getInstant());
+        var eventId = created.getId();
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, created.getDeadline().getInstant());
         eventPublisher.publishEvent(eventCreatedEvent);
         log.debug("Published {}", eventCreatedEvent);
 
