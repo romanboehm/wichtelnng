@@ -1,7 +1,16 @@
 package com.romanboehm.wichtelnng.common.data;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Objects;
 
@@ -15,11 +24,13 @@ public class Participant {
     private Long id;
 
     @NaturalId
-    @Column(nullable = false, length = 100)
+    @NotBlank
+    @Length(max = 100)
     private String name;
 
     @NaturalId
-    @Column(nullable = false, length = 255)
+    @NotBlank
+    @Length(max = 255)
     private String email;
 
     @ManyToOne

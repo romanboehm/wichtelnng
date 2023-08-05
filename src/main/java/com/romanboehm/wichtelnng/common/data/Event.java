@@ -1,7 +1,14 @@
 package com.romanboehm.wichtelnng.common.data;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.domain.Persistable;
 
 import java.util.HashSet;
@@ -19,12 +26,14 @@ public class Event implements Persistable<UUID> {
     @GeneratedValue
     private UUID id;
 
-    @Column(nullable = false, length = 100)
     @NaturalId
+    @NotBlank
+    @Length(max = 100)
     private String title;
 
-    @Column(nullable = false, length = 1000)
     @NaturalId
+    @NotBlank
+    @Length(max = 1000)
     private String description;
 
     @Embedded

@@ -1,15 +1,18 @@
 package com.romanboehm.wichtelnng.common.data;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 @Embeddable
 public class Host {
 
-    @Column(nullable = false, length = 100)
+    @NotBlank
+    @Length(max = 100)
     private String name;
 
-    @Column(nullable = false, length = 255)
+    @NotBlank
+    @Length(max = 255)
     private String email;
 
     public Host() {

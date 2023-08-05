@@ -1,7 +1,9 @@
 package com.romanboehm.wichtelnng.common.data;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,10 +12,11 @@ import java.time.ZoneId;
 @Embeddable
 public class Deadline {
 
-    @Column(nullable = false)
+    @NotNull
     private LocalDateTime localDateTime;
 
-    @Column(nullable = false, length = 30)
+    @NotBlank
+    @Length(max = 30)
     private String zoneId;
 
     public Deadline() {

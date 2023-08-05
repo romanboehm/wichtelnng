@@ -2,16 +2,23 @@ package com.romanboehm.wichtelnng.common.data;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 
 @Embeddable
 public class MonetaryAmount {
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2)
+    @NotNull
+    @DecimalMin("0")
     private BigDecimal number;
 
-    @Column(nullable = false, length = 3)
+    @NotBlank
+    @Length(max = 3)
     private String currency;
 
     public MonetaryAmount() {
