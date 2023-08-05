@@ -26,7 +26,7 @@ class RegisterParticipantService {
     }
 
     @Transactional(readOnly = true)
-    Event getEvent(UUID eventId) throws RegistrationAttemptTooLateException {
+    public Event getEvent(UUID eventId) throws RegistrationAttemptTooLateException {
         var possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);
@@ -39,7 +39,7 @@ class RegisterParticipantService {
     }
 
     @Transactional
-    void register(UUID eventId, RegisterParticipant registerParticipant) throws DuplicateParticipantException {
+    public void register(UUID eventId, RegisterParticipant registerParticipant) throws DuplicateParticipantException {
         Optional<Event> possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);

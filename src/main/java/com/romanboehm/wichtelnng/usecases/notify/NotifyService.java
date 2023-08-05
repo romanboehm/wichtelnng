@@ -24,7 +24,7 @@ class NotifyService {
     }
 
     @Transactional
-    void notify(UUID eventId) {
+    public void notify(UUID eventId) {
         var possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.warn("Event {} not found for notification", eventId);

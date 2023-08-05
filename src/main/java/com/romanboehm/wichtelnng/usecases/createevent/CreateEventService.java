@@ -11,10 +11,10 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.data.domain.ExampleMatcher.matching;
-
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static org.springframework.data.domain.ExampleMatcher.matching;
 
 @Service
 class CreateEventService {
@@ -30,7 +30,7 @@ class CreateEventService {
     }
 
     @Transactional
-    UUID save(CreateEvent createEvent) throws DuplicateEventException {
+    public UUID save(CreateEvent createEvent) throws DuplicateEventException {
         var eventToCreate = eventFrom(createEvent);
         if (repository.findOne(Example.of(eventToCreate, matching().withIgnorePaths("id"))).isPresent()) {
             throw new DuplicateEventException("Failed to create event as it is a duplicate.");
