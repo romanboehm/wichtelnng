@@ -48,7 +48,7 @@ public class Event implements Persistable<UUID> {
     @NaturalId
     private Host host;
 
-    @OneToMany(mappedBy = "event", cascade = ALL, orphanRemoval = true, fetch = LAZY)
+    @OneToMany(mappedBy = Participant_.EVENT, cascade = ALL, orphanRemoval = true, fetch = LAZY)
     private Set<Participant> participants = new HashSet<>();
 
     public Event() {

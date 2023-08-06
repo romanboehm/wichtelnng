@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 @Embeddable
 public class MonetaryAmount {
@@ -40,6 +41,23 @@ public class MonetaryAmount {
     public MonetaryAmount setCurrency(String currency) {
         this.currency = currency;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MonetaryAmount that = (MonetaryAmount) o;
+        return Objects.equals(number, that.number) && Objects.equals(currency, that.currency);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(number, currency);
     }
 
     @Override

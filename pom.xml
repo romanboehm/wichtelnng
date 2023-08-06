@@ -26,6 +26,7 @@
         <testcontainers.version>1.18.3</testcontainers.version>
         <greenmail.version>2.0.0</greenmail.version>
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
+        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
     </properties>
 
     <dependencies>
@@ -71,6 +72,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+        <!-- Needed else we get
+        java.lang.NoClassDefFoundError: jakarta/xml/bind/JAXBException during mvn compile
+        if  org.hibernate.orm:hibernate-jpamodelgen version > 5 is on classpath.
+        -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>${jakarta.xml.bind-api.version}</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

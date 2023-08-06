@@ -4,6 +4,8 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
+import java.util.Objects;
+
 @Embeddable
 public class Host {
 
@@ -34,6 +36,23 @@ public class Host {
     public Host setEmail(String email) {
         this.email = email;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Host host = (Host) o;
+        return Objects.equals(name, host.name) && Objects.equals(email, host.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, email);
     }
 
     @Override
