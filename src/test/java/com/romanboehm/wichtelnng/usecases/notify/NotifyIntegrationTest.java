@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringBootTest(webEnvironment = NONE)
-class NotifyServiceTest {
+class NotifyIntegrationTest {
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
@@ -40,12 +40,11 @@ class NotifyServiceTest {
 
     @BeforeEach
     public void cleanup() {
-        eventRepository.deleteAllInBatch();
-        eventRepository.flush();
+        eventRepository.deleteAll();
     }
 
     @Test
-    void shouldMatchAndNotify() {
+    void matchesThenNotifiesThenDeletes() {
         var event = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
@@ -67,6 +66,8 @@ class NotifyServiceTest {
                                 .setEmail("philrudd@matched.acdc.net")));
 
         service.notify(event.getId());
+
+        assertThat(eventRepository.findById(event.getId())).isEmpty();
         Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
             var mails = MailUtils.findMailFor(greenMail, "angusyoung@matched.acdc.net", "malcolmyoung@matched.acdc.net", "philrudd@matched.acdc.net");
             assertThat(mails)
@@ -78,35 +79,8 @@ class NotifyServiceTest {
     }
 
     @Test
-    void shouldDeleteEventsAfterNotification() {
-        var deleted = eventRepository.saveAndFlush(event()
-                .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(now().minus(1, MINUTES))
-                                .setZoneId(systemDefault().getId())
-
-                )
-                .addParticipant(
-                        new Participant()
-                                .setName("Angus Young")
-                                .setEmail("angusyoung@acdc.net"))
-                .addParticipant(
-                        new Participant()
-                                .setName("Malcolm Young")
-                                .setEmail("malcolmyoung@acdc.net"))
-                .addParticipant(
-                        new Participant()
-                                .setName("George Young")
-                                .setEmail("georgeyoung@acdc.net")));
-
-        service.notify(deleted.getId());
-
-        assertThat(eventRepository.findById(deleted.getId())).isEmpty();
-    }
-
-    @Test
-    void shouldInformHostAboutLostEvent() {
-        var lostevent = eventRepository.saveAndFlush(event()
+    void informsHostAboutLostEventThenDeletes() {
+        var event = eventRepository.saveAndFlush(event()
                 .setHost(new Host()
                         .setName("George Young")
                         .setEmail("georgeyoung@lostevent.acdc.net"))
@@ -115,8 +89,9 @@ class NotifyServiceTest {
                                 .setName("Angus Young")
                                 .setEmail("angusyoung@lostevent.acdc.net")));
 
-        service.notify(lostevent.getId());
+        service.notify(event.getId());
 
+        assertThat(eventRepository.findById(event.getId())).isEmpty();
         Awaitility.await().atMost(1500, TimeUnit.MILLISECONDS).untilAsserted(() -> {
             var hostMail = MailUtils.findMailFor(greenMail, "georgeyoung@lostevent.acdc.net");
             assertThat(hostMail)
