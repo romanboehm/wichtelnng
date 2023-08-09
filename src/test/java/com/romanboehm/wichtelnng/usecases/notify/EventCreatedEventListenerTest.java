@@ -4,7 +4,6 @@ import com.romanboehm.wichtelnng.usecases.createevent.EventCreatedEvent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.test.context.event.RecordApplicationEvents;
@@ -17,15 +16,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = NONE)
 @RecordApplicationEvents
 class EventCreatedEventListenerTest {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    @SpyBean
+    @Autowired
     private TaskScheduler scheduler;
 
     @Test
