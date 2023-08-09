@@ -34,8 +34,7 @@ class RegisterParticipantController {
     @GetMapping("/event/{eventId}/registration")
     ModelAndView get(@PathVariable UUID eventId) {
         try {
-            var event = service.getEvent(eventId);
-            RegisterParticipant registerParticipant = RegisterParticipant.registerFor(event);
+            var registerParticipant = service.getEvent(eventId);
             return new ModelAndView("registration", Map.of("registerParticipant", registerParticipant), OK);
         }
         catch (RegistrationAttemptTooLateException e) {

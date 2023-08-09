@@ -26,16 +26,17 @@ class RegisterParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public Event getEvent(UUID eventId) throws RegistrationAttemptTooLateException {
+    public RegisterParticipant getEvent(UUID eventId) throws RegistrationAttemptTooLateException {
         var possibleEvent = repository.findById(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
         }
-        if (possibleEvent.get().getDeadline().getInstant().isBefore(now())) {
+        var event = possibleEvent.get();
+        if (event.getDeadline().getInstant().isBefore(now())) {
             throw new RegistrationAttemptTooLateException("Failed to set up registration for event %s because its deadline has passed".formatted(eventId));
         }
-        return possibleEvent.get();
+        return RegisterParticipant.registerFor(event);
     }
 
     @Transactional
