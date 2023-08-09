@@ -39,8 +39,7 @@ class CreateEventServiceTest {
     @BeforeEach
     public void cleanup() {
         applicationEvents.clear();
-        eventRepository.deleteAllInBatch();
-        eventRepository.flush();
+        eventRepository.deleteAll();
     }
 
     @Test

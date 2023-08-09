@@ -38,8 +38,7 @@ class RegisterParticipantServiceTest {
 
     @BeforeEach
     public void cleanup() throws FolderException {
-        eventRepository.deleteAllInBatch();
-        eventRepository.flush();
+        eventRepository.deleteAll();
         greenMail.purgeEmailFromAllMailboxes();
     }
 
