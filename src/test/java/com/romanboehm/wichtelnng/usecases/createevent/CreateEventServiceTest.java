@@ -11,11 +11,9 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.UUID;
 
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
 import static java.time.Month.JUNE;
@@ -43,8 +41,8 @@ class CreateEventServiceTest {
     }
 
     @Test
-    void savesEvent() throws DuplicateEventException {
-        service.save(new CreateEvent()
+    void savesEventAndNotifiesOfCreation() throws DuplicateEventException {
+        var eventId = service.save(new CreateEvent()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setNumber(new BigDecimal("78.50"))
@@ -55,9 +53,8 @@ class CreateEventServiceTest {
                 .setLocalTime(LocalTime.of(6, 6))
                 .setTimezone(ZoneId.of("Australia/Sydney")));
 
-        assertThat(eventRepository.findAll())
-                .singleElement()
-                .satisfies(event -> {
+        assertThat(eventRepository.findById(eventId))
+                .hasValueSatisfying(event -> {
                     assertThat(event.getId()).isNotNull();
 
                     assertThat(event.getTitle()).isEqualTo("AC/DC Secret Santa");
@@ -74,28 +71,19 @@ class CreateEventServiceTest {
                                     LocalTime.of(6, 6),
                                     ZoneId.of("Australia/Sydney")).toInstant());
                 });
-    }
-
-    @Test
-    void notifiesOfEventCreation() throws DuplicateEventException {
-        var now = LocalDateTime.now();
-        var createEvent = createEvent()
-                .setLocalTime(now.toLocalTime())
-                .setLocalDate(now.toLocalDate())
-                .setTimezone(ZoneId.systemDefault());
-
-        UUID eventId = service.save(createEvent);
-
         assertThat(applicationEvents.stream(EventCreatedEvent.class))
                 .singleElement()
                 .satisfies(e -> {
                     assertThat(e.getEventId()).isEqualTo(eventId);
-                    assertThat(e.getEventDeadline()).isEqualTo(now.atZone(ZoneId.systemDefault()).toInstant());
+                    assertThat(e.getEventDeadline()).isEqualTo(ZonedDateTime.of(
+                            LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
+                            LocalTime.of(6, 6),
+                            ZoneId.of("Australia/Sydney")).toInstant());
                 });
     }
 
     @Test
-    void throwsOnDuplicateEvent() throws DuplicateEventException {
+    void preventsDuplicateEvent() throws DuplicateEventException {
         service.save(createEvent());
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
         applicationEvents.clear();
