@@ -40,21 +40,20 @@ class RegisterParticipantService {
 
     @Transactional
     public void register(UUID eventId, RegisterParticipant registerParticipant) throws DuplicateParticipantException {
-        Optional<Event> possibleEvent = repository.findById(eventId);
+        if (repository.eventContainsParticipant(eventId, registerParticipant.getParticipantName(), registerParticipant.getParticipantEmail())) {
+            throw new DuplicateParticipantException("Failed to register because of duplicate %s".formatted(registerParticipant));
+        }
+
+        Optional<Event> possibleEvent = repository.findByIdWithParticipants(eventId);
         if (possibleEvent.isEmpty()) {
             log.error("Failed to retrieve event {}", eventId);
             throw new IllegalArgumentException();
         }
-        var eventBefore = possibleEvent.get();
-        var participantsCountBefore = eventBefore.getParticipants().size();
-        eventBefore.addParticipant(
+
+        repository.save(possibleEvent.get().addParticipant(
                 new Participant()
                         .setName(registerParticipant.getParticipantName())
-                        .setEmail(registerParticipant.getParticipantEmail()));
-        var eventAfter = repository.save(eventBefore);
-        if (eventAfter.getParticipants().size() == participantsCountBefore) {
-            throw new DuplicateParticipantException("Failed to register because of duplicate %s".formatted(registerParticipant));
-        }
+                        .setEmail(registerParticipant.getParticipantEmail())));
         log.info("Registered {}", registerParticipant);
         participantNotifier.send(RegistrationMailEvent.from(registerParticipant));
     }

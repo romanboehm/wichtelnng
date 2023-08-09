@@ -12,9 +12,9 @@ import java.util.UUID;
 public interface TestEventRepository extends JpaRepository<Event, UUID> {
 
     @Query("""
-                SELECT DISTINCT e FROM Event e
-                LEFT JOIN FETCH e.participants
-                WHERE e.id = :eventId
+                select distinct e from Event e
+                left join fetch e.participants
+                where e.id = :eventId
             """)
     Optional<Event> findByIdWithParticipants(UUID eventId);
 }
