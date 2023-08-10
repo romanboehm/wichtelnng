@@ -1,9 +1,7 @@
 package com.romanboehm.wichtelnng.common.data;
 
 import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -15,9 +13,8 @@ public class Deadline {
     @NotNull
     private LocalDateTime localDateTime;
 
-    @NotBlank
-    @Length(max = 30)
-    private String zoneId;
+    @NotNull
+    private ZoneId zoneId;
 
     public Deadline() {
     }
@@ -31,17 +28,17 @@ public class Deadline {
         return this;
     }
 
-    public String getZoneId() {
+    public ZoneId getZoneId() {
         return this.zoneId;
     }
 
-    public Deadline setZoneId(String zoneId) {
+    public Deadline setZoneId(ZoneId zoneId) {
         this.zoneId = zoneId;
         return this;
     }
 
     public Instant getInstant() {
-        return localDateTime.atZone(ZoneId.of(zoneId)).toInstant();
+        return localDateTime.atZone(zoneId).toInstant();
     }
 
     @Override

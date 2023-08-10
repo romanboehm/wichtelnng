@@ -37,7 +37,7 @@ class RegisterParticipantServiceTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(nowMinusOneMinute.toLocalDateTime())
-                                .setZoneId(nowMinusOneMinute.getZone().getId())));
+                                .setZoneId(nowMinusOneMinute.getZone())));
 
         assertThatThrownBy(() -> service.getEvent(pastDeadline.getId())).isInstanceOf(RegistrationAttemptTooLateException.class);
     }

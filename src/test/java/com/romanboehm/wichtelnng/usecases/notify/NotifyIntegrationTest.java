@@ -49,7 +49,7 @@ class NotifyIntegrationTest {
                 .setDeadline(
                         new Deadline()
                                 .setLocalDateTime(now().minus(1, MINUTES))
-                                .setZoneId(systemDefault().getId())
+                                .setZoneId(systemDefault())
 
                 )
                 .addParticipant(

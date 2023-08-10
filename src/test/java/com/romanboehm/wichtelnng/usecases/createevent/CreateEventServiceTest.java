@@ -64,7 +64,7 @@ class CreateEventServiceTest {
                     assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo(Currency.getInstance("AUD"));
                     assertThat(event.getHost().getName()).isEqualTo("George Young");
                     assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
-                    assertThat(event.getDeadline().getZoneId()).isEqualTo("Australia/Sydney");
+                    assertThat(event.getDeadline().getZoneId()).isEqualTo(ZoneId.of("Australia/Sydney"));
                     assertThat(event.getDeadline().getLocalDateTime()).isEqualTo(LocalDateTime.of(
                             LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
                             LocalTime.of(6, 6)));

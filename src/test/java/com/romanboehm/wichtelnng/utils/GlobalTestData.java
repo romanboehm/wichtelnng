@@ -29,7 +29,7 @@ public class GlobalTestData {
                                 .setNumber(BigDecimal.valueOf(78.50)))
                 .setDeadline(
                         new Deadline()
-                                .setZoneId(ZoneId.of("Australia/Sydney").getId())
+                                .setZoneId(ZoneId.of("Australia/Sydney"))
                                 .setLocalDateTime(
                                         LocalDateTime.of(
                                                 LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),

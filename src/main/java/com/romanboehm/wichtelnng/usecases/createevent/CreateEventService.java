@@ -57,7 +57,7 @@ class CreateEventService {
                                         LocalDateTime.of(
                                                 createEvent.getLocalDate(),
                                                 createEvent.getLocalTime()))
-                                .setZoneId(createEvent.getTimezone().getId()))
+                                .setZoneId(createEvent.getTimezone()))
                 .setHost(
                         new Host()
                                 .setName(createEvent.getHostName())

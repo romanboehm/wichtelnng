@@ -1,7 +1,5 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import java.time.ZoneId;
-
 import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 
 class CreateEventTestData {
@@ -9,7 +7,7 @@ class CreateEventTestData {
         var entity = event();
         var entityDeadlineZdt = entity.getDeadline()
                 .getInstant()
-                .atZone(ZoneId.of(entity.getDeadline().getZoneId()));
+                .atZone(entity.getDeadline().getZoneId());
         return new CreateEvent()
                 .setId(entity.getId())
                 .setTitle(entity.getTitle())

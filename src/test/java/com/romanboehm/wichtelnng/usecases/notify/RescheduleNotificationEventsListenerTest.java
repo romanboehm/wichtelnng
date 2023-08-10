@@ -64,8 +64,8 @@ class RescheduleNotificationEventsListenerTest {
                         .map(i -> event()
                                 .setTitle(i.toString())
                                 .setDeadline(new Deadline()
-                                        .setZoneId(ZoneId.of("UTC").getId())
-                                        .setLocalDateTime(deadline.plus(i, ChronoUnit.SECONDS))))
+                                        .setZoneId(ZoneId.of("UTC"))
+                                        .setLocalDateTime(deadline.plusSeconds(i))))
                         .toList());
 
         eventPublisher.publishEvent(new RescheduleNotificationEventsListener.RescheduleNotificationEvent());
