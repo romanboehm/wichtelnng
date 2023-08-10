@@ -8,12 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
-import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Currency;
 
 import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
 import static java.time.Month.JUNE;
@@ -46,7 +47,7 @@ class CreateEventServiceTest {
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setNumber(new BigDecimal("78.50"))
-                .setCurrency(Monetary.getCurrency("AUD"))
+                .setCurrency(Currency.getInstance("AUD"))
                 .setHostName("George Young")
                 .setHostEmail("georgeyoung@acdc.net")
                 .setLocalDate(LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7))
@@ -60,16 +61,13 @@ class CreateEventServiceTest {
                     assertThat(event.getTitle()).isEqualTo("AC/DC Secret Santa");
                     assertThat(event.getDescription()).isEqualTo("There's gonna be some santa'ing");
                     assertThat(event.getMonetaryAmount().getNumber()).isEqualByComparingTo("78.50");
-                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
+                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo(Currency.getInstance("AUD"));
                     assertThat(event.getHost().getName()).isEqualTo("George Young");
                     assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
-                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
-                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo("AUD");
-                    assertThat(event.getDeadline().getInstant()).isEqualTo(
-                            ZonedDateTime.of(
-                                    LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
-                                    LocalTime.of(6, 6),
-                                    ZoneId.of("Australia/Sydney")).toInstant());
+                    assertThat(event.getDeadline().getZoneId()).isEqualTo("Australia/Sydney");
+                    assertThat(event.getDeadline().getLocalDateTime()).isEqualTo(LocalDateTime.of(
+                            LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
+                            LocalTime.of(6, 6)));
                 });
         assertThat(applicationEvents.stream(EventCreatedEvent.class))
                 .singleElement()

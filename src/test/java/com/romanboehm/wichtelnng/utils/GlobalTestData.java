@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.Currency;
 
 import static java.time.Month.JUNE;
 import static javax.money.Monetary.getCurrency;
@@ -24,7 +25,7 @@ public class GlobalTestData {
                 .setDescription("There's gonna be some santa'ing")
                 .setMonetaryAmount(
                         new MonetaryAmount()
-                                .setCurrency(getCurrency("AUD").getCurrencyCode())
+                                .setCurrency(Currency.getInstance(getCurrency("AUD").getCurrencyCode()))
                                 .setNumber(BigDecimal.valueOf(78.50)))
                 .setDeadline(
                         new Deadline()

@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -38,12 +37,6 @@ class RegisterParticipantIntegrationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    @Value("${com.romanboehm.wichtelnng.domain}")
-    private String domain;
-
-    @Value("${local.server.port}")
-    String port;
-
     @BeforeEach
     void cleanup() {
         eventRepository.deleteAll();
@@ -52,7 +45,7 @@ class RegisterParticipantIntegrationTest {
     @Test
     void providesRegistration() {
         var eventId = eventRepository.save(event()).getId();
-        String registrationUrl = "%s:%s/event/%s/registration".formatted(domain, port, eventId);
+        var registrationUrl = "/event/%s/registration".formatted(eventId);
 
         // Fetch page for participant registration
         var getRegisterResponse = testRestTemplate.getForEntity(registrationUrl, Void.class);

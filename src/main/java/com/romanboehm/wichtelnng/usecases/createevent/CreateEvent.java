@@ -1,13 +1,22 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +28,10 @@ import static java.util.stream.Collectors.toList;
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
 class CreateEvent {
 
-    private static final List<CurrencyUnit> CURRENCIES = Monetary.getCurrencies().stream().sorted().collect(toList());
+    private static final List<Currency> CURRENCIES = Currency.getAvailableCurrencies().stream()
+            .sorted(Comparator.comparing(Currency::getCurrencyCode))
+            .toList();
+
     // May be `null` first
     private UUID id;
     @NotBlank
@@ -32,7 +44,7 @@ class CreateEvent {
     @Min(0)
     private BigDecimal number;
     @NotNull
-    private CurrencyUnit currency;
+    private Currency currency;
     // Keep date and time apart since we replaced `input[@type='datetime-local']` with two separate `inputs` for reasons
     // of browser compatibility and ease of use.
     @NotNull
@@ -62,7 +74,7 @@ class CreateEvent {
         return ZonedDateTime.of(localDateTime, zone).toInstant();
     }
 
-    public List<CurrencyUnit> getCurrencies() {
+    public List<Currency> getCurrencies() {
         return CURRENCIES;
     }
 
@@ -106,11 +118,11 @@ class CreateEvent {
         return this;
     }
 
-    public CurrencyUnit getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public CreateEvent setCurrency(CurrencyUnit currency) {
+    public CreateEvent setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }

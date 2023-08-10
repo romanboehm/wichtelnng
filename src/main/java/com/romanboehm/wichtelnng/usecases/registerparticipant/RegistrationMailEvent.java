@@ -19,7 +19,7 @@ record RegistrationMailEvent(
                 registerParticipant.getParticipantEmail(),
                 registerParticipant.getHostName(),
                 registerParticipant.getHostEmail(),
-                Money.of(registerParticipant.getNumber(), registerParticipant.getCurrency()).toString()
+                Money.of(registerParticipant.getNumber(), registerParticipant.getCurrency().getCurrencyCode()).toString()
         );
     }
 

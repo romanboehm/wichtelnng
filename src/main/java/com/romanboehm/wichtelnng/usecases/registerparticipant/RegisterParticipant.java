@@ -1,12 +1,14 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.common.data.Event;
-import jakarta.validation.constraints.*;
-import org.javamoney.moneta.Money;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.UUID;
 
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
@@ -28,7 +30,7 @@ class RegisterParticipant {
     private BigDecimal number;
 
     @NotNull
-    private CurrencyUnit currency;
+    private Currency currency;
 
     @NotBlank
     @Size(max = 100)
@@ -51,7 +53,7 @@ class RegisterParticipant {
                 .setId(event.getId())
                 .setTitle(event.getTitle())
                 .setDescription(event.getDescription())
-                .setCurrency(Monetary.getCurrency(event.getMonetaryAmount().getCurrency()))
+                .setCurrency(event.getMonetaryAmount().getCurrency())
                 .setNumber(event.getMonetaryAmount().getNumber())
                 .setHostName(event.getHost().getName())
                 .setHostEmail(event.getHost().getEmail());
@@ -93,11 +95,11 @@ class RegisterParticipant {
         return this;
     }
 
-    public CurrencyUnit getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public RegisterParticipant setCurrency(CurrencyUnit currency) {
+    public RegisterParticipant setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }
@@ -136,10 +138,6 @@ class RegisterParticipant {
     public RegisterParticipant setParticipantEmail(String participantEmail) {
         this.participantEmail = participantEmail;
         return this;
-    }
-
-    public String getPrice() {
-        return Money.of(number, currency).toString();
     }
 
     @Override

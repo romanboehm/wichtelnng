@@ -3,11 +3,10 @@ package com.romanboehm.wichtelnng.common.data;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.Objects;
 
 @Embeddable
@@ -18,9 +17,8 @@ public class MonetaryAmount {
     @DecimalMin("0")
     private BigDecimal number;
 
-    @NotBlank
-    @Length(max = 3)
-    private String currency;
+    @NotNull
+    private Currency currency;
 
     public MonetaryAmount() {
     }
@@ -34,11 +32,11 @@ public class MonetaryAmount {
         return this;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return this.currency;
     }
 
-    public MonetaryAmount setCurrency(String currency) {
+    public MonetaryAmount setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }

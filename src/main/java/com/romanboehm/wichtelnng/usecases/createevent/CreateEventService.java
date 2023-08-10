@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Currency;
 import java.util.UUID;
 
 import static org.springframework.data.domain.ExampleMatcher.matching;
@@ -64,6 +65,6 @@ class CreateEventService {
                 .setMonetaryAmount(
                         new MonetaryAmount()
                                 .setNumber(createEvent.getNumber())
-                                .setCurrency(createEvent.getCurrency().getCurrencyCode()));
+                                .setCurrency(Currency.getInstance(createEvent.getCurrency().getCurrencyCode())));
     }
 }

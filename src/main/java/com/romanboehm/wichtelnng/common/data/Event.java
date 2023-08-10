@@ -60,12 +60,6 @@ public class Event implements Persistable<UUID> {
         return this;
     }
 
-    public Event removePartipant(Participant participant) {
-        participants.remove(participant);
-        participant.setEvent(null);
-        return this;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {

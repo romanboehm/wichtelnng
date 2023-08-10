@@ -2,8 +2,9 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 
 import org.junit.jupiter.api.Test;
 
-import javax.money.CurrencyUnit;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.Currency;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,8 +21,8 @@ class CreateEventTest {
 
     @Test
     void shouldSortCurrenciesAlphabetically() {
-        List<CurrencyUnit> currencies = new CreateEvent().getCurrencies();
+        List<Currency> currencies = new CreateEvent().getCurrencies();
 
-        assertThat(currencies).isSorted();
+        assertThat(currencies).isSortedAccordingTo(Comparator.comparing(Currency::getCurrencyCode));
     }
 }
