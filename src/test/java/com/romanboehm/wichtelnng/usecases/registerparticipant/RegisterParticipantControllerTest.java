@@ -6,6 +6,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.eventForRegistration;
 import static com.romanboehm.wichtelnng.utils.GlobalTestData.eventFormParams;
 import static java.lang.String.format;
 import static java.util.UUID.randomUUID;
@@ -13,6 +14,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,11 +32,15 @@ class RegisterParticipantControllerTest {
 
     @Test
     void validatesParticipant() throws Exception {
+        var id = randomUUID();
+        when(service.getEvent(id)).thenReturn(eventForRegistration());
+
         var params = eventFormParams();
+        params.add("eventId", id.toString());
         params.add("participantName", "Angus Young");
         params.add("participantEmail", "notavalidemail.address");
 
-        mockMvc.perform(post(format("/event/%s/registration", randomUUID()))
+        mockMvc.perform(post(format("/event/%s/registration", id))
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params))
                 .andExpect(status().is4xxClientError())
@@ -45,7 +51,7 @@ class RegisterParticipantControllerTest {
     void highlightsRegistrationAttemptTooLate() throws Exception {
         var id = randomUUID();
 
-        doThrow(RegistrationAttemptTooLateException.class).when(service).getEvent(id);
+        doThrow(RegistrationAttemptTooLateException.class).when(service).getEventOpenForRegistration(id);
 
         mockMvc.perform(get(format("/event/%s/registration", id))
                 .contentType(APPLICATION_FORM_URLENCODED))

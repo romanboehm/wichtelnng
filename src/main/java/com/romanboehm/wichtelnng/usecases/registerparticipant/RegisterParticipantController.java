@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +35,15 @@ class RegisterParticipantController {
     @GetMapping("/event/{eventId}/registration")
     ModelAndView get(@PathVariable UUID eventId) {
         try {
-            var registerParticipant = service.getEvent(eventId);
-            return new ModelAndView("registration", Map.of("registerParticipant", registerParticipant), OK);
+            var eventForRegistration = service.getEventOpenForRegistration(eventId);
+            var registration = new RegisterParticipant();
+            return new ModelAndView(
+                    "registration",
+                    Map.of(
+                            "eventId", eventId,
+                            "eventForRegistration", eventForRegistration,
+                            "registration", registration),
+                    OK);
         }
         catch (RegistrationAttemptTooLateException e) {
             return new ModelAndView("registrationattempttoolate", BAD_REQUEST);
@@ -45,20 +53,24 @@ class RegisterParticipantController {
     @PostMapping("/event/{eventId}/registration")
     ModelAndView post(
                       @PathVariable UUID eventId,
-                      @ModelAttribute @Valid RegisterParticipant registerParticipant,
-                      BindingResult bindingResult) {
+                      @ModelAttribute("registration") @Valid RegisterParticipant registration,
+                      BindingResult bindingResult,
+                      Model model) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",
-                    registerParticipant,
+                    registration,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(joining(", ")));
-            return new ModelAndView("registration", BAD_REQUEST);
+            model.addAttribute("eventForRegistration", service.getEvent(eventId));
+            return new ModelAndView(
+                    "registration",
+                    BAD_REQUEST);
         }
         try {
-            service.register(eventId, registerParticipant);
-            log.info("Registered {} for {}", registerParticipant, eventId);
+            service.register(eventId, registration);
+            log.info("Registered {} for {}", registration, eventId);
             return new ModelAndView(format("redirect:/event/%s/registration/finish", eventId));
         }
         catch (DuplicateParticipantException e) {

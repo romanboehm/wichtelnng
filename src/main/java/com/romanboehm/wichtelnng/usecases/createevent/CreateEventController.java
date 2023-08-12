@@ -42,7 +42,7 @@ class CreateEventController {
     }
 
     @PostMapping("/event")
-    ModelAndView post(@ModelAttribute @Valid CreateEvent createEvent, BindingResult bindingResult) {
+    ModelAndView post(@ModelAttribute("createEvent") @Valid CreateEvent createEvent, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",

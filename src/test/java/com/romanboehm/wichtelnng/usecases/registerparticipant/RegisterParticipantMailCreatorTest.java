@@ -35,11 +35,12 @@ class RegisterParticipantMailCreatorTest {
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        RegisterParticipant registration = RegisterParticipant.registerFor(event())
+        var event = event();
+        var registration = new RegisterParticipant()
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(registration));
+        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(event, registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -52,11 +53,12 @@ class RegisterParticipantMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        RegisterParticipant registration = RegisterParticipant.registerFor(event())
+        var event = event();
+        var registration = new RegisterParticipant()
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(registration));
+        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(event, registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("You have registered to wichtel at 'AC/DC Secret Santa'");

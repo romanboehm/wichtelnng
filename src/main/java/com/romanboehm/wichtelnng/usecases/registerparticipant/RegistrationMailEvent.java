@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
+import com.romanboehm.wichtelnng.common.data.Event;
 import org.javamoney.moneta.Money;
 
 record RegistrationMailEvent(
@@ -11,15 +12,15 @@ record RegistrationMailEvent(
         String hostEmail,
         String price
 ) {
-    static RegistrationMailEvent from(RegisterParticipant registerParticipant) {
+    static RegistrationMailEvent from(Event event, RegisterParticipant registerParticipant) {
         return new RegistrationMailEvent(
-                registerParticipant.getTitle(),
-                registerParticipant.getDescription(),
+                event.getTitle(),
+                event.getDescription(),
                 registerParticipant.getParticipantName(),
                 registerParticipant.getParticipantEmail(),
-                registerParticipant.getHostName(),
-                registerParticipant.getHostEmail(),
-                Money.of(registerParticipant.getNumber(), registerParticipant.getCurrency().getCurrencyCode()).toString()
+                event.getHost().getName(),
+                event.getHost().getEmail(),
+                Money.of(event.getMonetaryAmount().getNumber(), event.getMonetaryAmount().getCurrency().getCurrencyCode()).toString()
         );
     }
 

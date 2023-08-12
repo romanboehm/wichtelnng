@@ -26,17 +26,25 @@ class RegisterParticipantService {
     }
 
     @Transactional(readOnly = true)
-    public RegisterParticipant getEvent(UUID eventId) throws RegistrationAttemptTooLateException {
-        var possibleEvent = repository.findById(eventId);
-        if (possibleEvent.isEmpty()) {
-            log.error("Failed to retrieve event {}", eventId);
-            throw new IllegalArgumentException();
-        }
-        var event = possibleEvent.get();
+    public EventForRegistration getEventOpenForRegistration(UUID eventId) throws RegistrationAttemptTooLateException {
+        var event = getEventInternal(eventId);
         if (event.getDeadline().getInstant().isBefore(now())) {
             throw new RegistrationAttemptTooLateException("Failed to set up registration for event %s because its deadline has passed".formatted(eventId));
         }
-        return RegisterParticipant.registerFor(event);
+        return EventForRegistration.from(event);
+    }
+
+    @Transactional(readOnly = true)
+    public EventForRegistration getEvent(UUID eventId) {
+        var event = getEventInternal(eventId);
+        return EventForRegistration.from(event);
+    }
+
+    private Event getEventInternal(UUID eventId) {
+        return repository.findById(eventId).orElseThrow(() -> {
+            log.error("Failed to retrieve event {}", eventId);
+            return new IllegalArgumentException();
+        });
     }
 
     @Transactional
@@ -51,11 +59,12 @@ class RegisterParticipantService {
             throw new IllegalArgumentException();
         }
 
-        repository.save(possibleEvent.get().addParticipant(
+        var event = possibleEvent.get();
+        repository.save(event.addParticipant(
                 new Participant()
                         .setName(registerParticipant.getParticipantName())
                         .setEmail(registerParticipant.getParticipantEmail())));
         log.info("Registered {}", registerParticipant);
-        participantNotifier.send(RegistrationMailEvent.from(registerParticipant));
+        participantNotifier.send(RegistrationMailEvent.from(event, registerParticipant));
     }
 }

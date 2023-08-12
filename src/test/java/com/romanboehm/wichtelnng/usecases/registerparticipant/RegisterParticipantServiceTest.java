@@ -39,7 +39,7 @@ class RegisterParticipantServiceTest {
                                 .setLocalDateTime(nowMinusOneMinute.toLocalDateTime())
                                 .setZoneId(nowMinusOneMinute.getZone())));
 
-        assertThatThrownBy(() -> service.getEvent(pastDeadline.getId())).isInstanceOf(RegistrationAttemptTooLateException.class);
+        assertThatThrownBy(() -> service.getEventOpenForRegistration(pastDeadline.getId())).isInstanceOf(RegistrationAttemptTooLateException.class);
     }
 
     @Test

@@ -4,15 +4,9 @@
 <body>
 <div th:fragment="content">
     <div class="container-sm">
-        <form id="registration-form"
+        <div id="event-for-registration-dummy-form"
               class="form-horizontal my-3"
-              th:object="${registerParticipant}"
-              method="post">
-            <input th:field="*{id}" id="id"
-                   type="text"
-                   hidden
-                   required
-                   readonly/>
+              th:object="${eventForRegistration}">
             <fieldset>
                 <legend>The Wichteln event you may register for</legend>
                 <div class="form-row">
@@ -22,8 +16,7 @@
                                class="form-control"
                                type="text"
                                placeholder="AC/DC Secret Santa"
-                               required
-                               readonly/>
+                               disabled/>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="description">What do participants need to know?</label>
@@ -31,8 +24,7 @@
                                   id="description"
                                   class="form-control"
                                   placeholder="There's gonna be some santa'ing!"
-                                  required
-                                  readonly>
+                                  disabled>
                     </textarea>
                     </div>
                 </div>
@@ -46,13 +38,12 @@
                                    type="number"
                                    step="0.01"
                                    placeholder="78"
-                                   required
-                                   readonly/>
+                                   disabled/>
                             <div class="input-group-append">
                                 <select id="monetary-amount-currency"
                                         class="form-control btn btn-outline-secondary"
                                         name="currency"
-                                        readonly>
+                                        disabled>
                                     <option th:value="*{currency}" th:text="*{currency}"></option>
                                 </select>
                             </div>
@@ -67,8 +58,7 @@
                                class="form-control"
                                type="text"
                                placeholder="George Young"
-                               required
-                               readonly/>
+                               disabled/>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="host-email">What's their email?</label>
@@ -81,12 +71,16 @@
                                    class="form-control"
                                    type="text"
                                    placeholder="georgeyoung@acdc.net"
-                                   required
-                                   readonly/>
+                                   disabled/>
                         </div>
                     </div>
                 </div>
             </fieldset>
+        </div>
+        <form id="registration-form"
+              class="form-horizontal my-3"
+              th:object="${registration}"
+              method="post">
             <fieldset>
                 <legend>Your data</legend>
                 <div class="form-row">
@@ -128,7 +122,7 @@
             <button type="submit"
                     id="register-button"
                     class="btn btn-primary my-3 mr-3"
-                    th:formaction="@{/event/{eventId}/registration(eventId=*{id})}">
+                    th:formaction="@{/event/{eventId}/registration(eventId=${eventId})}">
                 Register
             </button>
         </form>
