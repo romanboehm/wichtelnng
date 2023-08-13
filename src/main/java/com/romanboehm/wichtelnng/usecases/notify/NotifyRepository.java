@@ -11,12 +11,11 @@ import java.util.UUID;
 @Repository
 interface NotifyRepository extends JpaRepository<Event, UUID> {
 
-    @Override
     @Query("""
                 SELECT e FROM Event e
                 LEFT JOIN FETCH e.participants
                 WHERE e.id = :id
             """)
-    Optional<Event> findById(UUID id);
+    Optional<Event> findByIdWithParticipants(UUID id);
 
 }

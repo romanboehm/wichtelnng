@@ -21,7 +21,6 @@ import static com.icegreen.greenmail.util.ServerSetupTest.SMTP_IMAP;
 import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static java.time.LocalDateTime.now;
 import static java.time.ZoneId.systemDefault;
-import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
@@ -44,11 +43,11 @@ class NotifyIntegrationTest {
     }
 
     @Test
-    void matchesThenNotifiesThenDeletes() {
+    void matchesNotifiesDeletes() {
         var event = eventRepository.saveAndFlush(event()
                 .setDeadline(
                         new Deadline()
-                                .setLocalDateTime(now().minus(1, MINUTES))
+                                .setLocalDateTime(now().minusMinutes(1))
                                 .setZoneId(systemDefault())
 
                 )
