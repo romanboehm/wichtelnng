@@ -21,11 +21,11 @@ class ParticipantsMatcher {
     }
 
     record Match(Donor donor, Recipient recipient) {
-        static Match of(Donor donor, Recipient recipient) {
+
+        Match {
             if (donor.name().equals(recipient.name()) && donor.email().equals(recipient.email())) {
                 throw new IllegalArgumentException("Donor and recipient must not match.");
             }
-            return new Match(donor, recipient);
         }
     }
 
@@ -43,7 +43,7 @@ class ParticipantsMatcher {
                 .mapToObj(i -> {
                     var donor = new Donor(original.get(i).getName(), original.get(i).getEmail());
                     var recipient = new Recipient(copy.get(i).getName(), copy.get(i).getEmail());
-                    var match = Match.of(donor, recipient);
+                    var match = new Match(donor, recipient);
                     LOG.debug("Created match {}", match);
                     return match;
                 }).collect(toList());
