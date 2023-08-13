@@ -193,6 +193,7 @@
                         <goals>
                             <goal>validate</goal>
                         </goals>
+                        <phase>verify</phase>
                     </execution>
                 </executions>
             </plugin>
