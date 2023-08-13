@@ -5,11 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
-import static java.util.Collections.rotate;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.IntStream.range;
 
@@ -29,30 +29,24 @@ class ParticipantsMatcher {
         }
     }
 
-    static List<Match> match(Set<Participant> participants) {
-        List<Participant> original = new ArrayList<>(participants);
+    static List<Match> match(Collection<Participant> participants) {
+        var original = new ArrayList<>(participants);
         if (original.size() < 2) {
             throw new IllegalArgumentException("Matching needs at least two participants.");
         }
-        List<Participant> copy = new ArrayList<>(original);
-        Random random = new Random();
-        do {
-            rotate(copy, random.nextInt());
-        } while (areNotMatchedCorrectly(original, copy));
+        var copy = new ArrayList<>(original);
+        var distance = ThreadLocalRandom.current().nextInt(1, copy.size() - 1);
+
+        Collections.rotate(copy, distance);
 
         return range(0, original.size())
                 .mapToObj(i -> {
-                    Donor donor = new Donor(original.get(i).getName(), original.get(i).getEmail());
-                    Recipient recipient = new Recipient(copy.get(i).getName(), copy.get(i).getEmail());
-                    Match match = Match.of(donor, recipient);
+                    var donor = new Donor(original.get(i).getName(), original.get(i).getEmail());
+                    var recipient = new Recipient(copy.get(i).getName(), copy.get(i).getEmail());
+                    var match = Match.of(donor, recipient);
                     LOG.debug("Created match {}", match);
                     return match;
                 }).collect(toList());
-    }
-
-    private static boolean areNotMatchedCorrectly(List<Participant> participants, List<Participant> copy) {
-        return range(0, participants.size())
-                .anyMatch(i -> participants.get(i).equals(copy.get(i)));
     }
 
 }
