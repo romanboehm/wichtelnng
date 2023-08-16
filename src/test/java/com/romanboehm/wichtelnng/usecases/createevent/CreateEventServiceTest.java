@@ -60,12 +60,12 @@ class CreateEventServiceTest {
 
                     assertThat(event.getTitle()).isEqualTo("AC/DC Secret Santa");
                     assertThat(event.getDescription()).isEqualTo("There's gonna be some santa'ing");
-                    assertThat(event.getMonetaryAmount().getNumber()).isEqualByComparingTo("78.50");
-                    assertThat(event.getMonetaryAmount().getCurrency()).isEqualTo(Currency.getInstance("AUD"));
-                    assertThat(event.getHost().getName()).isEqualTo("George Young");
-                    assertThat(event.getHost().getEmail()).isEqualTo("georgeyoung@acdc.net");
-                    assertThat(event.getDeadline().getZoneId()).isEqualTo(ZoneId.of("Australia/Sydney"));
-                    assertThat(event.getDeadline().getLocalDateTime()).isEqualTo(LocalDateTime.of(
+                    assertThat(event.getMonetaryAmount().number()).isEqualByComparingTo("78.50");
+                    assertThat(event.getMonetaryAmount().currency()).isEqualTo(Currency.getInstance("AUD"));
+                    assertThat(event.getHost().name()).isEqualTo("George Young");
+                    assertThat(event.getHost().email()).isEqualTo("georgeyoung@acdc.net");
+                    assertThat(event.getDeadline().zoneId()).isEqualTo(ZoneId.of("Australia/Sydney"));
+                    assertThat(event.getDeadline().localDateTime()).isEqualTo(LocalDateTime.of(
                             LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
                             LocalTime.of(6, 6)));
                 });

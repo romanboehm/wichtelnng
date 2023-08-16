@@ -35,9 +35,7 @@ class RegisterParticipantServiceTest {
         var nowMinusOneMinute = ZonedDateTime.now(ZoneId.systemDefault()).minusMinutes(1);
         var pastDeadline = eventRepository.saveAndFlush(event()
                 .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(nowMinusOneMinute.toLocalDateTime())
-                                .setZoneId(nowMinusOneMinute.getZone())));
+                        new Deadline(nowMinusOneMinute.toLocalDateTime(), nowMinusOneMinute.getZone())));
 
         assertThatThrownBy(() -> service.getEventOpenForRegistration(pastDeadline.getId())).isInstanceOf(RegistrationAttemptTooLateException.class);
     }

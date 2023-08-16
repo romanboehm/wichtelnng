@@ -46,11 +46,7 @@ class NotifyIntegrationTest {
     void matchesNotifiesDeletes() {
         var event = eventRepository.saveAndFlush(event()
                 .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(now().minusMinutes(1))
-                                .setZoneId(systemDefault())
-
-                )
+                        new Deadline(now().minusMinutes(1), systemDefault()))
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")
@@ -80,9 +76,7 @@ class NotifyIntegrationTest {
     @Test
     void informsHostAboutLostEventThenDeletes() {
         var event = eventRepository.saveAndFlush(event()
-                .setHost(new Host()
-                        .setName("George Young")
-                        .setEmail("georgeyoung@lostevent.acdc.net"))
+                .setHost(new Host("George Young", "georgeyoung@lostevent.acdc.net"))
                 .addParticipant(
                         new Participant()
                                 .setName("Angus Young")

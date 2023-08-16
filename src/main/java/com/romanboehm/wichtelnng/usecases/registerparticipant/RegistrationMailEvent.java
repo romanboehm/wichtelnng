@@ -18,9 +18,9 @@ record RegistrationMailEvent(
                 event.getDescription(),
                 registerParticipant.getParticipantName(),
                 registerParticipant.getParticipantEmail(),
-                event.getHost().getName(),
-                event.getHost().getEmail(),
-                Money.of(event.getMonetaryAmount().getNumber(), event.getMonetaryAmount().getCurrency().getCurrencyCode()).toString()
+                event.getHost().name(),
+                event.getHost().email(),
+                Money.of(event.getMonetaryAmount().number(), event.getMonetaryAmount().currency().getCurrencyCode()).toString()
         );
     }
 

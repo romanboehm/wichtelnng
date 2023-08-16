@@ -5,19 +5,16 @@ import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 class CreateEventTestData {
     static CreateEvent createEvent() {
         var entity = event();
-        var entityDeadlineZdt = entity.getDeadline()
-                .getInstant()
-                .atZone(entity.getDeadline().getZoneId());
         return new CreateEvent()
                 .setId(entity.getId())
                 .setTitle(entity.getTitle())
                 .setDescription(entity.getDescription())
-                .setCurrency(entity.getMonetaryAmount().getCurrency())
-                .setNumber(entity.getMonetaryAmount().getNumber())
-                .setLocalDate(entityDeadlineZdt.toLocalDate())
-                .setLocalTime(entityDeadlineZdt.toLocalTime())
-                .setTimezone(entityDeadlineZdt.getZone())
-                .setHostName(entity.getHost().getName())
-                .setHostEmail(entity.getHost().getEmail());
+                .setCurrency(entity.getMonetaryAmount().currency())
+                .setNumber(entity.getMonetaryAmount().number())
+                .setLocalDate(entity.getDeadline().localDateTime().toLocalDate())
+                .setLocalTime(entity.getDeadline().localDateTime().toLocalTime())
+                .setTimezone(entity.getDeadline().zoneId())
+                .setHostName(entity.getHost().name())
+                .setHostEmail(entity.getHost().email());
     }
 }

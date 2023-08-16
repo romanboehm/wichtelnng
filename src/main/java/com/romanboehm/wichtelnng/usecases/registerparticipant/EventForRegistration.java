@@ -33,10 +33,10 @@ record EventForRegistration(
         return new EventForRegistration(
                             event.getTitle(),
                             event.getDescription(),
-                            event.getMonetaryAmount().getNumber(),
-                            event.getMonetaryAmount().getCurrency(),
-                            event.getHost().getName(),
-                            event.getHost().getEmail()
+                            event.getMonetaryAmount().number(),
+                            event.getMonetaryAmount().currency(),
+                            event.getHost().name(),
+                            event.getHost().email()
         );
     }
 }

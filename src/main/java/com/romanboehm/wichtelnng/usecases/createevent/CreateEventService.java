@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Currency;
 import java.util.UUID;
 
 import static org.springframework.data.domain.ExampleMatcher.matching;
@@ -40,7 +39,8 @@ class CreateEventService {
         var created = repository.save(eventToCreate);
 
         var eventId = created.getId();
-        var eventCreatedEvent = new EventCreatedEvent(this, eventId, created.getDeadline().getInstant());
+        var deadlineInstant = created.getDeadline().localDateTime().atZone(created.getDeadline().zoneId()).toInstant();
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, deadlineInstant);
         eventPublisher.publishEvent(eventCreatedEvent);
         log.debug("Published {}", eventCreatedEvent);
 
@@ -52,19 +52,13 @@ class CreateEventService {
                 .setTitle(createEvent.getTitle())
                 .setDescription(createEvent.getDescription())
                 .setDeadline(
-                        new Deadline()
-                                .setLocalDateTime(
-                                        LocalDateTime.of(
-                                                createEvent.getLocalDate(),
-                                                createEvent.getLocalTime()))
-                                .setZoneId(createEvent.getTimezone()))
+                        new Deadline(LocalDateTime.of(
+                                createEvent.getLocalDate(),
+                                createEvent.getLocalTime()),
+                                createEvent.getTimezone()))
                 .setHost(
-                        new Host()
-                                .setName(createEvent.getHostName())
-                                .setEmail(createEvent.getHostEmail()))
+                        new Host(createEvent.getHostName(), createEvent.getHostEmail()))
                 .setMonetaryAmount(
-                        new MonetaryAmount()
-                                .setNumber(createEvent.getNumber())
-                                .setCurrency(Currency.getInstance(createEvent.getCurrency().getCurrencyCode())));
+                        new MonetaryAmount(createEvent.getNumber(), createEvent.getCurrency()));
     }
 }

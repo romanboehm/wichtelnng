@@ -15,7 +15,6 @@ import java.time.ZoneId;
 import java.util.Currency;
 
 import static java.time.Month.JUNE;
-import static javax.money.Monetary.getCurrency;
 
 public class GlobalTestData {
 
@@ -24,20 +23,13 @@ public class GlobalTestData {
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setMonetaryAmount(
-                        new MonetaryAmount()
-                                .setCurrency(Currency.getInstance(getCurrency("AUD").getCurrencyCode()))
-                                .setNumber(BigDecimal.valueOf(78.50)))
+                        new MonetaryAmount(BigDecimal.valueOf(78.50), Currency.getInstance("AUD")))
                 .setDeadline(
-                        new Deadline()
-                                .setZoneId(ZoneId.of("Australia/Sydney"))
-                                .setLocalDateTime(
-                                        LocalDateTime.of(
-                                                LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
-                                                LocalTime.of(6, 6))))
+                        new Deadline(LocalDateTime.of(
+                                LocalDate.of(LocalDate.now().getYear() + 1, JUNE, 7),
+                                LocalTime.of(6, 6)), ZoneId.of("Australia/Sydney")))
                 .setHost(
-                        new Host()
-                                .setName("George Young")
-                                .setEmail("georgeyoung@acdc.net"));
+                        new Host("George Young", "georgeyoung@acdc.net"));
     }
 
     public static MultiValueMap<String, String> eventFormParams() {

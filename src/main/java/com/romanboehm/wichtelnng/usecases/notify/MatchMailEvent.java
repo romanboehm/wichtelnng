@@ -20,7 +20,7 @@ record MatchMailEvent(
                 event.getTitle(),
                 event.getDescription(),
                 event.getHost(),
-                Money.of(event.getMonetaryAmount().getNumber(), event.getMonetaryAmount().getCurrency().getCurrencyCode()).toString()
+                Money.of(event.getMonetaryAmount().number(), event.getMonetaryAmount().currency().getCurrencyCode()).toString()
         );
     }
 }

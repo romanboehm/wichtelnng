@@ -28,8 +28,7 @@ class LostEventMailCreatorTest {
         LostMailEvent lostMailEvent = LostMailEvent.from(
                 event()
                         .setHost(
-                                new Host()
-                                        .setEmail("georgeyoung@acdc.net"))
+                                new Host("George Young", "georgeyoung@acdc.net"))
                         // Only one participant
                         .addParticipant(
                                 new Participant()
@@ -52,9 +51,7 @@ class LostEventMailCreatorTest {
         LostMailEvent lostMailEvent = LostMailEvent.from(
                 event()
                         .setHost(
-                                new Host()
-                                        .setEmail("georgeyoung@acdc.net")
-                                        .setName("George Young"))
+                                new Host("George Young", "georgeyoung@acdc.net"))
                         .addParticipant(
                                 new Participant()
                                         .setName("Angus Young")
