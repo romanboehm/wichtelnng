@@ -21,7 +21,7 @@ interface RegisterParticipantRepository extends JpaRepository<Event, UUID> {
 
     @Query(nativeQuery = true, value = """
             select
-                (case when count(p.id) > 0 then true else false end)
+                (case when count(p) > 0 then true else false end)
             from participant p
             where p.event_id = :eventId and p.name = :pName and p.email = :pEmail
             """)
