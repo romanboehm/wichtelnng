@@ -27,7 +27,7 @@ class RegisterParticipantService {
 
     @Transactional(readOnly = true)
     public EventForRegistration getEventOpenForRegistration(UUID eventId) throws RegistrationAttemptTooLateException {
-        var event = getEventInternal(eventId);
+        var event = repository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Failed to retrieve event %s".formatted(eventId)));
         if (event.getDeadline().asInstant().isBefore(now())) {
             throw new RegistrationAttemptTooLateException("Failed to set up registration for event %s because its deadline has passed".formatted(eventId));
         }
@@ -36,15 +36,8 @@ class RegisterParticipantService {
 
     @Transactional(readOnly = true)
     public EventForRegistration getEvent(UUID eventId) {
-        var event = getEventInternal(eventId);
+        var event = repository.findById(eventId).orElseThrow(() -> new IllegalArgumentException("Failed to retrieve event %s".formatted(eventId)));
         return EventForRegistration.from(event);
-    }
-
-    private Event getEventInternal(UUID eventId) {
-        return repository.findById(eventId).orElseThrow(() -> {
-            log.error("Failed to retrieve event {}", eventId);
-            return new IllegalArgumentException();
-        });
     }
 
     @Transactional
@@ -55,8 +48,7 @@ class RegisterParticipantService {
 
         Optional<Event> possibleEvent = repository.findByIdWithParticipants(eventId);
         if (possibleEvent.isEmpty()) {
-            log.error("Failed to retrieve event {}", eventId);
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Failed to retrieve event %s".formatted(eventId));
         }
 
         var event = possibleEvent.get();
