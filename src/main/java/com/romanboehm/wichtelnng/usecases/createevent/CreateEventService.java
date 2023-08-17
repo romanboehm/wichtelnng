@@ -39,8 +39,7 @@ class CreateEventService {
         var created = repository.save(eventToCreate);
 
         var eventId = created.getId();
-        var deadlineInstant = created.getDeadline().localDateTime().atZone(created.getDeadline().zoneId()).toInstant();
-        var eventCreatedEvent = new EventCreatedEvent(this, eventId, deadlineInstant);
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, created.getDeadline().asInstant());
         eventPublisher.publishEvent(eventCreatedEvent);
         log.debug("Published {}", eventCreatedEvent);
 

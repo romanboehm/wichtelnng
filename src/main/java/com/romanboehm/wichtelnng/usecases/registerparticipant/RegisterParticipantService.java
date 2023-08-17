@@ -28,8 +28,7 @@ class RegisterParticipantService {
     @Transactional(readOnly = true)
     public EventForRegistration getEventOpenForRegistration(UUID eventId) throws RegistrationAttemptTooLateException {
         var event = getEventInternal(eventId);
-        var deadlineInstant = event.getDeadline().localDateTime().atZone(event.getDeadline().zoneId()).toInstant();
-        if (deadlineInstant.isBefore(now())) {
+        if (event.getDeadline().asInstant().isBefore(now())) {
             throw new RegistrationAttemptTooLateException("Failed to set up registration for event %s because its deadline has passed".formatted(eventId));
         }
         return EventForRegistration.from(event);

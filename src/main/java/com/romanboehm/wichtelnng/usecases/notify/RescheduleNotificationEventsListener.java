@@ -44,8 +44,7 @@ class RescheduleNotificationEventsListener {
         }
         var eventsPendingNotification = repository.findAll();
         eventsPendingNotification.forEach(e -> {
-            var deadlineInstant = e.getDeadline().localDateTime().atZone(e.getDeadline().zoneId()).toInstant();
-            scheduler.schedule(() -> service.notify(e.getId()), deadlineInstant);
+            scheduler.schedule(() -> service.notify(e.getId()), e.getDeadline().asInstant());
         });
         log.debug("Rescheduled notifications for {} events", count);
     }
