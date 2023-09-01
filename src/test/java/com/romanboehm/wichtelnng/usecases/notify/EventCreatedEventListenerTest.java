@@ -1,7 +1,9 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.usecases.createevent.EventCreatedEvent;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -27,6 +29,11 @@ class EventCreatedEventListenerTest {
 
     @Autowired
     private TaskScheduler scheduler;
+
+    @BeforeEach
+    void setUp() {
+        Mockito.reset(scheduler);
+    }
 
     @Test
     void schedulesTaskForEventNotification() {
