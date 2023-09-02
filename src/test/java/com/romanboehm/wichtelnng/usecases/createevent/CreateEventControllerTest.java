@@ -38,7 +38,7 @@ class CreateEventControllerTest {
     }
 
     @Test
-    void shouldValidateEvent() throws Exception {
+    void validatesEvent() throws Exception {
         MultiValueMap<String, String> params = eventFormParams();
         params.set(
                 "localDate",
@@ -55,7 +55,7 @@ class CreateEventControllerTest {
     }
 
     @Test
-    void shouldRedirectFromApiRoot() throws Exception {
+    void redirectsAfterCreateComplete() throws Exception {
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .params(eventFormParams()))
@@ -63,20 +63,12 @@ class CreateEventControllerTest {
     }
 
     @Test
-    void shouldRedirectAfterCreateComplete() throws Exception {
-        mockMvc.perform(post("/event")
-                .contentType(APPLICATION_FORM_URLENCODED)
-                .params(eventFormParams()))
-                .andExpect(status().is3xxRedirection());
-    }
-
-    @Test
-    void shouldHighlightDuplicateEvent() throws Exception {
+    void highlightsDuplicateEvent() throws Exception {
         MultiValueMap<String, String> params = eventFormParams();
-
         when(service.save(any(CreateEvent.class)))
                 .thenReturn(UUID.randomUUID())
                 .thenThrow(DuplicateEventException.class);
+
         mockMvc.perform(post("/event")
                 .contentType(APPLICATION_FORM_URLENCODED)
                 .params(params))
