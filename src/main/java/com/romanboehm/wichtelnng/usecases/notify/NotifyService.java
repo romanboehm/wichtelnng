@@ -1,11 +1,15 @@
 package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Event_;
+import jakarta.persistence.EntityManagerFactory;
+import org.hibernate.SessionFactory;
+import org.hibernate.jpa.SpecHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -13,16 +17,14 @@ class NotifyService {
 
     private final Logger log = LoggerFactory.getLogger(NotifyService.class);
 
-    private final NotifyRepository repository;
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
-    private final TransactionTemplate tx;
+    private final SessionFactory sessionFactory;
 
-    NotifyService(NotifyRepository repository, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier, TransactionTemplate tx) {
-        this.repository = repository;
+    NotifyService(EntityManagerFactory emf, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier) {
+        this.sessionFactory = emf.unwrap(SessionFactory.class);
         this.matchNotifier = matchNotifier;
         this.lostEventNotifier = lostEventNotifier;
-        this.tx = tx;
     }
 
     private static boolean hasEnoughParticipants(Event event) {
@@ -31,9 +33,14 @@ class NotifyService {
 
     void notify(UUID eventId) {
         try {
-            var event = tx.execute(__ -> {
-                var _event = repository.findByIdWithParticipants(eventId).orElseThrow(() -> new IllegalArgumentException("Failed to find event %s".formatted(eventId)));
-                repository.delete(_event);
+            Event event = sessionFactory.fromTransaction(session -> {
+                var graph = session.createEntityGraph(Event.class);
+                graph.addSubgraph(Event_.participants);
+                var _event = session.find(Event.class, eventId, Map.of(SpecHints.HINT_SPEC_FETCH_GRAPH, graph));
+                if (_event == null) {
+                    throw new IllegalArgumentException("Failed to retrieve event %s".formatted(eventId));
+                }
+                session.remove(_event);
                 return _event;
             });
             if (!hasEnoughParticipants(event)) {

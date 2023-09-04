@@ -2,44 +2,51 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 
 import com.romanboehm.wichtelnng.common.data.Deadline;
 import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Event_;
 import com.romanboehm.wichtelnng.common.data.Host;
 import com.romanboehm.wichtelnng.common.data.MonetaryAmount;
+import jakarta.persistence.EntityManager;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static org.springframework.data.domain.ExampleMatcher.matching;
-
 @Service
 class CreateEventService {
 
     private final Logger log = LoggerFactory.getLogger(CreateEventService.class);
 
-    private final CreateEventRepository repository;
+    private final Session session;
     private final ApplicationEventPublisher eventPublisher;
 
-    CreateEventService(CreateEventRepository repository, ApplicationEventPublisher eventPublisher) {
-        this.repository = repository;
+    CreateEventService(EntityManager em, ApplicationEventPublisher eventPublisher) {
+        this.session = em.unwrap(Session.class);
         this.eventPublisher = eventPublisher;
     }
 
     @Transactional
     public UUID save(CreateEvent createEvent) throws DuplicateEventException {
-        var eventToCreate = eventFrom(createEvent);
-        if (repository.findOne(Example.of(eventToCreate, matching().withIgnorePaths("id"))).isPresent()) {
+        var event = eventFrom(createEvent);
+        var existingEvent = session.byNaturalId(Event.class)
+                .using(Event_.title, event.getTitle())
+                .using(Event_.description, event.getDescription())
+                .using(Event_.host, event.getHost())
+                .using(Event_.deadline, event.getDeadline())
+                .using(Event_.monetaryAmount, event.getMonetaryAmount())
+                .load();
+        if (existingEvent != null) {
             throw new DuplicateEventException("Failed to create event as it is a duplicate.");
         }
 
-        var created = repository.save(eventToCreate);
+        session.persist(event);
 
-        var eventId = created.getId();
-        var eventCreatedEvent = new EventCreatedEvent(this, eventId, created.getDeadline().asInstant());
+        var eventId = event.getId();
+        var eventCreatedEvent = new EventCreatedEvent(this, eventId, event.getDeadline().asInstant());
         eventPublisher.publishEvent(eventCreatedEvent);
         log.debug("Published {}", eventCreatedEvent);
 
