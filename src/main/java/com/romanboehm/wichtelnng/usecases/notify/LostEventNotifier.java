@@ -21,14 +21,14 @@ class LostEventNotifier {
     }
 
     @Async
-    void send(LostMailEvent event) {
+    void send(LostEventMailDto event) {
         try {
             MimeMessage message = mailCreator.createMessage(event);
             mailSender.send(message);
-            log.info("Sent mail to inform about empty event: {}", event);
+            log.info("Sent mail to inform host about empty event: {}", event);
         }
         catch (Exception e) {
-            log.error("Failed to send mail informing about empty event: {}", event, e);
+            log.error("Failed to send mail to inform host about empty event: {}", event, e);
         }
     }
 }

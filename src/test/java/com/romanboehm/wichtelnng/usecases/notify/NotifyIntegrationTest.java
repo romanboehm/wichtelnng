@@ -92,7 +92,10 @@ class NotifyIntegrationTest {
                     .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("Unfortunately, not enough people have registered to wichtel"));
 
             var participantMail = MailUtils.findMailFor(greenMail, "angusyoung@lostevent.acdc.net");
-            assertThat(participantMail).isEmpty();
+            assertThat(participantMail)
+                    .singleElement()
+                    .satisfies(
+                            mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("Unfortunately, not enough other people have registered to wichtel"));
         });
     }
 }

@@ -19,12 +19,14 @@ class NotifyService {
 
     private final MatchNotifier matchNotifier;
     private final LostEventNotifier lostEventNotifier;
+    private final LostParticipationNotifier participationNotifier;
     private final SessionFactory sessionFactory;
 
-    NotifyService(EntityManagerFactory emf, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier) {
+    NotifyService(EntityManagerFactory emf, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier, LostParticipationNotifier participationNotifier) {
         this.sessionFactory = emf.unwrap(SessionFactory.class);
         this.matchNotifier = matchNotifier;
         this.lostEventNotifier = lostEventNotifier;
+        this.participationNotifier = participationNotifier;
     }
 
     private static boolean hasEnoughParticipants(Event event) {
@@ -43,12 +45,15 @@ class NotifyService {
                 session.remove(_event);
                 return _event;
             });
+            var participants = event.getParticipants();
             if (!hasEnoughParticipants(event)) {
-                lostEventNotifier.send(LostMailEvent.from(event));
-                log.debug("Notified host for event {}", eventId);
+                lostEventNotifier.send(LostEventMailDto.from(event));
+                log.debug("Notified host for event cancelled {}", eventId);
+                participationNotifier.send(participants.stream().map(p -> LostParticipationMailDto.from(event, p.getName(), p.getEmail())).toList());
+                log.debug("Notified participants for cancelled event {}", eventId);
                 return;
             }
-            var matches = ParticipantsMatcher.match(event.getParticipants());
+            var matches = ParticipantsMatcher.match(participants);
             var matchMailEvents = matches.stream()
                     .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))
                     .toList();

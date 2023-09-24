@@ -16,16 +16,16 @@ import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-class LostEventMailCreatorTest {
+class LostParticipationMailCreatorTest {
 
-    private final LostEventMailCreator mailCreator = new LostEventMailCreator(
+    private final LostParticipationMailCreator mailCreator = new LostParticipationMailCreator(
             "https://wichtelnng.romanboehm.com",
             "wichteln@romanboehm.com",
             MailUtils.getJavaMailSender());
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        LostEventMailDto lostEventMailDto = LostEventMailDto.from(
+        LostParticipationMailDto lostParticipationMailDto = LostParticipationMailDto.from(
                 event()
                         .setHost(
                                 new Host("George Young", "georgeyoung@acdc.net"))
@@ -33,9 +33,10 @@ class LostEventMailCreatorTest {
                         .addParticipant(
                                 new Participant()
                                         .setName("Angus Young")
-                                        .setEmail("angusyoung@acdc.net")));
+                                        .setEmail("angusyoung@acdc.net")),
+                "Angus Young", "angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(lostEventMailDto);
+        MimeMessage mail = mailCreator.createMessage(lostParticipationMailDto);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -43,28 +44,30 @@ class LostEventMailCreatorTest {
                 .containsExactly("wichteln@romanboehm.com");
         assertThat(mail.getRecipients(TO))
                 .extracting(Address::toString)
-                .containsExactly("georgeyoung@acdc.net");
+                .containsExactly("angusyoung@acdc.net");
     }
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        LostEventMailDto lostEventMailDto = LostEventMailDto.from(
+        LostParticipationMailDto lostParticipationMailDto = LostParticipationMailDto.from(
                 event()
                         .setHost(
                                 new Host("George Young", "georgeyoung@acdc.net"))
+                        // Only one participant
                         .addParticipant(
                                 new Participant()
                                         .setName("Angus Young")
-                                        .setEmail("angusyoung@acdc.net")));
+                                        .setEmail("angusyoung@acdc.net")),
+                "Angus Young", "angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(lostEventMailDto);
+        MimeMessage mail = mailCreator.createMessage(lostParticipationMailDto);
 
         assertThat(mail).isNotNull();
-        assertThat(mail.getSubject()).isEqualTo("Unfortunately, not enough people have registered for 'AC/DC Secret Santa'");
+        assertThat(mail.getSubject()).isEqualTo("Unfortunately, not enough other people have registered for 'AC/DC Secret Santa'");
         MatcherAssert.assertThat(mail.getContent().toString(), stringContainsInOrder(
-                "Hey George Young,",
-                "Unfortunately, not enough people have registered to wichtel at 'AC/DC Secret Santa'.",
-                "Try creating a new event: https://wichtelnng.romanboehm.com!",
+                "Hey Angus Young,",
+                "Unfortunately, not enough other people have registered to wichtel at 'AC/DC Secret Santa'.",
+                "Try contacting the event's host if you have any questions: georgeyoung@acdc.net!",
                 "This mail was generated using https://wichtelnng.romanboehm.com"));
     }
 
