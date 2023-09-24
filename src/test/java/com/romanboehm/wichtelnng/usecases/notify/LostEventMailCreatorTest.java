@@ -60,10 +60,10 @@ class LostEventMailCreatorTest {
         MimeMessage mail = mailCreator.createMessage(lostMailEvent);
 
         assertThat(mail).isNotNull();
-        assertThat(mail.getSubject()).isEqualTo("Unfortunately, nobody has registered for 'AC/DC Secret Santa'");
+        assertThat(mail.getSubject()).isEqualTo("Unfortunately, not enough people have registered for 'AC/DC Secret Santa'");
         MatcherAssert.assertThat(mail.getContent().toString(), stringContainsInOrder(
                 "Hey George Young,",
-                "Unfortunately nobody has registered to wichtel at 'AC/DC Secret Santa'.",
+                "Unfortunately, not enough people have registered to wichtel at 'AC/DC Secret Santa'.",
                 "Try creating a new event: https://wichtelnng.romanboehm.com!",
                 "This mail was generated using https://wichtelnng.romanboehm.com"));
     }

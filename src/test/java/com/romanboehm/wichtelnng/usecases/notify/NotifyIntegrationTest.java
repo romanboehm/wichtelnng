@@ -89,7 +89,7 @@ class NotifyIntegrationTest {
             var hostMail = MailUtils.findMailFor(greenMail, "georgeyoung@lostevent.acdc.net");
             assertThat(hostMail)
                     .singleElement()
-                    .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("Unfortunately nobody has registered to wichtel"));
+                    .satisfies(mimeMessage -> assertThat(mimeMessage.getContent().toString()).contains("Unfortunately, not enough people have registered to wichtel"));
 
             var participantMail = MailUtils.findMailFor(greenMail, "angusyoung@lostevent.acdc.net");
             assertThat(participantMail).isEmpty();
