@@ -7,11 +7,11 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v3
-      - name: set up JDK 17
+      - name: set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'adopt'
+          java-version: '21'
+          distribution: 'corretto'
       - name: build with Maven
         run: ./mvnw --batch-mode verify -Dspring.config.additional-location=src/test/resources/application-it.properties
       - name: setup flyctl

@@ -16,7 +16,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <surefire.runOrder>random</surefire.runOrder>
         <moneta.version>1.4.2</moneta.version>
         <!-- Match sure webjar versions match those in src/main/resources/templates/fragments/head.html. -->
