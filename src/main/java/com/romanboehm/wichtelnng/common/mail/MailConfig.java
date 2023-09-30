@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng.common.config;
+package com.romanboehm.wichtelnng.common.mail;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

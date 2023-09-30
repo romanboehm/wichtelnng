@@ -1,6 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
-import com.romanboehm.wichtelnng.common.config.MailConfig;
+import com.romanboehm.wichtelnng.common.mail.MailConfig;
 import com.romanboehm.wichtelnng.utils.MailUtils;
 import jakarta.mail.Address;
 import jakarta.mail.MessagingException;

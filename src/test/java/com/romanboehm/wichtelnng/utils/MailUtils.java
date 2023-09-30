@@ -1,7 +1,7 @@
 package com.romanboehm.wichtelnng.utils;
 
 import com.icegreen.greenmail.junit5.GreenMailExtension;
-import com.romanboehm.wichtelnng.common.config.MailConfig;
+import com.romanboehm.wichtelnng.common.mail.MailConfig;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
