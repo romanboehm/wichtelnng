@@ -36,13 +36,13 @@ class RegisterParticipantController {
     ModelAndView get(@PathVariable UUID eventId) {
         try {
             var eventForRegistration = service.getEventOpenForRegistration(eventId);
-            var registration = new RegisterParticipant();
+            var registrationForm = new RegistrationForm();
             return new ModelAndView(
                     "registration",
                     Map.of(
                             "eventId", eventId,
                             "eventForRegistration", eventForRegistration,
-                            "registration", registration),
+                            "registrationForm", registrationForm),
                     OK);
         }
         catch (RegistrationAttemptTooLateException e) {
@@ -53,13 +53,13 @@ class RegisterParticipantController {
     @PostMapping("/event/{eventId}/registration")
     ModelAndView post(
                       @PathVariable UUID eventId,
-                      @ModelAttribute("registration") @Valid RegisterParticipant registration,
+                      @ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm,
                       BindingResult bindingResult,
                       Model model) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",
-                    registration,
+                    registrationForm,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(joining(", ")));
@@ -69,8 +69,8 @@ class RegisterParticipantController {
                     BAD_REQUEST);
         }
         try {
-            service.register(eventId, registration);
-            log.info("Registered {} for {}", registration, eventId);
+            service.register(eventId, registrationForm);
+            log.info("Registered {} for {}", registrationForm, eventId);
             return new ModelAndView(format("redirect:/event/%s/registration/finish", eventId));
         }
         catch (DuplicateParticipantException e) {

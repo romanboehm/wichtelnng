@@ -68,7 +68,7 @@ class RegisterParticipantControllerTest {
         params.add("participantEmail", "angusyoung@acdc.net");
         params.add("id", id.toString());
 
-        doThrow(DuplicateParticipantException.class).when(service).register(eq(id), any(RegisterParticipant.class));
+        doThrow(DuplicateParticipantException.class).when(service).register(eq(id), any(RegistrationForm.class));
 
         mockMvc.perform(post(format("/event/%s/registration", id))
                 .contentType(APPLICATION_FORM_URLENCODED)

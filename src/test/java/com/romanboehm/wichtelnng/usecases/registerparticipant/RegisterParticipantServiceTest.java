@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.participantRegistration;
+import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.registrationForm;
 import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -46,13 +46,13 @@ class RegisterParticipantServiceTest {
 
         service.register(
                 eventId,
-                participantRegistration()
+                registrationForm()
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net"));
 
         assertThatThrownBy(() -> service.register(
                 eventId,
-                participantRegistration()
+                registrationForm()
                         .setParticipantName("Angus Young")
                         .setParticipantEmail("angusyoung@acdc.net")))
                 .isInstanceOf(DuplicateParticipantException.class);

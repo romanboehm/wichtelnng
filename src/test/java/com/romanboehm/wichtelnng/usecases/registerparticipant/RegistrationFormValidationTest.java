@@ -6,11 +6,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.participantRegistration;
+import static com.romanboehm.wichtelnng.usecases.registerparticipant.RegisterParticipantTestData.registrationForm;
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class RegisterParticipantValidationTest {
+class RegistrationFormValidationTest {
 
     private Validator validator;
     private ValidatorFactory validatorFactory;
@@ -28,65 +28,65 @@ class RegisterParticipantValidationTest {
 
     @Test
     void shouldFailParticipantWithTooLongName() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantName("foo".repeat(100));
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithEmptyName() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantName("");
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithWhitespaceName() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantName(" ");
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithNullName() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantName(null);
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithInvalidEmail() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantEmail("notavalid.email");
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithEmptyEmail() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantEmail("");
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithWhitespaceEmail() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantEmail(" ");
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 
     @Test
     void shouldFailParticipantWithNullEmail() {
-        RegisterParticipant registration = participantRegistration()
+        var form = registrationForm()
                 .setParticipantEmail(null);
 
-        assertThat(validator.validate(registration)).isNotEmpty();
+        assertThat(validator.validate(form)).isNotEmpty();
     }
 }

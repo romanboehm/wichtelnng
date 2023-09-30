@@ -17,16 +17,16 @@ import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-class RegisterParticipantMailCreatorTest {
+class MailToParticipantForRegistrationComposerTest {
 
-    private RegisterParticipantMailCreator mailCreator;
+    private MailToParticipantForRegistrationComposer mailCreator;
 
     @BeforeEach
     void setUp() {
         var templateResolver = new MailConfig().textTemplateResolver();
         var templateEngine = new SpringTemplateEngine();
         templateEngine.addTemplateResolver(templateResolver);
-        mailCreator = new RegisterParticipantMailCreator(
+        mailCreator = new MailToParticipantForRegistrationComposer(
                 "https://wichtelnng.romanboehm.com",
                 "wichteln@romanboehm.com",
                 MailUtils.getTemplateEngine(),
@@ -36,11 +36,11 @@ class RegisterParticipantMailCreatorTest {
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
         var event = event();
-        var registration = new RegisterParticipant()
+        var registration = new RegistrationForm()
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(event, registration));
+        MimeMessage mail = mailCreator.createMessage(MailToParticipantDataForRegistration.from(event, registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -54,11 +54,11 @@ class RegisterParticipantMailCreatorTest {
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
         var event = event();
-        var registration = new RegisterParticipant()
+        var registration = new RegistrationForm()
                 .setParticipantName("Angus Young")
                 .setParticipantEmail("angusyoung@acdc.net");
 
-        MimeMessage mail = mailCreator.createMessage(RegistrationMailEvent.from(event, registration));
+        MimeMessage mail = mailCreator.createMessage(MailToParticipantDataForRegistration.from(event, registration));
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("You have registered to wichtel at 'AC/DC Secret Santa'");

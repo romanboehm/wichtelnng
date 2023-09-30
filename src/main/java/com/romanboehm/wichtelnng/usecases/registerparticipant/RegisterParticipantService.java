@@ -21,10 +21,10 @@ class RegisterParticipantService {
 
     private final Logger log = LoggerFactory.getLogger(RegisterParticipantService.class);
 
-    private final RegisterParticipantNotifier participantNotifier;
+    private final RegisterParticipantMailSender participantNotifier;
     private final Session session;
 
-    RegisterParticipantService(EntityManager em, RegisterParticipantNotifier participantNotifier) {
+    RegisterParticipantService(EntityManager em, RegisterParticipantMailSender participantNotifier) {
         this.participantNotifier = participantNotifier;
         this.session = em.unwrap(Session.class);
     }
@@ -51,9 +51,9 @@ class RegisterParticipantService {
     }
 
     @Transactional
-    public void register(UUID eventId, RegisterParticipant registerParticipant) throws DuplicateParticipantException {
-        if (eventContainsParticipant(eventId, registerParticipant)) {
-            throw new DuplicateParticipantException("Failed to register because of duplicate %s".formatted(registerParticipant));
+    public void register(UUID eventId, RegistrationForm registrationForm) throws DuplicateParticipantException {
+        if (eventContainsParticipant(eventId, registrationForm)) {
+            throw new DuplicateParticipantException("Failed to register because of duplicate %s".formatted(registrationForm));
         }
 
         var graph = session.createEntityGraph(Event.class);
@@ -65,13 +65,13 @@ class RegisterParticipantService {
 
         session.persist(event.addParticipant(
                 new Participant()
-                        .setName(registerParticipant.getParticipantName())
-                        .setEmail(registerParticipant.getParticipantEmail())));
-        log.info("Registered {}", registerParticipant);
-        participantNotifier.send(RegistrationMailEvent.from(event, registerParticipant));
+                        .setName(registrationForm.getParticipantName())
+                        .setEmail(registrationForm.getParticipantEmail())));
+        log.info("Registered {}", registrationForm);
+        participantNotifier.send(MailToParticipantDataForRegistration.from(event, registrationForm));
     }
 
-    private Boolean eventContainsParticipant(UUID eventId, RegisterParticipant registerParticipant) {
+    private Boolean eventContainsParticipant(UUID eventId, RegistrationForm registrationForm) {
         return session.createNativeQuery("""
                 select
                     (case when count(p.*) > 0 then true else false end)
@@ -80,8 +80,8 @@ class RegisterParticipantService {
                 """,
                 Boolean.class)
                 .setParameter("eventId", eventId)
-                .setParameter("pName", registerParticipant.getParticipantName())
-                .setParameter("pEmail", registerParticipant.getParticipantEmail())
+                .setParameter("pName", registrationForm.getParticipantName())
+                .setParameter("pEmail", registrationForm.getParticipantEmail())
                 .getSingleResult();
     }
 }

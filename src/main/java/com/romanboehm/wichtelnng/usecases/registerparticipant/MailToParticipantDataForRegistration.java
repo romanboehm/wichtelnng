@@ -1,25 +1,24 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
 import com.romanboehm.wichtelnng.common.data.Event;
+import com.romanboehm.wichtelnng.common.data.Host;
 import org.javamoney.moneta.Money;
 
-record RegistrationMailEvent(
+record MailToParticipantDataForRegistration(
         String title,
         String description,
         String participantName,
         String participantEmail,
-        String hostName,
-        String hostEmail,
+        Host host,
         String price
 ) {
-    static RegistrationMailEvent from(Event event, RegisterParticipant registerParticipant) {
-        return new RegistrationMailEvent(
+    static MailToParticipantDataForRegistration from(Event event, RegistrationForm registrationForm) {
+        return new MailToParticipantDataForRegistration(
                 event.getTitle(),
                 event.getDescription(),
-                registerParticipant.getParticipantName(),
-                registerParticipant.getParticipantEmail(),
-                event.getHost().name(),
-                event.getHost().email(),
+                registrationForm.getParticipantName(),
+                registrationForm.getParticipantEmail(),
+                event.getHost(),
                 Money.of(event.getMonetaryAmount().number(), event.getMonetaryAmount().currency().getCurrencyCode()).toString()
         );
     }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
-class RegisterParticipant {
+class RegistrationForm {
 
     @NotBlank
     @Size(max = 100)
@@ -19,7 +19,7 @@ class RegisterParticipant {
         return participantName;
     }
 
-    public RegisterParticipant setParticipantName(String participantName) {
+    public RegistrationForm setParticipantName(String participantName) {
         this.participantName = participantName;
         return this;
     }
@@ -28,7 +28,7 @@ class RegisterParticipant {
         return participantEmail;
     }
 
-    public RegisterParticipant setParticipantEmail(String participantEmail) {
+    public RegistrationForm setParticipantEmail(String participantEmail) {
         this.participantEmail = participantEmail;
         return this;
     }
