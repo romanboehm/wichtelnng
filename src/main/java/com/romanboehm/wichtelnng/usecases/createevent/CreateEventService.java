@@ -30,8 +30,8 @@ class CreateEventService {
     }
 
     @Transactional
-    public UUID save(CreateEvent createEvent) throws DuplicateEventException {
-        var event = eventFrom(createEvent);
+    public UUID save(EventForm eventForm) throws DuplicateEventException {
+        var event = eventFrom(eventForm);
         var existingEvent = session.byNaturalId(Event.class)
                 .using(Event_.title, event.getTitle())
                 .using(Event_.description, event.getDescription())
@@ -53,18 +53,18 @@ class CreateEventService {
         return eventId;
     }
 
-    private static Event eventFrom(CreateEvent createEvent) {
+    private static Event eventFrom(EventForm eventForm) {
         return new Event()
-                .setTitle(createEvent.getTitle())
-                .setDescription(createEvent.getDescription())
+                .setTitle(eventForm.getTitle())
+                .setDescription(eventForm.getDescription())
                 .setDeadline(
                         new Deadline(LocalDateTime.of(
-                                createEvent.getLocalDate(),
-                                createEvent.getLocalTime()),
-                                createEvent.getTimezone()))
+                                eventForm.getLocalDate(),
+                                eventForm.getLocalTime()),
+                                eventForm.getTimezone()))
                 .setHost(
-                        new Host(createEvent.getHostName(), createEvent.getHostEmail()))
+                        new Host(eventForm.getHostName(), eventForm.getHostEmail()))
                 .setMonetaryAmount(
-                        new MonetaryAmount(createEvent.getNumber(), createEvent.getCurrency()));
+                        new MonetaryAmount(eventForm.getNumber(), eventForm.getCurrency()));
     }
 }

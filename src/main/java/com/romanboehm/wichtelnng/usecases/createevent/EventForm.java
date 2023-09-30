@@ -26,7 +26,7 @@ import static java.util.Comparator.reverseOrder;
 import static java.util.stream.Collectors.toList;
 
 // Class may be package-private, but properties (i.e. getters) need be public for validator.
-class CreateEvent {
+class EventForm {
 
     private static final List<Currency> CURRENCIES = Currency.getAvailableCurrencies().stream()
             .sorted(Comparator.comparing(Currency::getCurrencyCode))
@@ -86,7 +86,7 @@ class CreateEvent {
         return id;
     }
 
-    public CreateEvent setId(UUID id) {
+    public EventForm setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -95,7 +95,7 @@ class CreateEvent {
         return title;
     }
 
-    public CreateEvent setTitle(String title) {
+    public EventForm setTitle(String title) {
         this.title = title;
         return this;
     }
@@ -104,7 +104,7 @@ class CreateEvent {
         return description;
     }
 
-    public CreateEvent setDescription(String description) {
+    public EventForm setDescription(String description) {
         this.description = description;
         return this;
     }
@@ -113,7 +113,7 @@ class CreateEvent {
         return number;
     }
 
-    public CreateEvent setNumber(BigDecimal number) {
+    public EventForm setNumber(BigDecimal number) {
         this.number = number;
         return this;
     }
@@ -122,7 +122,7 @@ class CreateEvent {
         return currency;
     }
 
-    public CreateEvent setCurrency(Currency currency) {
+    public EventForm setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }
@@ -131,7 +131,7 @@ class CreateEvent {
         return localDate;
     }
 
-    public CreateEvent setLocalDate(LocalDate localDate) {
+    public EventForm setLocalDate(LocalDate localDate) {
         this.localDate = localDate;
         return this;
     }
@@ -140,7 +140,7 @@ class CreateEvent {
         return localTime;
     }
 
-    public CreateEvent setLocalTime(LocalTime localTime) {
+    public EventForm setLocalTime(LocalTime localTime) {
         this.localTime = localTime;
         return this;
     }
@@ -149,7 +149,7 @@ class CreateEvent {
         return timezone;
     }
 
-    public CreateEvent setTimezone(ZoneId timezone) {
+    public EventForm setTimezone(ZoneId timezone) {
         this.timezone = timezone;
         return this;
     }
@@ -158,7 +158,7 @@ class CreateEvent {
         return hostName;
     }
 
-    public CreateEvent setHostName(String hostName) {
+    public EventForm setHostName(String hostName) {
         this.hostName = hostName;
         return this;
     }
@@ -167,7 +167,7 @@ class CreateEvent {
         return hostEmail;
     }
 
-    public CreateEvent setHostEmail(String hostEmail) {
+    public EventForm setHostEmail(String hostEmail) {
         this.hostEmail = hostEmail;
         return this;
     }

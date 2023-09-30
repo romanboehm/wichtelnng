@@ -38,23 +38,23 @@ class CreateEventController {
 
     @GetMapping("/event")
     ModelAndView get() {
-        return new ModelAndView("event", Map.of("createEvent", new CreateEvent()), OK);
+        return new ModelAndView("event", Map.of("eventForm", new EventForm()), OK);
     }
 
     @PostMapping("/event")
-    ModelAndView post(@ModelAttribute("createEvent") @Valid CreateEvent createEvent, BindingResult bindingResult) {
+    ModelAndView post(@ModelAttribute("eventForm") @Valid EventForm eventForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.debug(
                     "Failed to create {} because {}",
-                    createEvent,
+                    eventForm,
                     bindingResult.getAllErrors().stream()
                             .map(ObjectError::toString)
                             .collect(joining(", ")));
             return new ModelAndView("event", BAD_REQUEST);
         }
         try {
-            UUID uuid = service.save(createEvent);
-            log.info("Saved {}", createEvent);
+            UUID uuid = service.save(eventForm);
+            log.info("Saved {}", eventForm);
             return new ModelAndView(format("redirect:/event/%s/link", uuid));
         }
         catch (DuplicateEventException dee) {

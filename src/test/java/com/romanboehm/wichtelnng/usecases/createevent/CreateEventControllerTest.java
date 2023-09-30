@@ -65,7 +65,7 @@ class CreateEventControllerTest {
     @Test
     void highlightsDuplicateEvent() throws Exception {
         MultiValueMap<String, String> params = eventFormParams();
-        when(service.save(any(CreateEvent.class)))
+        when(service.save(any(EventForm.class)))
                 .thenReturn(UUID.randomUUID())
                 .thenThrow(DuplicateEventException.class);
 

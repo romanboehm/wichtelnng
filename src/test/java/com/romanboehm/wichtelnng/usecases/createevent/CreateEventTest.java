@@ -13,7 +13,7 @@ class CreateEventTest {
 
     @Test
     void shouldSortTimezonesByOffset() {
-        List<CreateEvent.EventZoneId> timezones = new CreateEvent().getTimezones();
+        List<EventForm.EventZoneId> timezones = new EventForm().getTimezones();
 
         LocalDateTime now = LocalDateTime.now();
         assertThat(timezones).isSortedAccordingTo((t1, t2) -> t2.zoneId().getRules().getOffset(now).compareTo(t1.zoneId().getRules().getOffset(now)));
@@ -21,7 +21,7 @@ class CreateEventTest {
 
     @Test
     void shouldSortCurrenciesAlphabetically() {
-        List<Currency> currencies = new CreateEvent().getCurrencies();
+        List<Currency> currencies = new EventForm().getCurrencies();
 
         assertThat(currencies).isSortedAccordingTo(Comparator.comparing(Currency::getCurrencyCode));
     }

@@ -16,7 +16,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Currency;
 
-import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
+import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.eventForm;
 import static java.time.Month.JUNE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -43,7 +43,7 @@ class CreateEventServiceTest {
 
     @Test
     void savesEventAndNotifiesOfCreation() throws DuplicateEventException {
-        var eventId = service.save(new CreateEvent()
+        var eventId = service.save(new EventForm()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setNumber(new BigDecimal("78.50"))
@@ -82,11 +82,11 @@ class CreateEventServiceTest {
 
     @Test
     void preventsDuplicateEvent() throws DuplicateEventException {
-        service.save(createEvent());
+        service.save(eventForm());
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
         applicationEvents.clear();
 
-        assertThatThrownBy(() -> service.save(createEvent())).isInstanceOf(DuplicateEventException.class);
+        assertThatThrownBy(() -> service.save(eventForm())).isInstanceOf(DuplicateEventException.class);
 
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).isEmpty();
     }

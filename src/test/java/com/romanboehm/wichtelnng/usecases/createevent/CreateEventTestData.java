@@ -3,9 +3,9 @@ package com.romanboehm.wichtelnng.usecases.createevent;
 import static com.romanboehm.wichtelnng.utils.GlobalTestData.event;
 
 class CreateEventTestData {
-    static CreateEvent createEvent() {
+    static EventForm eventForm() {
         var entity = event();
-        return new CreateEvent()
+        return new EventForm()
                 .setId(entity.getId())
                 .setTitle(entity.getTitle())
                 .setDescription(entity.getDescription())

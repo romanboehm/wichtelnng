@@ -11,12 +11,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.createEvent;
+import static com.romanboehm.wichtelnng.usecases.createevent.CreateEventTestData.eventForm;
 import static jakarta.validation.Validation.buildDefaultValidatorFactory;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 
-class EventValidationTest {
+class EventFormValidationTest {
 
     private Validator validator;
     private ValidatorFactory validatorFactory;
@@ -34,9 +34,9 @@ class EventValidationTest {
 
     @Test
     void shouldAcceptValidEvent() {
-        CreateEvent event = createEvent();
+        var form = eventForm();
 
-        assertThat(validator.validate(event)).isEmpty();
+        assertThat(validator.validate(form)).isEmpty();
     }
 
     @Nested
@@ -44,26 +44,26 @@ class EventValidationTest {
 
         @Test
         void shouldFailEventWithInvalidNumber() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setNumber(BigDecimal.valueOf(-1));
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullMonetaryAmount() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setNumber(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullCurrency() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setCurrency(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
     }
@@ -73,34 +73,34 @@ class EventValidationTest {
 
         @Test
         void shouldFailEventWithTooLongTitle() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setTitle("foo".repeat(100));
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullTitle() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setTitle(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithEmptyTitle() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setTitle("");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithWhitespaceTitle() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setTitle(" ");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
     }
 
@@ -109,34 +109,34 @@ class EventValidationTest {
 
         @Test
         void shouldFailEventWithTooLongDescription() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setDescription("foo".repeat(1000));
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullDescription() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setDescription(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithEmptyDescription() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setDescription("");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithWhitespaceDescription() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setDescription(" ");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
     }
@@ -146,35 +146,35 @@ class EventValidationTest {
 
         @Test
         void shouldFailEventWithPastZonedDateTime() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setLocalDate(LocalDate.now())
                     .setLocalTime(LocalTime.now().minus(1, HOURS));
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullLocalDate() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setLocalDate(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullLocalTime() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setLocalTime(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullTimezone() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setTimezone(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
     }
 
@@ -183,58 +183,58 @@ class EventValidationTest {
 
         @Test
         void shouldFailEventWithTooLongHostName() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostName("foo".repeat(100));
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullHostName() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostName(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithEmptyHostName() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostName("");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithInvalidHostEmail() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostEmail("notavalid.email");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithNullHostEmail() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostEmail(null);
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithEmptyHostEmail() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostEmail("");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
 
         @Test
         void shouldFailEventWithWhitespaceHostEmail() {
-            CreateEvent event = createEvent()
+            var form = eventForm()
                     .setHostEmail(" ");
 
-            assertThat(validator.validate(event)).isNotEmpty();
+            assertThat(validator.validate(form)).isNotEmpty();
         }
     }
 
