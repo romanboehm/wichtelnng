@@ -20,15 +20,6 @@ class ParticipantsMatcher {
     private ParticipantsMatcher() {
     }
 
-    record Match(Donor donor, Recipient recipient) {
-
-        Match {
-            if (donor.name().equals(recipient.name()) && donor.email().equals(recipient.email())) {
-                throw new IllegalArgumentException("Donor and recipient must not match.");
-            }
-        }
-    }
-
     static List<Match> match(Collection<Participant> participants) {
         var original = new ArrayList<>(participants);
         if (original.size() < 2) {
@@ -41,8 +32,8 @@ class ParticipantsMatcher {
 
         return range(0, original.size())
                 .mapToObj(i -> {
-                    var donor = new Donor(original.get(i).getName(), original.get(i).getEmail());
-                    var recipient = new Recipient(copy.get(i).getName(), copy.get(i).getEmail());
+                    var donor = new Match.Donor(original.get(i).getName(), original.get(i).getEmail());
+                    var recipient = new Match.Recipient(copy.get(i).getName(), copy.get(i).getEmail());
                     var match = new Match(donor, recipient);
                     LOG.debug("Created match {}", match);
                     return match;

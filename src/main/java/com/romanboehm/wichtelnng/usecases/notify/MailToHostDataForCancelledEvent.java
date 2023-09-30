@@ -2,10 +2,10 @@ package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.common.data.Event;
 
-record LostEventMailDto(String title, String recipientEmail, String recipientName) {
+record MailToHostDataForCancelledEvent(String title, String recipientEmail, String recipientName) {
 
-    static LostEventMailDto from(Event event) {
-        return new LostEventMailDto(
+    static MailToHostDataForCancelledEvent from(Event event) {
+        return new MailToHostDataForCancelledEvent(
                 event.getTitle(),
                 event.getHost().email(),
                 event.getHost().name()

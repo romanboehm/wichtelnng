@@ -13,7 +13,7 @@ class ParticipantsMatcherTest {
 
     @Test
     void shouldShuffle() {
-        List<ParticipantsMatcher.Match> matches = ParticipantsMatcher.match(
+        List<Match> matches = ParticipantsMatcher.match(
                 Set.of(new Participant()
                         .setName("Angus Young")
                         .setEmail("angusyoung@acdc.net"),

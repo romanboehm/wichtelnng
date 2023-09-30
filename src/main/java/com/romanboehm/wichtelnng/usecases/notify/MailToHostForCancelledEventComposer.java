@@ -12,26 +12,26 @@ import org.springframework.stereotype.Component;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
-class LostEventMailCreator {
+class MailToHostForCancelledEventComposer {
 
-    private final Logger log = LoggerFactory.getLogger(LostEventMailCreator.class);
+    private final Logger log = LoggerFactory.getLogger(MailToHostForCancelledEventComposer.class);
 
     private final String domain;
     private final String from;
     private final JavaMailSender mailSender;
 
-    LostEventMailCreator(
-                         @Value("${com.romanboehm.wichtelnng.domain}") String domain,
-                         @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
-                         JavaMailSender mailSender) {
+    MailToHostForCancelledEventComposer(
+                                        @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+                                        @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+                                        JavaMailSender mailSender) {
         this.domain = domain;
         this.from = from;
         this.mailSender = mailSender;
     }
 
-    MimeMessage createMessage(LostEventMailDto event) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
+    MimeMessage createMessage(MailToHostDataForCancelledEvent event) throws MessagingException {
+        var mimeMessage = mailSender.createMimeMessage();
+        var message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
         message.setSubject("Unfortunately, not enough people have registered for '%s'".formatted(event.title()));
         message.setFrom(from);
         message.setTo(event.recipientEmail());

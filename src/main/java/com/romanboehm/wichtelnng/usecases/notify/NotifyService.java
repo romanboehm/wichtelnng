@@ -17,16 +17,19 @@ class NotifyService {
 
     private final Logger log = LoggerFactory.getLogger(NotifyService.class);
 
-    private final MatchNotifier matchNotifier;
-    private final LostEventNotifier lostEventNotifier;
-    private final LostParticipationNotifier participationNotifier;
+    private final MailToDonorSender mailToDonorSender;
+    private final MailToHostForCancelledEventSender mailToHostForCancelledEventSender;
+    private final MailToParticipantsForCancelledEventSender mailToParticipantsForCancelledEventSender;
     private final SessionFactory sessionFactory;
 
-    NotifyService(EntityManagerFactory emf, MatchNotifier matchNotifier, LostEventNotifier lostEventNotifier, LostParticipationNotifier participationNotifier) {
+    NotifyService(EntityManagerFactory emf,
+                  MailToDonorSender mailToDonorSender,
+                  MailToHostForCancelledEventSender mailToHostForCancelledEventSender,
+                  MailToParticipantsForCancelledEventSender mailToParticipantsForCancelledEventSender) {
         this.sessionFactory = emf.unwrap(SessionFactory.class);
-        this.matchNotifier = matchNotifier;
-        this.lostEventNotifier = lostEventNotifier;
-        this.participationNotifier = participationNotifier;
+        this.mailToDonorSender = mailToDonorSender;
+        this.mailToHostForCancelledEventSender = mailToHostForCancelledEventSender;
+        this.mailToParticipantsForCancelledEventSender = mailToParticipantsForCancelledEventSender;
     }
 
     private static boolean hasEnoughParticipants(Event event) {
@@ -35,7 +38,7 @@ class NotifyService {
 
     void notify(UUID eventId) {
         try {
-            Event event = sessionFactory.fromTransaction(session -> {
+            var event = sessionFactory.fromTransaction(session -> {
                 var graph = session.createEntityGraph(Event.class);
                 graph.addSubgraph(Event_.participants);
                 var _event = session.find(Event.class, eventId, Map.of(SpecHints.HINT_SPEC_FETCH_GRAPH, graph));
@@ -47,17 +50,16 @@ class NotifyService {
             });
             var participants = event.getParticipants();
             if (!hasEnoughParticipants(event)) {
-                lostEventNotifier.send(LostEventMailDto.from(event));
-                log.debug("Notified host for event cancelled {}", eventId);
-                participationNotifier.send(participants.stream().map(p -> LostParticipationMailDto.from(event, p.getName(), p.getEmail())).toList());
-                log.debug("Notified participants for cancelled event {}", eventId);
+                mailToHostForCancelledEventSender.send(MailToHostDataForCancelledEvent.from(event));
+                mailToParticipantsForCancelledEventSender
+                        .send(participants.stream().map(p -> MailToParticipantDataForCancelledEvent.from(event, p.getName(), p.getEmail())).toList());
                 return;
             }
             var matches = ParticipantsMatcher.match(participants);
             var matchMailEvents = matches.stream()
-                    .map(m -> MatchMailEvent.from(event, m.donor(), m.recipient()))
+                    .map(match -> MailToDonorData.from(event, match))
                     .toList();
-            matchNotifier.send(matchMailEvents);
+            mailToDonorSender.send(matchMailEvents);
             log.debug("Notified participants for event {}", eventId);
 
         }

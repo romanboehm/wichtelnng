@@ -1,0 +1,12 @@
+Hey [( ${data.match.donor.name} )],
+
+You registered to wichtel at '[( ${data.title} )]' ([( ${domain} )]/about)!
+We matched the event's participants and you're therefore now asked to give a gift to [( ${data.match.recipient.name} )]. The gift's monetary value should not exceed [( ${data.price} )].
+
+Here's what the event's host says about it:
+
+"[( ${data.description} )]"
+
+If you have any questions, contact the event's host [( ${data.host.name} )] at [( ${data.host.email} )].
+
+This mail was generated using [( ${domain} )]

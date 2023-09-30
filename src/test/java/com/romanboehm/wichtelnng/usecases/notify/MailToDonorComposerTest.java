@@ -3,7 +3,6 @@ package com.romanboehm.wichtelnng.usecases.notify;
 import com.romanboehm.wichtelnng.utils.MailUtils;
 import jakarta.mail.Address;
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +14,13 @@ import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-class MatchMailCreatorTest {
+class MailToDonorComposerTest {
 
-    private MatchMailCreator mailCreator;
+    private MailToDonorComposer mailCreator;
 
     @BeforeEach
     void setUp() {
-        mailCreator = new MatchMailCreator(
+        mailCreator = new MailToDonorComposer(
                 "https://wichtelnng.romanboehm.com",
                 "wichteln@romanboehm.com",
                 MailUtils.getTemplateEngine(),
@@ -30,14 +29,11 @@ class MatchMailCreatorTest {
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        Donor angusYoung = new Donor("Angus Young", "angusyoung@acdc.net");
-        Recipient malcolmYoung = new Recipient("Malcolm Young", "malcolmyoung@acdc.net");
+        var match = new Match(new Match.Donor("Angus Young", "angusyoung@acdc.net"), new Match.Recipient("Malcolm Young", "malcolmyoung@acdc.net"));
 
-        MatchMailEvent matchMailEvent = MatchMailEvent.from(
-                event(),
-                angusYoung, malcolmYoung);
+        var mailToDonorData = MailToDonorData.from(event(), match);
 
-        MimeMessage mail = mailCreator.createMessage(matchMailEvent);
+        var mail = mailCreator.createMessage(mailToDonorData);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -50,14 +46,11 @@ class MatchMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        Donor angusYoung = new Donor("Angus Young", "angusyoung@acdc.net");
-        Recipient malcolmYoung = new Recipient("Malcolm Young", "malcolmyoung@acdc.net");
+        var match = new Match(new Match.Donor("Angus Young", "angusyoung@acdc.net"), new Match.Recipient("Malcolm Young", "malcolmyoung@acdc.net"));
 
-        MatchMailEvent matchMailEvent = MatchMailEvent.from(
-                event(),
-                angusYoung, malcolmYoung);
+        var mailToDonorData = MailToDonorData.from(event(), match);
 
-        MimeMessage mail = mailCreator.createMessage(matchMailEvent);
+        var mail = mailCreator.createMessage(mailToDonorData);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("You have been matched to wichtel at 'AC/DC Secret Santa'");

@@ -16,16 +16,16 @@ import static jakarta.mail.Message.RecipientType.TO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
 
-class LostEventMailCreatorTest {
+class MailToHostDataForCancelledEventComposerTest {
 
-    private final LostEventMailCreator mailCreator = new LostEventMailCreator(
+    private final MailToHostForCancelledEventComposer mailCreator = new MailToHostForCancelledEventComposer(
             "https://wichtelnng.romanboehm.com",
             "wichteln@romanboehm.com",
             MailUtils.getJavaMailSender());
 
     @Test
     void shouldHandleToAndFromCorrectly() throws MessagingException {
-        LostEventMailDto lostEventMailDto = LostEventMailDto.from(
+        MailToHostDataForCancelledEvent mailToHostDataForCancelledEvent = MailToHostDataForCancelledEvent.from(
                 event()
                         .setHost(
                                 new Host("George Young", "georgeyoung@acdc.net"))
@@ -35,7 +35,7 @@ class LostEventMailCreatorTest {
                                         .setName("Angus Young")
                                         .setEmail("angusyoung@acdc.net")));
 
-        MimeMessage mail = mailCreator.createMessage(lostEventMailDto);
+        MimeMessage mail = mailCreator.createMessage(mailToHostDataForCancelledEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
@@ -48,7 +48,7 @@ class LostEventMailCreatorTest {
 
     @Test
     void shouldHandleDataCorrectly() throws IOException, MessagingException {
-        LostEventMailDto lostEventMailDto = LostEventMailDto.from(
+        MailToHostDataForCancelledEvent mailToHostDataForCancelledEvent = MailToHostDataForCancelledEvent.from(
                 event()
                         .setHost(
                                 new Host("George Young", "georgeyoung@acdc.net"))
@@ -57,7 +57,7 @@ class LostEventMailCreatorTest {
                                         .setName("Angus Young")
                                         .setEmail("angusyoung@acdc.net")));
 
-        MimeMessage mail = mailCreator.createMessage(lostEventMailDto);
+        MimeMessage mail = mailCreator.createMessage(mailToHostDataForCancelledEvent);
 
         assertThat(mail).isNotNull();
         assertThat(mail.getSubject()).isEqualTo("Unfortunately, not enough people have registered for 'AC/DC Secret Santa'");

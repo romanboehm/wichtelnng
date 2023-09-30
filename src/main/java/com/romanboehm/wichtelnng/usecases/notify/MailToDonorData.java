@@ -4,19 +4,17 @@ import com.romanboehm.wichtelnng.common.data.Event;
 import com.romanboehm.wichtelnng.common.data.Host;
 import org.javamoney.moneta.Money;
 
-record MatchMailEvent(
-        Donor donor,
-        Recipient recipient,
+record MailToDonorData(
+        Match match,
         String title,
         String description,
         Host host,
         String price
 ) {
 
-    static MatchMailEvent from(Event event, Donor donor, Recipient recipient) {
-        return new MatchMailEvent(
-                donor,
-                recipient,
+    static MailToDonorData from(Event event, Match match) {
+        return new MailToDonorData(
+                match,
                 event.getTitle(),
                 event.getDescription(),
                 event.getHost(),

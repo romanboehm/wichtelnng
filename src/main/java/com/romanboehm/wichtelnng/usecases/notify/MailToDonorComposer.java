@@ -15,40 +15,40 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
-class MatchMailCreator {
+class MailToDonorComposer {
 
-    private final Logger log = LoggerFactory.getLogger(MatchMailCreator.class);
+    private final Logger log = LoggerFactory.getLogger(MailToDonorComposer.class);
 
     private final String domain;
     private final String from;
     private final TemplateEngine templateEngine;
     private final JavaMailSender mailSender;
 
-    MatchMailCreator(
-                     @Value("${com.romanboehm.wichtelnng.domain}") String domain,
-                     @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
-                     TemplateEngine templateEngine,
-                     JavaMailSender mailSender) {
+    MailToDonorComposer(
+                        @Value("${com.romanboehm.wichtelnng.domain}") String domain,
+                        @Value("${com.romanboehm.wichtelnng.mail.from}") String from,
+                        TemplateEngine templateEngine,
+                        JavaMailSender mailSender) {
         this.domain = domain;
         this.from = from;
         this.templateEngine = templateEngine;
         this.mailSender = mailSender;
     }
 
-    MimeMessage createMessage(MatchMailEvent matchMailEvent) throws MessagingException {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
-        message.setSubject(format("You have been matched to wichtel at '%s'", matchMailEvent.title()));
+    MimeMessage createMessage(MailToDonorData mailToDonorData) throws MessagingException {
+        var mimeMessage = mailSender.createMimeMessage();
+        var message = new MimeMessageHelper(mimeMessage, UTF_8.toString());
+        message.setSubject(format("You have been matched to wichtel at '%s'", mailToDonorData.title()));
         message.setFrom(from);
-        message.setTo(matchMailEvent.donor().email());
+        message.setTo(mailToDonorData.match().donor().email());
 
-        Context ctx = new Context();
-        ctx.setVariable("event", matchMailEvent);
+        var ctx = new Context();
+        ctx.setVariable("data", mailToDonorData);
         ctx.setVariable("domain", domain);
-        String textContent = templateEngine.process("matchmail.txt", ctx);
+        var textContent = templateEngine.process("donormail.txt", ctx);
         message.setText(textContent);
 
-        log.debug("Created mail for {}", matchMailEvent);
+        log.debug("Created mail for {}", mailToDonorData);
         return mimeMessage;
     }
 }
