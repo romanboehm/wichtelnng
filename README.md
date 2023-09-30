@@ -9,7 +9,7 @@ Postgres.
 
 ### On the Internet
 
-Navigate to https://wichtelnng.fly.dev/.
+Navigate to https://wichtelnng.romanboehm.com.
 
 ### Locally
 
