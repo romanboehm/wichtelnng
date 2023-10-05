@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.registerparticipant;
 
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +47,13 @@ class RegisterParticipantController {
                     OK);
         }
         catch (RegistrationAttemptTooLateException e) {
+            log.info("Failed to register participant for event {} because too late", eventId);
             return new ModelAndView("registrationattempttoolate", BAD_REQUEST);
         }
     }
 
     @PostMapping("/event/{eventId}/registration")
+    @Observed(name = "register.participant", contextualName = "registering-participant")
     ModelAndView post(
                       @PathVariable UUID eventId,
                       @ModelAttribute("registrationForm") @Valid RegistrationForm registrationForm,
@@ -74,6 +77,7 @@ class RegisterParticipantController {
             return new ModelAndView(format("redirect:/event/%s/registration/finish", eventId));
         }
         catch (DuplicateParticipantException e) {
+            log.info("Failed to register participant for event {} because duplicate", eventId);
             return new ModelAndView("duplicateparticipant", BAD_REQUEST);
         }
     }

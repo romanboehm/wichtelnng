@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.createevent;
 
+import io.micrometer.observation.annotation.Observed;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +38,13 @@ class CreateEventController {
     }
 
     @GetMapping("/event")
+    @Observed(name = "get.event", contextualName = "getting-event")
     ModelAndView get() {
         return new ModelAndView("event", Map.of("eventForm", new EventForm()), OK);
     }
 
     @PostMapping("/event")
+    @Observed(name = "create.event", contextualName = "creating-event")
     ModelAndView post(@ModelAttribute("eventForm") @Valid EventForm eventForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.debug(
@@ -53,11 +56,12 @@ class CreateEventController {
             return new ModelAndView("event", BAD_REQUEST);
         }
         try {
-            UUID uuid = service.save(eventForm);
-            log.info("Saved {}", eventForm);
+            UUID uuid = service.createEvent(eventForm);
+            log.info("Created {}", eventForm);
             return new ModelAndView(format("redirect:/event/%s/link", uuid));
         }
         catch (DuplicateEventException dee) {
+            log.info("Failed to create {} because duplicate", eventForm);
             return new ModelAndView("duplicateevent", BAD_REQUEST);
         }
     }

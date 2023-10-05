@@ -30,7 +30,7 @@ class CreateEventService {
     }
 
     @Transactional
-    public UUID save(EventForm eventForm) throws DuplicateEventException {
+    public UUID createEvent(EventForm eventForm) throws DuplicateEventException {
         var event = eventFrom(eventForm);
         var existingEvent = session.byNaturalId(Event.class)
                 .using(Event_.title, event.getTitle())

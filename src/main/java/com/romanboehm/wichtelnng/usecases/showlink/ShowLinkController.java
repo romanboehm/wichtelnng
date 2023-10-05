@@ -1,5 +1,6 @@
 package com.romanboehm.wichtelnng.usecases.showlink;
 
+import io.micrometer.observation.annotation.Observed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class ShowLinkController {
     }
 
     @GetMapping("/event/{eventId}/link")
+    @Observed(name = "show.link", contextualName = "showing-link")
     public ModelAndView showResult(@PathVariable UUID eventId) {
         URI link = service.createLink(eventId);
         log.info("Created link {}", link);

@@ -2,6 +2,7 @@ package com.romanboehm.wichtelnng.usecases.notify;
 
 import com.romanboehm.wichtelnng.common.data.Event;
 import com.romanboehm.wichtelnng.common.data.Event_;
+import io.micrometer.observation.annotation.Observed;
 import jakarta.persistence.EntityManagerFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.jpa.SpecHints;
@@ -36,13 +37,15 @@ class NotifyService {
         return event.getParticipants().size() > 2;
     }
 
+    @Observed(name = "notify.event", contextualName = "notifying-for-event")
     void notify(UUID eventId) {
         try {
-            var event = sessionFactory.fromTransaction(session -> {
+            Event event = sessionFactory.fromTransaction(session -> {
                 var graph = session.createEntityGraph(Event.class);
                 graph.addSubgraph(Event_.participants);
                 var _event = session.find(Event.class, eventId, Map.of(SpecHints.HINT_SPEC_FETCH_GRAPH, graph));
                 if (_event == null) {
+                    log.error("Failed to retrieve event {}", eventId);
                     throw new IllegalArgumentException("Failed to retrieve event %s".formatted(eventId));
                 }
                 session.remove(_event);
@@ -60,8 +63,6 @@ class NotifyService {
                     .map(match -> MailToDonorData.from(event, match))
                     .toList();
             mailToDonorSender.send(matchMailEvents);
-            log.debug("Notified participants for event {}", eventId);
-
         }
         catch (Exception e) {
             log.debug("Failed to notify host or participants for event {}", eventId, e);
