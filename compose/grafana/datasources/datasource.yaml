@@ -1,0 +1,13 @@
+apiVersion: 1
+
+datasources:
+  - name: 'wichtelnng-prometheus'
+    type: 'prometheus'
+    access: 'proxy'
+    url: 'http://wichtelnng-observability-prometheus:9090'
+    editable: false
+  - name: 'wichtelnng-loki'
+    type: 'loki'
+    access: 'proxy'
+    url: 'http://wichtelnng-observability-loki:3100'
+    editable: false

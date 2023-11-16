@@ -43,7 +43,7 @@ class CreateEventServiceTest {
 
     @Test
     void savesEventAndNotifiesOfCreation() throws DuplicateEventException {
-        var eventId = service.save(new EventForm()
+        var eventId = service.createEvent(new EventForm()
                 .setTitle("AC/DC Secret Santa")
                 .setDescription("There's gonna be some santa'ing")
                 .setNumber(new BigDecimal("78.50"))
@@ -82,11 +82,11 @@ class CreateEventServiceTest {
 
     @Test
     void preventsDuplicateEvent() throws DuplicateEventException {
-        service.save(eventForm());
+        service.createEvent(eventForm());
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).hasSize(1);
         applicationEvents.clear();
 
-        assertThatThrownBy(() -> service.save(eventForm())).isInstanceOf(DuplicateEventException.class);
+        assertThatThrownBy(() -> service.createEvent(eventForm())).isInstanceOf(DuplicateEventException.class);
 
         assertThat(applicationEvents.stream(EventCreatedEvent.class)).isEmpty();
     }

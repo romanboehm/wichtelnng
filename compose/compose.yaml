@@ -1,0 +1,80 @@
+services:
+  wichtelnng-db:
+    image: 'postgres:15.3-alpine'
+    container_name: 'wichtelnng-db'
+    environment:
+      - 'POSTGRES_DB=wichtelnngdb'
+      - 'POSTGRES_PASSWORD=wichtelnngpassword'
+      - 'POSTGRES_USER=wichtelnnguser'
+    # Use static host port instead of one assigned dynamically by Testcontainers to make it easier to connect with a db
+    # client.
+    ports:
+      - '5432:5432'
+  wichtelnng-mail-server:
+    image: 'greenmail/standalone:2.0.0'
+    container_name: 'wichtelnng-mail-server'
+    # Allows wichtelnng-mail-ui to access wichtelnng-mail-server at wichtelnng-mail-server:3143.
+    expose:
+      - '3143'
+    # Needed for `spring.mail.port` in wichtelnng app.
+    ports:
+      - '3025:3025'
+  wichtelnng-mail-ui:
+    image: 'roundcube/roundcubemail:1.6.1-apache'
+    container_name: 'wichtelnng-mail-ui'
+    depends_on:
+      - 'wichtelnng-mail-server'
+    ports:
+      - '8082:80'
+    environment:
+      - 'ROUNDCUBEMAIL_DEFAULT_PORT=3143'
+      - 'ROUNDCUBEMAIL_SMTP_PORT=3025'
+      - 'ROUNDCUBEMAIL_DEFAULT_HOST=wichtelnng-mail-server'
+      - 'ROUNDCUBEMAIL_SMTP_SERVER=wichtelnng-mail-server'
+  wichtelnng-observability-loki:
+    image: 'grafana/loki:2.9.1'
+    container_name: 'wichtelnng-observability-loki'
+    # Allows wichtelnng-observability-grafana to access the Loki data source at
+    # http://wichtelnng-observability-loki:3100.
+    expose:
+      - '3100'
+    # Allows the wichtelnng app to push logs to wichtelnng-observability-loki at http://localhost:3100/loki/api/v1/push.
+    ports:
+      - '3100:3100'
+  wichtelnng-observability-grafana:
+    depends_on:
+      - 'wichtelnng-observability-loki'
+    image: 'grafana/grafana:10.1.4'
+    container_name: 'wichtelnng-observability-grafana'
+    # Grafana UI available at http://localhost:3000.
+    ports:
+      - '3000:3000'
+    # Disable any auth.
+    volumes:
+      - './grafana/datasources:/etc/grafana/provisioning/datasources:ro'
+      - './grafana/dashboards:/etc/grafana/provisioning/dashboards:ro'
+    environment:
+      - 'GF_AUTH_ANONYMOUS_ENABLED=true'
+      - 'GF_AUTH_ANONYMOUS_ORG_ROLE=Admin'
+      - 'GF_AUTH_DISABLE_LOGIN_FORM=true'
+  wichtelnng-observability-prometheus:
+    image: 'prom/prometheus:v2.47.0'
+    container_name: 'wichtelnng-observability-prometheus'
+    # Allows wichtelnng-observability-grafana to access the Prometheus data source at
+    # http://wichtelnng-observability-prometheus:9090
+    expose:
+      - '9090'
+    # For the Prometheus UI.
+    ports:
+      - '9090:9090'
+    command:
+      - '--enable-feature=exemplar-storage'
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    volumes:
+      - './prometheus.yaml:/etc/prometheus/prometheus.yaml:ro'
+    # Along with using host.docker.internal as the host in the scrape-config, this allows
+    # wichtelnng-observability-prometheus to scrape the host where the app is running.
+    # Note: I couldn't just get by with using host.docker.internal in the config. Googling around yielded
+    # https://github.com/docker/for-linux/issues/264#issuecomment-823528103 where it shows the mapping below.
+    extra_hosts:
+      host.docker.internal: 'host-gateway'

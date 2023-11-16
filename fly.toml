@@ -12,6 +12,12 @@ buildpacks = ["gcr.io/paketo-buildpacks/java"]
 BP_JVM_VERSION = "21"
 
 [env]
+COM_ROMANBOEHM_WICHTELNNG_MAIL_FROM = "wichtelnng@romanboehm.com"
+COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.fly.dev"
+OBSERVABILITY_LOKI_ENDPOINT = "https://logs-prod-012.grafana.net/loki/api/v1/push"
+OBSERVABILITY_LOKI_USERNAME = "<override-with-fly-secret>"
+OBSERVABILITY_LOKI_PASSWORD = "<override-with-fly-secret>"
+LOGGING_CONFIG = "classpath:logback-loki.xml"
 SPRING_DATASOURCE_URL = "jdbc:postgresql://top2.nearest.of.wichtelnng-db.internal:5432/wichtelnng?sslmode=disable"
 SPRING_DATASOURCE_USERNAME = "<override-with-fly-secret>"
 SPRING_DATASOURCE_PASSWORD = "<override-with-fly-secret>"
@@ -20,8 +26,6 @@ SPRING_MAIL_PORT = "587"
 SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE = "true"
 SPRING_MAIL_PASSWORD = "<override-with-fly-secret>"
 SPRING_MAIL_USERNAME = "<override-with-fly-secret>"
-COM_ROMANBOEHM_WICHTELNNG_MAIL_FROM = "wichtelnng@romanboehm.com"
-COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.fly.dev"
 
 [metrics]
 port = 8081

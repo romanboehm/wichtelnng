@@ -28,6 +28,7 @@
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
         <hibernate.version>6.3.0.CR1</hibernate.version>
+        <loki-logback-appender.version>1.4.2</loki-logback-appender.version>
     </properties>
 
     <dependencies>
@@ -39,6 +40,19 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>${loki-logback-appender.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
         </dependency>
 
         <!-- For sending mail to participants -->
