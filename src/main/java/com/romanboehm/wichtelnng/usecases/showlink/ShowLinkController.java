@@ -15,19 +15,19 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.OK;
 
 @Controller
-public class ShowLinkController {
+class ShowLinkController {
 
     private final Logger log = LoggerFactory.getLogger(ShowLinkController.class);
 
     private final ShowLinkService service;
 
-    public ShowLinkController(ShowLinkService service) {
+    ShowLinkController(ShowLinkService service) {
         this.service = service;
     }
 
     @GetMapping("/event/{eventId}/link")
     @Observed(name = "show.link", contextualName = "showing-link")
-    public ModelAndView showResult(@PathVariable UUID eventId) {
+    ModelAndView showResult(@PathVariable UUID eventId) {
         URI link = service.createLink(eventId);
         log.info("Created link {}", link);
         return new ModelAndView("link", Map.of("link", link), OK);
