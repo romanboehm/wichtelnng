@@ -37,8 +37,13 @@ jobs:
             "SPRING_MAIL_USERNAME=$SECRETS_SPRING_MAIL_USERNAME" \
             "OBSERVABILITY_LOKI_USERNAME=$SECRETS_OBSERVABILITY_LOKI_USERNAME" \
             "OBSERVABILITY_LOKI_PASSWORD=$SECRETS_OBSERVABILITY_LOKI_PASSWORD"
-      - name: deploy to fly.io
+      - name: build docker image and deploy to fly.io
         if: github.ref == 'refs/heads/main'
-        run: flyctl deploy
+        run: |
+          ./mvnw --batch-mode spring-boot:build-image \
+            -DskipTests \
+            -Dspring-boot.build-image.imageName=$IMAGE_NAME
+          flyctl deploy --local-only --image docker.io/$IMAGE_NAME
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          IMAGE_NAME: romanboehm/wichtelnng:latest

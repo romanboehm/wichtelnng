@@ -181,6 +181,16 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <!-- Needed until Spring Boot 3.2.x arrives.
+                        Cf. https://spring.io/blog/2023/09/22/paketo-buildpacks-bionic-end-of-support -->
+                        <builder>paketobuildpacks/builder-jammy-base:latest</builder>
+                        <env>
+                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
+                        </env>
+                    </image>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
