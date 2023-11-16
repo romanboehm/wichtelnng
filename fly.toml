@@ -7,7 +7,7 @@ processes = []
 
 [env]
 COM_ROMANBOEHM_WICHTELNNG_MAIL_FROM = "wichtelnng@romanboehm.com"
-COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.fly.dev"
+COM_ROMANBOEHM_WICHTELNNG_DOMAIN = "https://wichtelnng.romanboehm.com"
 OBSERVABILITY_LOKI_ENDPOINT = "https://logs-prod-012.grafana.net/loki/api/v1/push"
 OBSERVABILITY_LOKI_USERNAME = "<override-with-fly-secret>"
 OBSERVABILITY_LOKI_PASSWORD = "<override-with-fly-secret>"
