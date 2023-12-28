@@ -27,7 +27,6 @@
         <greenmail.version>2.0.0</greenmail.version>
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
         <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
-        <hibernate.version>6.3.0.CR1</hibernate.version>
         <loki-logback-appender.version>1.4.2</loki-logback-appender.version>
     </properties>
 
