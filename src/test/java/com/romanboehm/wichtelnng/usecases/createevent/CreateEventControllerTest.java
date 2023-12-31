@@ -38,6 +38,12 @@ class CreateEventControllerTest {
     }
 
     @Test
+    void showsFavicon() throws Exception {
+        mockMvc.perform(get("/favicon.ico"))
+                .andExpect(status().is2xxSuccessful());
+    }
+
+    @Test
     void validatesEvent() throws Exception {
         MultiValueMap<String, String> params = eventFormParams();
         params.set(
