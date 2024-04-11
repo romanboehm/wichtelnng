@@ -20,7 +20,7 @@ class MailToParticipantForCancelledEventComposerTest {
 
     private final MailToParticipantForCancelledEventComposer mailCreator = new MailToParticipantForCancelledEventComposer(
             "https://wichtelnng.romanboehm.com",
-            "wichteln@romanboehm.com",
+            "mail@wichtelnng.romanboehm.com",
             MailUtils.getJavaMailSender());
 
     @Test
@@ -41,7 +41,7 @@ class MailToParticipantForCancelledEventComposerTest {
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
                 .extracting(Address::toString)
-                .containsExactly("wichteln@romanboehm.com");
+                .containsExactly("mail@wichtelnng.romanboehm.com");
         assertThat(mail.getRecipients(TO))
                 .extracting(Address::toString)
                 .containsExactly("angusyoung@acdc.net");

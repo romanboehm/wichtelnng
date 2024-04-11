@@ -22,7 +22,7 @@ class MailToDonorComposerTest {
     void setUp() {
         mailCreator = new MailToDonorComposer(
                 "https://wichtelnng.romanboehm.com",
-                "wichteln@romanboehm.com",
+                "mail@wichtelnng.romanboehm.com",
                 MailUtils.getTemplateEngine(),
                 MailUtils.getJavaMailSender());
     }
@@ -38,7 +38,7 @@ class MailToDonorComposerTest {
         assertThat(mail).isNotNull();
         assertThat(mail.getFrom())
                 .extracting(Address::toString)
-                .containsExactly("wichteln@romanboehm.com");
+                .containsExactly("mail@wichtelnng.romanboehm.com");
         assertThat(mail.getRecipients(TO))
                 .extracting(Address::toString)
                 .containsExactly("angusyoung@acdc.net");
