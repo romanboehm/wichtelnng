@@ -25,7 +25,6 @@
         <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
         <greenmail.version>2.0.0</greenmail.version>
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
-        <jakarta.xml.bind-api.version>4.0.0</jakarta.xml.bind-api.version>
         <loki-logback-appender.version>1.4.2</loki-logback-appender.version>
     </properties>
 
@@ -90,15 +89,6 @@
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
-        <!-- Needed else we get
-        java.lang.NoClassDefFoundError: jakarta/xml/bind/JAXBException during mvn compile
-        if  org.hibernate.orm:hibernate-jpamodelgen version > 5 is on classpath.
-        -->
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${jakarta.xml.bind-api.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
@@ -161,13 +151,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <image>
-                        <env>
-                            <BP_JVM_VERSION>${java.version}</BP_JVM_VERSION>
-                        </env>
-                    </image>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
