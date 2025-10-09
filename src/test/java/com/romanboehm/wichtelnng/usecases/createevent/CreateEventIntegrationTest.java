@@ -61,14 +61,14 @@ class CreateEventIntegrationTest {
 
         // Fill out and submit form for event
         var eventParams = eventFormParams();
-        var postCreatEventHeaders = new HttpHeaders();
-        postCreatEventHeaders.add("Content-Type", APPLICATION_FORM_URLENCODED_VALUE);
-        var postCreateEventEntity = new HttpEntity<>(eventParams, postCreatEventHeaders);
+        var postCreateEventHeaders = new HttpHeaders();
+        postCreateEventHeaders.add("Content-Type", APPLICATION_FORM_URLENCODED_VALUE);
+        var postCreateEventEntity = new HttpEntity<>(eventParams, postCreateEventHeaders);
         var postCreateEventResponse = testRestTemplate.postForEntity("/event", postCreateEventEntity, Void.class);
         assertThat(postCreateEventResponse.getStatusCode()).isEqualTo(HttpStatus.FOUND);
 
         var linkLocation = postCreateEventResponse.getHeaders().getLocation();
-        var matcher = Pattern.compile(".+/([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})/link").matcher(linkLocation.toString());
+        var matcher = UUID_PATTERN.matcher(linkLocation.toString());
         assertThat(matcher.matches()).isTrue();
         var eventId = UUID.fromString(matcher.group(1));
 
