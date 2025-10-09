@@ -1,6 +1,6 @@
 services:
   wichtelnng-db:
-    image: 'postgres:15.3-alpine'
+    image: 'postgres:18.0-alpine'
     container_name: 'wichtelnng-db'
     environment:
       - 'POSTGRES_DB=wichtelnngdb'

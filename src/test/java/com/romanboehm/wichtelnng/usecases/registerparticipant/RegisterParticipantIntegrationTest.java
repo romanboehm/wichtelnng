@@ -8,8 +8,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.client.RestTemplateBuilderConfigurer;
+import org.springframework.boot.http.client.ClientHttpRequestFactorySettings;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,6 +31,16 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class RegisterParticipantIntegrationTest {
+
+    @TestConfiguration(proxyBeanMethods = false)
+    static class RestTemplateBuilderConfiguration {
+
+        @Bean
+        RestTemplateBuilder configureRedirects(RestTemplateBuilderConfigurer configurer) {
+            return configurer.configure(new RestTemplateBuilder())
+                    .requestFactorySettings(settings -> settings.withRedirects(ClientHttpRequestFactorySettings.Redirects.DONT_FOLLOW));
+        }
+    }
 
     @RegisterExtension
     static GreenMailExtension greenMail = new GreenMailExtension(SMTP_IMAP)
