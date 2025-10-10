@@ -1,4 +1,4 @@
-package com.romanboehm.wichtelnng;
+package com.romanboehm.wichtelnng.common.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -15,9 +15,9 @@ public class ErrorAdvice {
     private final Logger log = LoggerFactory.getLogger(ErrorAdvice.class);
 
     @ExceptionHandler(value = Throwable.class)
-    public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) {
+    public ModelAndView defaultErrorHandler(HttpServletRequest req, Throwable e) {
         log.error("Encountered exception while requesting {}: {}", req.getRequestURI(), e.getMessage());
-        // Cf. https://docs.spring.io/spring-framework/reference/integration/observability.html.
+        // Cf. https://docs.spring.io/spring-framework/reference/integration/observability.html#observability.http-server.servlet
         ServerHttpObservationFilter.findObservationContext(req)
                 .ifPresent(context -> context.setError(e));
         return new ModelAndView("error", HttpStatus.INTERNAL_SERVER_ERROR);
