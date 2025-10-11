@@ -13,7 +13,7 @@ jobs:
           java-version: '21'
           distribution: 'corretto'
       - name: build with Maven
-        run: ./mvnw --batch-mode verify -Dspring.config.additional-location=src/test/resources/application-it.properties
+        run: ./mvnw --batch-mode verify -Dspring.profiles.active=it
       - name: setup flyctl
         if: github.ref == 'refs/heads/main'
         uses: superfly/flyctl-actions/setup-flyctl@master
