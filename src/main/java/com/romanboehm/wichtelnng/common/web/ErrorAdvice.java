@@ -20,6 +20,11 @@ public class ErrorAdvice {
         // Cf. https://docs.spring.io/spring-framework/reference/integration/observability.html#observability.http-server.servlet
         ServerHttpObservationFilter.findObservationContext(req)
                 .ifPresent(context -> context.setError(e));
-        return new ModelAndView("error", HttpStatus.INTERNAL_SERVER_ERROR);
+        var modelAndView = new ModelAndView("error", HttpStatus.INTERNAL_SERVER_ERROR);
+        // Need to embed manually here, instead of using `ThymeleafLayoutInterceptor`, as `ExceptionHandler`-emitted
+        // `ModelAndView` responses don't participate in the same way as regular in `ModelAndView` instances from
+        // controllers in the interceptor's `postHandle` method.
+        WebUtils.embedViewIntoDefaultLayout(modelAndView);
+        return modelAndView;
     }
 }
