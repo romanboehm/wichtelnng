@@ -22,7 +22,7 @@
         <webjars-locator-lite.version>1.1.0</webjars-locator-lite.version>
         <webjars.bootstrap.version>4.6.2</webjars.bootstrap.version>
         <webjars.jquery.version>3.7.1</webjars.jquery.version>
-        <webjars.fontawesome.version>5.15.1</webjars.fontawesome.version>
+        <webjars.fontawesome.version>7.0.1</webjars.fontawesome.version>
         <greenmail.version>2.1.7</greenmail.version>
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
         <loki-logback-appender.version>2.0.0</loki-logback-appender.version>
