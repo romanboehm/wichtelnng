@@ -13,12 +13,12 @@ Navigate to https://wichtelnng.romanboehm.com.
 
 ### Locally
 
-Run the wichtelnng app with the _compose_ profile:
 ```shell
-./mvnw spring-boot:run -Dspring-boot.run.profiles=compose
+./mvnw spring-boot:test-run
 ```
 - Navigate to http://localhost:8080 for the application's UI.
-- Check mail via a local roundcube instance running at http://localhost:8082 (use \<mail-address-you-want-to-check\> as both username and password).
+- Check mail via a local roundcube instance, the address of which will be logged to the console.
+  - login: \<mail-address-you-want-to-check\>
+  - username: \<mail-address-you-want-to-check\>
+  - password: \<mail-address-you-want-to-check\> (yes, same as username)
 - Spring Boot Actuator is available at http://localhost:8081/actuator.
-- Grafana dashboard is available at http://localhost:3000.
-- Postgres db is available at localhost:5432.
