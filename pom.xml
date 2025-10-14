@@ -18,7 +18,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
         <surefire.runOrder>random</surefire.runOrder>
-        <moneta.version>1.4.4</moneta.version>
+        <moneta.version>1.4.5</moneta.version>
         <webjars-locator-lite.version>1.1.2</webjars-locator-lite.version>
         <webjars.bootstrap.version>4.6.2</webjars.bootstrap.version>
         <webjars.jquery.version>3.7.1</webjars.jquery.version>
