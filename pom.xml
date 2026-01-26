@@ -25,7 +25,7 @@
         <webjars.fontawesome.version>7.0.1</webjars.fontawesome.version>
         <greenmail.version>2.1.7</greenmail.version>
         <formatter-maven-plugin.version>2.22.0</formatter-maven-plugin.version>
-        <loki-logback-appender.version>2.0.0</loki-logback-appender.version>
+        <loki-logback-appender.version>2.0.3</loki-logback-appender.version>
     </properties>
 
     <dependencies>
